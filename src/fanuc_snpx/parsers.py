@@ -333,6 +333,17 @@ class SnpxSlot:
     def used(self) -> bool:
         return self.size > 0 and bool(self.var_name)
 
+    @property
+    def var(self) -> str:
+        return self.var_name
+
+    @property
+    def last_address(self) -> int:
+        return self.address + self.size - 1
+
+    def overlaps(self, address: int, words: int) -> bool:
+        return self.used and address <= self.last_address and self.address <= address + words - 1
+
 
 @dataclass(frozen=True)
 class SnpxConfig:

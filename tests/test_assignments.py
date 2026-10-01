@@ -215,3 +215,35 @@ def test_plan_respects_block_and_foreign_entries() -> None:
         plan_assignments([AssignmentRequest.of("PR[1]")], (1001, 2000), avoid=foreign)
     with pytest.raises(SnpxAssignmentError, match="consecutively"):
         plan_assignments([AssignmentRequest.of("POS[0]", 2)], (1, 1000))
+
+
+def test_parse_spec_and_sizes() -> None:
+    from fanuc_snpx.assignments import request_words
+
+    r = AssignmentRequest.parse_spec("$MNUFRAME[1,1] 9 POSITION")
+    assert (str(r.var), r.count, r.sysvar_type) == ("$MNUFRAME[1,1]", 9, SysvarType.POSITION)
+    assert request_words(r) == 450
+    assert request_words(AssignmentRequest.parse_spec("R[1] 200 mult=1")) == 400
+    assert request_words(AssignmentRequest.parse_spec("PR[1]@1.12 300")) == 3600
+    with pytest.raises(ValueError, match="unknown token"):
+        AssignmentRequest.parse_spec("R[1] lots")
+
+
+def test_free_slots_and_slot_numbers() -> None:
+    from fanuc_snpx.assignments import free_slots
+
+    assert free_slots([1, 2, 4], 3) == [3, 5, 6]
+    with pytest.raises(SnpxAssignmentError, match="free"):
+        free_slots(range(1, 80), 2)
+    plan = plan_assignments(
+        [AssignmentRequest.of("R[1]", 2), AssignmentRequest.of("PR[1]")], (10001, 16384),
+        slots=[3, 5],
+    )  # fmt: skip
+    assert [(e.slot, e.address) for e in plan] == [(3, 10001), (5, 10005)]
+
+
+def test_plan_reports_total_size_when_too_big() -> None:
+    with pytest.raises(
+        SnpxAssignmentError, match="whole plan needs 12500 words, the block has 6384"
+    ):
+        plan_assignments([AssignmentRequest.of("PR[1]", 250)], (10001, 16384))

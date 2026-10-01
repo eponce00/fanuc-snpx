@@ -51,6 +51,18 @@ fanuc-snpx ftp-get 10.50.160.51 numreg.va posreg.va sysframe.va curpos.dg errall
 `controller-dumps/` and `evidence/` are git-ignored. Copy the relevant hex and values into
 `docs/VALIDATION_LOG.md` by hand, with timestamps.
 
+## Phase 3 helpers (offline planning, read-only comparison)
+
+```bash
+# Lay out assignments against the robot's table (prints the pendant table; sends nothing)
+fanuc-snpx plan-asg --existing evidence/<run>/files/system.va --item "R[1] 200" --item "PR[1]@1.26 100" --out-map evidence/<run>/asg-plan.json
+
+# Compare SRTP reads with fresh controller files (read-only); paste the rows into VALIDATION_LOG.md
+fanuc-snpx compare 10.50.160.51 --map evidence/<run>/asg-plan.json --files evidence/<run>/files --registers 1-50 --pr 1-20 --curpos --out evidence/<run>/compare.md
+```  
+
+See [ASSIGNMENT_OPTIONS.md](ASSIGNMENT_OPTIONS.md) for how the assignments get onto the controller.
+
 ## Hardware tests
 
 ```bash

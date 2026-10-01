@@ -15,8 +15,15 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
-from . import __version__, parsers
-from .assignments import AssignmentTable
+from . import __version__, compare, parsers
+from .assignments import (
+    Assignment,
+    AssignmentRequest,
+    AssignmentTable,
+    free_slots,
+    plan_assignments,
+    request_words,
+)
 from .client import SnpxClient
 from .errors import SnpxError
 from .oracle import ControllerFiles
@@ -178,6 +185,83 @@ def cmd_parse(args: argparse.Namespace) -> None:
     _print(_PARSERS[kind](text))
 
 
+def cmd_plan_asg(args: argparse.Namespace) -> None:
+    """Offline: lay out new assignments and print the pendant table (sends nothing)."""
+    requests = [AssignmentRequest.parse_spec(s) for s in args.item]
+    used: list[int] = []
+    existing: list[parsers.SnpxSlot] = []
+    table_entries: list[Assignment] = []
+    problems: list[str] = []
+    if args.existing:
+        cfg = parsers.parse_snpx_config(Path(args.existing).read_text(encoding="latin-1"))
+        existing = cfg.used_slots
+        used = [s.slot for s in existing]
+        known, problems = cfg.to_table()
+        table_entries = list(known)
+    if args.block:
+        lo, hi = (int(x) for x in args.block.split("-", 1))
+    else:
+        lo, hi = max((s.last_address for s in existing), default=0) + 1, 16384
+    needed = sum(request_words(r) for r in requests)
+    plan = plan_assignments(
+        requests, (lo, hi), avoid=existing, slots=free_slots(used, len(requests))
+    )
+    lines = [
+        f"Plan for %R{lo}..%R{hi}: {needed} of {hi - lo + 1} words used.",
+        "",
+        "| Slot | $ADDRESS | $SIZE | $VAR_NAME | $MULTIPLY | %R range |",
+        "|---|---|---|---|---|---|",
+    ]
+    lines += [
+        f"| {e.slot} | {e.address} | {e.size} | {e.var} | {e.multiply:g} | "
+        f"%R{e.address}..%R{e.last_address} |"
+        for e in plan
+    ]
+    lines += ["", "Equivalent %G commands (reference only; this tool sends nothing):", ""]
+    lines += [f"    {e.command()}" for e in plan]
+    if problems:
+        lines += ["", "Existing slots this package cannot decode:", *[f"- {p}" for p in problems]]
+    print("\n".join(lines))
+    if args.out_map:
+        Path(args.out_map).write_text(
+            AssignmentTable([*table_entries, *plan]).to_json(), encoding="utf-8"
+        )
+
+
+def cmd_compare(args: argparse.Namespace) -> None:
+    files = Path(args.files)
+
+    def text(name: str) -> str:
+        return (files / name).read_text(encoding="latin-1")
+
+    results: list[compare.Comparison] = []
+    with _client(args) as c:
+        if args.registers:
+            results += compare.compare_numeric_registers(
+                c, text("numreg.va"), compare.parse_ranges(args.registers)
+            )
+        if args.pr:
+            results += compare.compare_position_registers(
+                c, text("posreg.va"), compare.parse_ranges(args.pr), group=args.group
+            )
+        if args.frames or args.tools:
+            results += compare.compare_frames(
+                c,
+                text("sysframe.va"),
+                group=args.group,
+                frames=compare.parse_ranges(args.frames or ""),
+                tools=compare.parse_ranges(args.tools or ""),
+            )
+        if args.curpos:
+            results += compare.compare_current_position(c, text("curpos.dg"), group=args.group)
+    md = compare.to_markdown(results, source=str(files))
+    if args.out:
+        Path(args.out).write_text(md, encoding="utf-8")
+    else:
+        print(md)
+    _print(compare.summary(results))
+
+
 def cmd_survey(args: argparse.Namespace) -> None:
     report = run_survey(
         args.host,
@@ -293,6 +377,32 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--group", type=int, default=1)
     sp.add_argument("--frame", type=int, default=0, help="0 world, 1-9 user frame, 15 current")
     sp.set_defaults(func=cmd_read_pos)
+
+    sp = sub.add_parser("plan-asg", help="lay out new assignments offline (prints a table)")
+    sp.add_argument(
+        "--item",
+        action="append",
+        required=True,
+        help='e.g. "R[1] 200", "PR[1] 100", "$MNUFRAME[1,1] 9 POSITION", "POS[G1:0]"',
+    )
+    sp.add_argument("--existing", type=Path, help="system.va from the controller (avoid its slots)")
+    sp.add_argument("--block", help="%%R range to use, e.g. 10001-16384 (default: after existing)")
+    sp.add_argument("--out-map", type=Path, help="write the resulting assignment map JSON")
+    sp.set_defaults(func=cmd_plan_asg)
+
+    sp = sub.add_parser("compare", help="compare SRTP reads with downloaded controller files")
+    common(sp, assignments=True)
+    sp.add_argument(
+        "--files", type=Path, required=True, help="folder with numreg.va, posreg.va, ..."
+    )
+    sp.add_argument("--registers", help="R indexes, e.g. 1-30,45")
+    sp.add_argument("--pr", help="PR indexes, e.g. 1-10")
+    sp.add_argument("--frames", help="user frame numbers, e.g. 1-9")
+    sp.add_argument("--tools", help="user tool numbers, e.g. 1-9")
+    sp.add_argument("--curpos", action="store_true", help="compare POS[Gg:0] with curpos.dg")
+    sp.add_argument("--group", type=int, default=1)
+    sp.add_argument("--out", type=Path, help="write the markdown rows here")
+    sp.set_defaults(func=cmd_compare)
 
     sp = sub.add_parser("parse", help="parse a downloaded controller file to JSON (offline)")
     sp.add_argument("file", type=Path)
