@@ -21,6 +21,7 @@ from .client import SnpxClient
 from .errors import SnpxError
 from .oracle import ControllerFiles
 from .srtp import DEFAULT_PORT
+from .survey import run_survey
 from .types import IoFamily
 
 
@@ -151,6 +152,25 @@ def cmd_ftp_get(args: argparse.Namespace) -> None:
         _print({"saved": saved})
 
 
+def cmd_survey(args: argparse.Namespace) -> None:
+    report = run_survey(
+        args.host,
+        args.out,
+        port=args.port,
+        timeout=args.timeout,
+        max_requests_per_second=args.rate,
+        error_probe=args.error_probe,
+        large_sizes=args.large_sizes,
+        ftp=not args.no_ftp,
+    )
+    _print(
+        {
+            "out": str(args.out),
+            "steps": {s.name: ("ok" if s.ok else s.error) for s in report.steps},
+        }
+    )
+
+
 def cmd_write_reg(args: argparse.Namespace) -> None:
     kind = args.kind.upper()
     _confirm(args, f"{kind}[{args.index}] = {args.value!r}")
@@ -247,6 +267,25 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--group", type=int, default=1)
     sp.add_argument("--frame", type=int, default=0, help="0 world, 1-9 user frame, 15 current")
     sp.set_defaults(func=cmd_read_pos)
+
+    sp = sub.add_parser("survey", help="read-only first-contact survey (Phase 2) with a report")
+    sp.add_argument("host")
+    sp.add_argument("--out", type=Path, default=Path("evidence/survey"))
+    sp.add_argument("--port", type=int, default=DEFAULT_PORT)
+    sp.add_argument("--timeout", type=float, default=2.0)
+    sp.add_argument("--rate", type=float, default=5.0, help="max requests per second")
+    sp.add_argument("--no-ftp", action="store_true", help="skip the controller file downloads")
+    sp.add_argument(
+        "--error-probe",
+        action="store_true",
+        help="also read %%R16385 once to record the real error reply (may post PRIO-090)",
+    )
+    sp.add_argument(
+        "--large-sizes",
+        action="store_true",
+        help="probe reads above 2048 bytes (may post PRIO-090)",
+    )
+    sp.set_defaults(func=cmd_survey)
 
     sp = sub.add_parser("ftp-get", help="download controller files (read-only FTP)")
     sp.add_argument("host")

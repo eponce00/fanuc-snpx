@@ -14,6 +14,22 @@ python -m venv .venv
 
 Everything below is read-only. Keep an evidence log for every run.
 
+The quickest way is the survey, which runs the whole checklist and writes `survey.md`, `survey.json`,
+`evidence.jsonl` and the downloaded files into one folder (about 10-20 s at 5 requests/s):
+
+```bash
+fanuc-snpx survey 10.50.160.51 --out evidence/survey-2026-10-xx
+```
+
+Steps: handshake without and with the `0x4F` packet (plus short status), services `0x43`/`0x03`/`0x38`,
+small reads (%R1-10, DO/DI/UO/UI 1-16, GO/GI 1-4), the largest single read up to 2048 bytes, latency of
+20 reads of %R1-30, and FTP downloads of `numreg.va`, `posreg.va`, `strreg.va`, `sysframe.va`,
+`syssnpx.va`, `curpos.dg`, `errall.ls`, `version.dg`, `summary.dg`. Two optional steps may make
+the controller post an SNPX communication alarm (PRIO-090) and only run when asked: `--error-probe`
+(one read of %R16385) and `--large-sizes` (reads of 4-16 KiB).
+
+The same steps by hand:
+
 ```bash
 # 1. Handshake + short status, with and without the 0x4F session control packet
 fanuc-snpx probe 10.50.160.51 --evidence evidence/phase2.jsonl --controller-type

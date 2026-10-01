@@ -92,6 +92,10 @@ bytes 42-43 are not zero. It raises `SrtpProtocolError` for an unknown message t
 length mismatch, or a multi-packet reply, and checks byte 0, the sequence and the message type before it
 trusts the length field.
 
+Error descriptions: `fanuc_snpx.status` maps status pairs to GE's SNP tables (GFK-0582D tables 6-2/6-3;
+major `05` = service request error, minor `F4` = invalid input parameter, `E4` = memory type does not
+exist, ...). They are attached to `SrtpServiceError` messages as hints, marked unverified on FANUC.
+
 Inline vs extended: replies with 6 data bytes or fewer came back as `D4` inline in every capture; 80 bytes
 came back as `94`. The client accepts `94` for any size and `D4` only for 6 bytes or fewer.
 

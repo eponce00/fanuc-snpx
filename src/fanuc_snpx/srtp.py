@@ -50,6 +50,7 @@ from .memory import (
     srtp_index,
     unpack_bits,
 )
+from .status import describe_status
 
 log = logging.getLogger(__name__)
 
@@ -265,6 +266,11 @@ def describe_request(frame: bytes) -> dict[str, Any]:
             payload_len=len(frame) - HEADER_LEN,
         )
     return out
+
+
+def _hint(major: int, minor: int) -> str:
+    text = describe_status(major, minor)
+    return f" ({text}; GE code table, unverified on FANUC)" if text else ""
 
 
 # --- authorization token ------------------------------------------------------
@@ -556,7 +562,8 @@ class SrtpSession:
             raise SrtpServiceError(
                 f"controller rejected service 0x{service:02X}"
                 + (f" segment 0x{segment:02X}" if segment is not None else "")
-                + f": status {reply.major_status:02X} {reply.minor_status:02X}",
+                + f": status {reply.major_status:02X} {reply.minor_status:02X}"
+                + _hint(reply.major_status, reply.minor_status),
                 major=reply.major_status,
                 minor=reply.minor_status,
                 msg_type=reply.msg_type,
@@ -569,7 +576,8 @@ class SrtpSession:
         if reply.major_status or reply.minor_status:
             raise SrtpServiceError(
                 f"reply to service 0x{service:02X} carries non-zero status "
-                f"{reply.major_status:02X} {reply.minor_status:02X}",
+                f"{reply.major_status:02X} {reply.minor_status:02X}"
+                + _hint(reply.major_status, reply.minor_status),
                 major=reply.major_status,
                 minor=reply.minor_status,
                 msg_type=reply.msg_type,
