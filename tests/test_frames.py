@@ -143,3 +143,15 @@ def test_error_reply_capture_raises_and_closes() -> None:
     assert (info.value.major, info.value.minor) == (0, 0)
     assert not s.is_open
     assert sock.closed
+
+
+def test_status_hints() -> None:
+    from fanuc_snpx.status import describe_status
+
+    assert (
+        describe_status(0x05, 0xF4) == "service request error: invalid input parameter in request"
+    )
+    assert describe_status(0x05, 0xE4) is not None
+    assert "memory type for this selector does not exist" in str(describe_status(0x05, 0xE4))
+    assert describe_status(0x02, 0x00) == "insufficient privilege"
+    assert describe_status(0x00, 0x00) is None

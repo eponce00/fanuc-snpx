@@ -382,8 +382,10 @@ class FakeSrtpServer:
         *,
         desync_after_error: bool = False,
         controller_type: bytes = b"FAKE-SNPX",
+        max_reply_bytes: int | None = None,
     ) -> None:
         self.controller = controller or FakeController()
+        self.max_reply_bytes = max_reply_bytes
         self.lock = threading.RLock()
         self.desync_after_error = desync_after_error
         self.controller_type = controller_type
@@ -584,6 +586,10 @@ class FakeSrtpServer:
                 return self._reply(h, 0x94, conn=conn, text=bytes(16))
             if service != 0x04 or count == 0:
                 return self._reply(h, 0xD1, major=0x05, minor=0x02, conn=conn)
+            unit = 2 if segment in ctl.words else (1 if segment not in ctl.bits else 0)
+            n_bytes = count * unit if unit else count // 8
+            if self.max_reply_bytes is not None and n_bytes > self.max_reply_bytes:
+                return self._reply(h, 0xD1, major=0x05, minor=0x0A, conn=conn)
             if segment == 0x08:
                 return self._data_reply(h, ctl.read_r(index + 1, count, conn.local_table), conn)
             if segment in ctl.words:

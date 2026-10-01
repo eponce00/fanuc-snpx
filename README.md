@@ -83,7 +83,7 @@ of `$SNPX_ASG`, and fault injection (error replies, timeouts, split and stale re
 
 ## Documentation
 
-[PROTOCOL](docs/PROTOCOL.md) · [ARCHITECTURE](docs/ARCHITECTURE.md) · [SAFETY](docs/SAFETY.md) ·
+[TRACKER](docs/TRACKER.md) · [BRIEF](docs/BRIEF.md) · [PROTOCOL](docs/PROTOCOL.md) · [ARCHITECTURE](docs/ARCHITECTURE.md) · [SAFETY](docs/SAFETY.md) ·
 [POLICY](docs/POLICY.md) · [RUNBOOK](docs/RUNBOOK.md) · [PLAN](docs/PLAN.md) ·
 [PROVENANCE](docs/PROVENANCE.md) · [VALIDATION_LOG](docs/VALIDATION_LOG.md) · [ASG_MAP](docs/ASG_MAP.md)
 
