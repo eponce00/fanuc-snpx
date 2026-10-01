@@ -1,0 +1,301 @@
+<html>
+<head>
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-store">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title> ROBOT (robot) Homepage </title>
+
+
+<script language=javascript>
+<!--
+var openSetupWin = [null, null, null, null];
+var openLogWin = null;
+var openRuntimeWin = null;
+var openPickStatusWin = null;
+var openImageRegisters = null;
+var openTutorialListWin = null;
+var openTutorialWin = null;
+var openLenseWin = null;
+var appConf = [{page: "vsfrmn.stm", width: 1070, height: 960},
+               {page: "pufrmn.stm", width: 1070, height: 960},
+               {page: "bpiafr.stm", width: 1070, height: 840},
+               {page: "bppmfr.stm", width: 1070, height: 960},
+               {page: "vdfrmn.stm", width: 1070, height: 960},
+               {page: "vsmnsv.stm", width: 960,  height: 840}];
+
+function CenterPopup(URL, width, height) {
+  var left = (screen.width-width)/2;
+  if (left < 0) {
+    left = 0;
+  }
+  var top = (screen.height-height)/2;
+  if (top < 0) {
+    top = 0;
+  }
+  var features='toolbar=no, location=no, status=no, menubar=no, scrollbars=no, resizable=yes, ' +
+      'width=' + width + ', ' +
+      'height=' + height + ', ' +
+      'top=' + top + ', ' + //
+      'left=' + left;
+  var popup = null;
+  try {
+    popup = window.open(URL, "_blank", features, false);
+    if (popup == null) {
+      alert("Please enable pop-up windows in Internet Explorer.");
+    }
+    else {
+      popup.focus()
+    }
+  }
+  catch (err) {
+    alert("Failed to open window.\nCause: (" + err.name + " " + (err.number & 0xFFFF) + ") " + err.message + "\nRemedy: Please contact your FANUC technical representative.");
+  }
+  return popup;
+}
+
+function OpenVisionSetup(appType) {
+  if (appConf[appType - 1] !== undefined) {
+    try {
+      if (openSetupWin[appType - 1] && !openSetupWin[appType - 1].closed) {
+        // already open
+        openSetupWin[appType - 1].focus();
+        return;
+      }
+    } catch (err) {
+    }
+    openSetupWin[appType - 1] = CenterPopup("/frh/vision/vsset.stm?_toppage=" + appConf[appType - 1].page + "&_apptype=" + appType,
+                                            appConf[appType - 1].width, appConf[appType - 1].height);
+  }
+}
+
+function OpenVisionPage(varName, url, width, height) {
+  try {
+    if (window[varName] && !window[varName].closed) {
+      // already open
+      window[varName].focus();
+      return;
+    }
+  } catch (err) {
+  }
+  window[varName] = CenterPopup(url, width, height);
+}
+
+function OpenVisionLog() {
+  OpenVisionPage("openLogWin", "/frh/vision/vlfrmn.stm", 1024, 800);
+}
+function OpenVisionRuntime() {
+  OpenVisionPage("openRuntimeWin", "/frh/vision/vrfrmn.stm", 1024, 800);
+}
+function OpenImageRegisters() {
+  OpenVisionPage("openImageRegisters", "/frh/vision/vimreg.stm", 1024, 800);
+}
+function OpenIRPickStatus() {
+  OpenVisionPage("openPickStatusWin", "/frh/vision/psfrmn.stm", 1024, 840);
+}
+function OpenTutorialList() {
+  OpenVisionPage("openTutorialListWin", "/frh/vision/vtuthead.stm", 1280, 840);
+}
+function OpenTutorial() {
+  OpenVisionPage("openTutorialWin", "/frh/vision/vtuthead.stm?tutorialName=vtbggn", 1280, 840);
+}
+function OpenLense() {
+  OpenVisionPage("openLenseWin", "/frh/vision/lenseguide.htm", 1280, 840);
+}
+//-->
+</script>
+
+
+
+<script language=javascript>
+<!--
+var openIDEWin = null;
+var openPCEchoWin = null;
+var openPCNavWin = null;
+var openPCJogWin = null;
+var ietitle = 6;
+var tpkeys = 54;
+
+function CenterJogPopup(URL, width, height) {
+  var left = (screen.width-width)/2;
+  if (left < 0) {
+    left = 0;
+    width = screen.width;
+  }
+  var top = (screen.height-height)/2;
+  if (top < 0) {
+    top = 0;
+    height = screen.height;
+  }
+  var features='"toolbar=no, location=no, status=no, menubar=no, scrollbars=no, resizable=yes, ' +
+      'width=' + width + ', ' +
+      'height=' + height + ', ' +
+      'top=' + top + ', ' + //
+      'left=' + left + '"';
+  var popup = window.open(URL, "_blank", features, false);
+  if (popup == null) {
+    alert("Please enable pop-up windows in Internet Explorer.");
+  }
+  else {
+    popup.focus()
+  }
+  return popup;
+}
+
+function OpenIDEWin(hmi) {
+  try {
+    if (openIDEWin && !openIDEWin.closed) {
+      // already open
+      openIDEWin.focus();
+      return;
+    }
+  } catch (err) {
+  }
+  var htcg_port = parseInt("3080");
+  if (!htcg_port) {
+    htcg_port = 3080;
+  }
+  var ipaddr = 'http://' + location.hostname + ':' + htcg_port;
+  // Open jQuery connection
+  openIDEWin = CenterJogPopup(ipaddr + '/frh/jcgtp/irprog.stm', 1024, 800);
+}
+
+function OpenPCEchoWin(hmi) {
+  try {
+    if (openPCEchoWin && !openPCEchoWin.closed) {
+      // already open
+      openPCEchoWin.focus();
+      return;
+    }
+  } catch (err) {
+  }
+  if (hmi == true) {
+    // Open jQuery connection
+    openPCEchoWin = CenterJogPopup('/frh/jcgtp/echo.stm', 672 + 20, 504 + ietitle + 110);
+  }
+  else {
+    // Not quite 640x480 - sized to match iPendant Display
+    openPCEchoWin = CenterJogPopup('/frh/cgtp/echo.htm', 672, 504 + ietitle);
+  }
+}
+
+function OpenPCNavWin(hmi) {
+  try {
+    if (openPCNavWin && !openPCNavWin.closed) {
+      // already open
+      openPCNavWin.focus();
+      return;
+    }
+  } catch (err) {
+  }
+  if (hmi == true) {
+    // Open jQuery connection
+    openPCNavWin = CenterJogPopup('/frh/jcgtp/cgtp.stm', 1024, 800 - tpkeys);
+  }
+  else {
+    // Not quite 640x480 - sized to match iPendant Display
+    openPCNavWin = CenterJogPopup('/frh/cgtp/cgtp.htm', 672, 504 + ietitle);
+  }
+}
+
+function OpenPCJogWin(hmi) {
+  try {
+    if (openPCJogWin && !openPCJogWin.closed) {
+      // already open
+      openPCJogWin.focus();
+      return;
+    }
+  } catch (err) {
+  }
+  var htcg_port = parseInt("3080");
+  if (!htcg_port) {
+    htcg_port = 3080;
+  }
+  var ipaddr = 'http://' + location.hostname + ':' + htcg_port;
+  if (hmi == true) {
+    // Open jQuery connection
+    openPCJogWin = CenterJogPopup(ipaddr + '/frh/jcgtp/itp.stm', 1024, 800 - tpkeys);
+  }
+  else {
+    // Not quite 640x480 - sized to match iPendant Display
+    openPCJogWin = CenterJogPopup(ipaddr + '/frh/cgtp/itp.htm', 672, 504 + ietitle);
+  }
+}
+
+// Perform the genlink url with proper connect_id
+function genlink_url(menuhref) {
+  if (typeof (top.g_connect_id) == 'undefined') {
+    window.location.href = '/softpart/genlink?' + menuhref;
+  }
+  else {
+    window.location.href = '/softpart/genlink?connect_id=' + top.g_connect_id + '&' + menuhref;
+  }
+} // genlink_url
+
+//-->
+
+//Open Soft Panel
+function OpenSoftPanel(hmi) {
+  try {
+    if (openSoftPanel && !openSoftPanel.closed) {
+      // already open
+      openSoftPanel.focus();
+      return;
+    }
+  } catch (err) {
+  }
+  // Open jQuery connection
+  openSoftPanel = CenterJogPopup('/frh/jcgtp/sop.stm', 1024, 800);
+}
+
+</script>
+
+
+</head>
+<BODY bgcolor= #FFF9e3>
+
+<table width="100%" border="2">
+  <tr>
+  <td>
+  <table width="100%" bgcolor=#FFFFFF>
+  <tr>
+  <td width=175 align=center valign=middle><img src="/frs/logo.png"></td>
+  <td align=center valign=middle><strong><font color=#bc1e33 size=6>
+                WEB SERVER</font><br>
+        <font color=black size=3>
+                Hostname: ROBOT<br>
+                Robot No: F546175   <br>
+                File Name: /md/sftysig.dg<br>
+                Date:  26/10/02
+                Time: 07:19:56
+        </font></strong></td>
+  <td width=175></td>
+  </tr>
+  </table>
+  </td>
+  </tr>
+</table>
+<PRE>
+F Number: F546175   
+VERSION : LR HandlingTool      
+$VERSION: V9.30146      5/27/2021
+DATE:     02-OCT-26 07:19 
+
+STOP SIGNALS::
+
+External ESTOP   FALSE
+SOP Estop        FALSE
+TP ESTOP         FALSE
+Hand Broken      TRUE 
+OverTravel       FALSE
+Low Air Alarm    FALSE
+Fence Open       FALSE
+Belt Broken      FALSE
+TP Enable        FALSE
+TP Deadman       FALSE
+SVOFF Detect     FALSE
+Non Teacher Enb  FALSE
+</PRE>
+</BODY>
+</HTML>
+

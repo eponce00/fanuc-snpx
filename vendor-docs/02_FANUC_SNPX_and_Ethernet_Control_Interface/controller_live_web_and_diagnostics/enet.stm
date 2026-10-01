@@ -1,0 +1,43 @@
+<html>
+<head>
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-store">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title> ROBOT (robot) EtherNet/IP Page </title>
+</head>
+<BODY bgcolor= #FFF9e3>
+
+<table width="100%" border="2">
+  <tr>
+  <td>
+  <table width="100%" bgcolor=#FFFFCC>
+  <tr>
+  <td align=left valign=middle><img src="/frs/rws_left.png"></td>
+  <td align=center valign=middle><strong><font color=#e60000 size=6>
+                EtherNet/IP</font><br>
+        <font color=black size=3>
+                Hostname: ROBOT<br>
+                Robot No: F546175   <br>
+                File Name: /frs/enet.stm<br>
+                Date:  26/10/02
+                Time: 07:19:54
+        </font></strong></td>
+  <td align=right valign=middle><img src="/frs/rws_rght.png"></td>
+  </tr>
+  </table>
+  </td>
+  </tr>
+</table>
+<PRE>
+
+</pre>
+
+<a href="enetstrt.htm">Start Monitoring Statistics</a><br>
+<a href="enetstop.htm">Stop Monitoring Statistics</a><br>
+<a href="enetshow.stm">View Statistics</a><br>
+
+<pre>
+</pre>
+</body>
+</html>

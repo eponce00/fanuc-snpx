@@ -1,0 +1,120 @@
+[*SYSTEM*]$AAVM_WRK  Storage: SHADOW  Access: FP  : ARRAY[1] OF AAVM_WRK_T
+     Field: $AAVM_WRK[1].$EXPOSURE Access: RW: INTEGER = 33333
+     Field: $AAVM_WRK[1].$CAMCLBDATE Access: RW: STRING[30] = Uninitialized
+     Field: $AAVM_WRK[1].$TRGVT Access: RW: REAL = 0.000000e+00
+     Field: $AAVM_WRK[1].$TRGHZ Access: RW: REAL = 0.000000e+00
+     Field: $AAVM_WRK[1].$TRGDIST Access: RW: REAL = 0.000000e+00
+     Field: $AAVM_WRK[1].$TRGW Access: RW: REAL = 0.000000e+00
+     Field: $AAVM_WRK[1].$TRGP Access: RW: REAL = 0.000000e+00
+     Field: $AAVM_WRK[1].$TRGR Access: RW: REAL = 0.000000e+00
+     Field: $AAVM_WRK[1].$LENS_CENT_X Access: RW: REAL = 0.000000e+00
+     Field: $AAVM_WRK[1].$LENS_CENT_Y Access: RW: REAL = 0.000000e+00
+     Field: $AAVM_WRK[1].$DISTORT  ARRAY[2] OF REAL
+      [1] = 0.000000e+00
+      [2] = 0.000000e+00
+     Field: $AAVM_WRK[1].$CMP_GC_P Access: RW: REAL = 0.000000e+00
+     Field: $AAVM_WRK[1].$UTNUM Access: RW: INTEGER = 9
+     Field: $AAVM_WRK[1].$PRE_MAST_CT  ARRAY[9] OF INTEGER
+      [1] = 0
+      [2] = 0
+      [3] = 0
+      [4] = 0
+      [5] = 0
+      [6] = 0
+      [7] = 0
+      [8] = 0
+      [9] = 0
+     Field: $AAVM_WRK[1].$PRE_GRV_MST Access: RW: INTEGER = -1
+     Field: $AAVM_WRK[1].$NEW_MAST_CT  ARRAY[9] OF INTEGER
+      [1] = 0
+      [2] = 0
+      [3] = 0
+      [4] = 0
+      [5] = 0
+      [6] = 0
+      [7] = 0
+      [8] = 0
+      [9] = 0
+     Field: $AAVM_WRK[1].$NEW_GRV_MST Access: RW: INTEGER = -1
+     Field: $AAVM_WRK[1].$STAT_RUN Access: RW: INTEGER = 0
+     Field: $AAVM_WRK[1].$RES_ERR Access: RW: REAL = 0.000000e+00
+     Field: $AAVM_WRK[1].$VTCP_ERR  ARRAY[3] OF REAL
+      [1] = 0.000000e+00
+      [2] = 0.000000e+00
+      [3] = 0.000000e+00
+     Field: $AAVM_WRK[1].$TRGT_ERR  ARRAY[3] OF REAL
+      [1] = 0.000000e+00
+      [2] = 0.000000e+00
+      [3] = 0.000000e+00
+     Field: $AAVM_WRK[1].$RES_ERR2 Access: RW: REAL = 0.000000e+00
+     Field: $AAVM_WRK[1].$VTCP_ERR2  ARRAY[3] OF REAL
+      [1] = 0.000000e+00
+      [2] = 0.000000e+00
+      [3] = 0.000000e+00
+     Field: $AAVM_WRK[1].$RSM_MAST_CT  ARRAY[9] OF INTEGER
+      [1] = 0
+      [2] = 0
+      [3] = 0
+      [4] = 0
+      [5] = 0
+      [6] = 0
+      [7] = 0
+      [8] = 0
+      [9] = 0
+     Field: $AAVM_WRK[1].$STAT_START Access: RW: INTEGER = 0
+     Field: $AAVM_WRK[1].$STAT_END Access: RW: INTEGER = 0
+     Field: $AAVM_WRK[1].$STAT_ORGBK Access: RW: INTEGER = 0
+     Field: $AAVM_WRK[1].$STAT_RSMBK Access: RW: INTEGER = 0
+     Field: $AAVM_WRK[1].$STAT_ORGRES Access: RW: INTEGER = 0
+     Field: $AAVM_WRK[1].$STAT_UPDT Access: RW: INTEGER = 0
+
+[*SYSTEM*]$ABSPOS_GRP  Storage: CMOS  Access: RW  : ARRAY[1] OF ABSPOS_GRP_T
+     Field: $ABSPOS_GRP[1].$PARAM  ARRAY[270] OF REAL
+      [1] = 0.000000e+00
+      [2] = 0.000000e+00
+      [3] = 0.000000e+00
+      [4] = 0.000000e+00
+      [5] = 0.000000e+00
+      [6] = 0.000000e+00
+      [7] = 0.000000e+00
+      [8] = 0.000000e+00
+      [9] = 0.000000e+00
+      [10] = 0.000000e+00
+      [11] = 0.000000e+00
+      [12] = 0.000000e+00
+      [13] = 0.000000e+00
+      [14] = 0.000000e+00
+      [15] = 0.000000e+00
+      [16] = 0.000000e+00
+      [17] = 0.000000e+00
+      [18] = 0.000000e+00
+      [19] = 0.000000e+00
+      [20] = 0.000000e+00
+      [21] = 0.000000e+00
+      [22] = 0.000000e+00
+      [23] = 0.000000e+00
+      [24] = 0.000000e+00
+      [25] = 0.000000e+00
+      [26] = 0.000000e+00
+      [27] = 0.000000e+00
+      [28] = 0.000000e+00
+      [29] = 0.000000e+00
+      [30] = 0.000000e+00
+      [31] = 0.000000e+00
+      [32] = 0.000000e+00
+      [33] = 0.000000e+00
+      [34] = 0.000000e+00
+      [35] = 0.000000e+00
+      [36] = 0.000000e+00
+      [37] = 0.000000e+00
+      [38] = 0.000000e+00
+      [39] = 0.000000e+00
+      [40] = 0.000000e+00
+      [41] = 0.000000e+00
+      [42] = 0.000000e+00
+      [43] = 0.000000e+00
+      [44] = 0.000000e+00
+      [45] = 0.000000e+00
+      [46] = 0.000000e+00
+      [47] = 0.000000e+00
+      [48] = 0.000000e+00

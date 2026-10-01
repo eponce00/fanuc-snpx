@@ -1,0 +1,38 @@
+<H2><A NAME="7">Current Position Information</A></H2>
+<PRE><A HREF="#TOP">[TOP]</A><P>
+
+CURRENT ROBOT POSITION::
+Group #:  1
+ 
+CURRENT JOINT POSITION:
+Joint   1:      2.53
+Joint   2:      1.64
+Joint   3:    -39.49
+Joint   4:     14.69
+Joint   5:    -52.06
+Joint   6:   -147.29
+
+
+Frame #:  4  Tool #:  9
+CURRENT USER FRAME POSITION:
+CFG: N U T, 0, 0, 0
+X:      4.45
+Y:   -342.21
+Z:   -587.52
+W:   -171.77
+P:     -8.14
+R:    -46.13
+
+
+Tool #:  9
+CURRENT WORLD POSITION:
+CFG: N U T, 0, 0, 0
+X:    302.42
+Y:    -58.78
+Z:   -209.32
+W:   -171.77
+P:     -8.14
+R:   -136.13
+
+
+</PRE>

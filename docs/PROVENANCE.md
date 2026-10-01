@@ -25,4 +25,4 @@ slsdetectorgroup/pickingtools, JuniorNatalin/VASC, Apllepie/draw_portret and ric
 facts only; nothing copied). The test fixtures in `tests/fixtures/` were written for this project with
 invented values in the same layout.
 
-Vendor manuals the user supplied are kept locally in `vendor-docs/`, which is git-ignored.
+Vendor manuals and notes the owner supplied, text extracts of the manuals above, the MIT wire captures and the public controller-file samples are in `vendor-docs/` (committed on the owner's decision; private; not packaged; see `vendor-docs/README.md`). Remove that folder from the history before any public release.

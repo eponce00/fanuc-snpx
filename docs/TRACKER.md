@@ -12,6 +12,7 @@ Last updated: 2026-10-01 (end of PC-only work; robot not contacted yet).
 | 0 Research, protocol hypothesis | ✅ | docs/PROTOCOL.md, docs/research/PUBLIC_SOURCES.md |
 | 1 PC-only core | ✅ | PR #1 merged. 180+ tests, ruff, mypy --strict, CI on Linux/Windows/macOS × 3.10/3.13 |
 | 2 prep (PC) | ✅ | `fanuc-snpx survey`, GE status hints, handoff docs |
+| Reference docs in repo | ✅ | `vendor-docs/` (manuals, owner's notes, text extracts, MIT captures, public file samples; index in `vendor-docs/README.md`) and `docs/research/` (research notes). Private; remove `vendor-docs/` from history before any public release |
 | Oracle parsers (PC) | ✅ | `parsers.py`: numreg, posreg, sysframe, system.va (`$SNPX_*`), curpos/summary, errall, iostate; `fanuc-snpx parse`. Learned from public V7.70-V9.40 files; re-check against the robot's files |
 | 2 Robot read-only: handshake, info, small reads, ASG map | ⬜ ❓ | waiting for the owner to say "connected" → GATE 1 |
 | 3 Robot read-only: every data type vs FTP oracle | ⬜ | → GATE 2 |

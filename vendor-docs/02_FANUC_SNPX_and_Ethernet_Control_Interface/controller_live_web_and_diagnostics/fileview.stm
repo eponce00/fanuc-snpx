@@ -1,0 +1,43 @@
+<html>
+<head>
+<meta charset='iso-8859-1' />
+<title>TreeView/File</title>
+<script type="text/javascript">
+function view_onclick() {
+  var filename = frmTreeView.document.tview.CursorFullText;
+  filename = filename.toUpperCase();
+  if (filename.indexOf('CONS:') >= 0) {
+    filename = filename.replace('CONS:', 'MD:');
+    filename = filename.replace('.LS', '.DG');
+  }
+  if (filename.indexOf('.') >= 0) {
+    // Must have extension
+    frmFileView.document.location.href = filename;
+  }
+  else {
+    frmFileView.document.location.href = '/frs/filenone.htm';
+  }
+}
+</script>
+<style>
+iframe {
+  float: left;
+}
+.tpbutton {
+  background-color: blue;
+  color: white;
+  width: 80px;
+  height: 40px;
+  font-size: 14px;
+}
+</style>
+</head>
+<body bgcolor= #FFF9e3>
+<center>
+<a href="../" target="_parent"><img border="0" src="/frs/comhome.png" alt="Robot Home Page"></a>&nbsp;&nbsp;&nbsp;
+<button type="button" class="tpbutton" onClick="return view_onclick()">DISPLAY</button> 
+</center>
+<iframe id="frmTreeView" name="frmTreeView" src="filetree.stm" width="50%" height="90%" frameborder="1"></iframe>
+<iframe id="frmFileView" name="frmTreeFile" src="filenone.htm" width="49%" height="90%" frameborder="1"></iframe>
+</body>
+</html>

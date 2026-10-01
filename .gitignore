@@ -12,12 +12,11 @@ dist/
 .coverage
 htmlcov/
 
-# Never commit robot-specific or vendor material
+# Never commit robot dumps, evidence or policy files (vendor-docs/ IS committed: private reference)
 evidence/
 robot-policy.local.json
 *.local.json
 *.local.*
-vendor-docs/
 controller-dumps/
 dumps/
 *.va
@@ -31,3 +30,6 @@ dumps/
 .idea/
 Thumbs.db
 .DS_Store
+
+# The reference folder is committed even though it contains controller-format samples
+!vendor-docs/**

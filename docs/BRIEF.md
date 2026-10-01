@@ -223,5 +223,5 @@ the robot" without a log entry showing the FTP-oracle comparison.
 |---|---|
 | Repo | `eponce00/fanuc-snpx`, private (created 2026-10-01) |
 | License | Apache-2.0 |
-| Manuals | No R553 manual. The user supplied `Enclosure_Robot_and_Fanuc_Documentation.zip` (on their Desktop, 349 MB, mostly their own cell's documents). The SNPX-relevant subset is extracted to the git-ignored `vendor-docs/` folder. "You can always find more stuff online." The best public SNPX reference found is FANUC B-82604EN/01 chapter 6 (see PROVENANCE.md). |
+| Manuals | No R553 manual. The user supplied `Enclosure_Robot_and_Fanuc_Documentation.zip` (on their Desktop, 349 MB, mostly their own cell's documents). The SNPX-relevant subset is in `vendor-docs/` (first kept local; committed on the owner's request later on 2026-10-01, see `vendor-docs/README.md`). "You can always find more stuff online." The best public SNPX reference found is FANUC B-82604EN/01 chapter 6 (see PROVENANCE.md). |
 | Robot | Not yet. PC-only until the user says "connected". A different agent may take over at that point: start from `CLAUDE.md` and `docs/TRACKER.md`. |

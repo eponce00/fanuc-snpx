@@ -1,0 +1,28 @@
+file	source_url	license	controller	notes
+numreg.va__pickingtools-v940.txt	https://github.com/slsdetectorgroup/pickingtools/blob/HEAD/Old_resources/controller_backup/PicknPlace/numreg.va	no license	V9.40P/60 R-30iB Plus (SR-6iA)	real controller, CRLF, full file
+numreg.va__vasc-v820.txt	https://github.com/JuniorNatalin/VASC/blob/HEAD/BVTU/Backups/07.10.24/kjbvtu411400r01/NUMREG.VA	no license	V8.20P/A2 R-30iB (R-2000iB/185L)	real controller, CRLF, first 200 lines
+numreg.va__mfidemo.txt	https://github.com/ricardocastr0/MFI_DEMO/blob/HEAD/NUMREG.VA	no license	unknown	first 80 lines; has negative/real values
+numreg.va__gofanuc-http.txt	https://github.com/onerobotics/go-fanuc/blob/HEAD/testdata/md/numreg.va	MIT	unknown	HTTP (/md/) variant with HTML wrapper, LF-normalised by git
+posreg.va__vasc-v820.txt	https://github.com/JuniorNatalin/VASC/blob/HEAD/BVTU/Backups/07.10.24/kjbvtu411400r01/POSREG.VA	no license	V8.20P/A2 R-30iB	4 groups, joint+cartesian+linear-axis groups, full file
+posreg.va__vasc7ax-v820.txt	https://github.com/JuniorNatalin/VASC/blob/HEAD/KJLTVX/Backups/24.06.2024/LTVR/kjltvr411670r01/POSREG.VA	no license	V8.20P/A2 R-30iB	EXT1 extended axis with ******** values, first 60 lines
+posreg.va__pickingtools-v940.txt	https://github.com/slsdetectorgroup/pickingtools/blob/HEAD/Old_resources/controller_backup/PicknPlace/posreg.va	no license	V9.40P/60 R-30iB Plus	SCARA config 'R, 0, 0, 0', first 160 lines
+posreg.va__gofanuc-http.txt	https://github.com/onerobotics/go-fanuc/blob/HEAD/testdata/md/posreg.va	MIT	unknown	HTTP variant, HTML wrapper
+posreg.va__mfidemo.txt	https://github.com/ricardocastr0/MFI_DEMO/blob/HEAD/POSREG.VA	no license	unknown	'.364'-style values, first 40 lines
+sysframe.va__pickingtools-v940.txt	https://github.com/slsdetectorgroup/pickingtools/blob/HEAD/Old_resources/controller_backup/Other%20stuff/sysframe.va	no license	V9.40P/60	full file
+sysframe.va__vasc-v820.txt	https://github.com/JuniorNatalin/VASC/blob/HEAD/BVTU/Backups/07.10.24/kjbvtu411400r01/SYSFRAME.VA	no license	V8.20P/A2	4 groups, first 200 lines
+strreg.va__pickingtools-v940.txt	https://github.com/slsdetectorgroup/pickingtools/blob/HEAD/Old_resources/controller_backup/Other%20stuff/strreg.va	no license	V9.40P/60	ONLY known public strreg.va; all registers empty
+syssnpx-from-system.va__pickingtools-v940.txt	https://github.com/slsdetectorgroup/pickingtools/blob/HEAD/Old_resources/controller_backup/Other%20stuff/system.va	no license	V9.40P/60	$SNPX_ASG/$SNPX_PARAM section cut from system.va (lines 46600-46938)
+syssnpx-from-system.va__vasc-v820.txt	https://github.com/JuniorNatalin/VASC/blob/HEAD/BVTU/Backups/07.10.24/kjbvtu411400r01/SYSTEM.VA	no license	V8.20P/A2	section cut from SYSTEM.VA (line 99503+); no CMD_ENDIAN fields
+system.va-head__pickingtools-v940.txt	(same as pickingtools system.va)	no license	V9.40P/60	first 120 lines, shows generic nested-struct grammar
+curpos.dg__pickingtools-v940.txt	https://github.com/slsdetectorgroup/pickingtools/blob/HEAD/Old_resources/controller_backup/Other%20stuff/curpos.dg	no license	V9.40P/60	4-axis SCARA, LF line endings
+curpos-section-in-summary.dg__karelcal-v770.txt	https://github.com/KonstantynBely/karelCalibration/blob/HEAD/TCPCalibrator/SavePoints/2025_07_19/Robot_1/SUMMARY.DG	MIT	V7.70P/36 R-30iA (ROBOGUIDE, LR Mate 200iC)	section 7 of summary.dg (same layout as curpos.dg body)
+curpos-section-in-summary.dg__drawportret-v830.txt	https://github.com/Apllepie/draw_portret/blob/HEAD/Assets/setup/SavePoints/2025_09_23/Robot_1/SUMMARY.DG	no license	V8.30P/48 (ROBOGUIDE, LR Mate 200iD)	section 7 of summary.dg
+errall.ls__pickingtools-v940.txt	https://github.com/slsdetectorgroup/pickingtools/blob/HEAD/Old_resources/controller_backup/Other%20stuff/errall.ls	no license	V9.40P/60	CRLF, full file
+errall.ls__vasc-v820.txt	https://github.com/JuniorNatalin/VASC/blob/HEAD/BVTU/Backups/07.10.24/kjbvtu411400r01/ERRALL.LS	no license	V8.20P/A2	CRLF, full file
+errall.ls__karelcal-v770.txt	https://github.com/KonstantynBely/karelCalibration/blob/HEAD/TCPCalibrator/SavePoints/2025_07_19/Robot_1/ERRALL.LS	MIT	V7.70P/36 (ROBOGUIDE)	timestamps WITHOUT seconds; DATA detail in cause field
+errall.ls__gofanuc-http.txt	https://github.com/onerobotics/go-fanuc/blob/HEAD/testdata/md/errall.ls	MIT	unknown	HTTP variant (<HTML>..<XMP>)
+iostate.dg__pickingtools-v940.txt	https://github.com/slsdetectorgroup/pickingtools/blob/HEAD/Old_resources/controller_backup/Other%20stuff/iostate.dg	no license	V9.40P/60	first 120 lines
+iostate.dg__gofanuc-http.txt	https://github.com/onerobotics/go-fanuc/blob/HEAD/testdata/md/iostate.dg	MIT	unknown	has AIN/AOUT/GIN/GOUT lines
+version.dg__pickingtools-v940.txt	https://github.com/slsdetectorgroup/pickingtools/blob/HEAD/Old_resources/controller_backup/Other%20stuff/version.dg	no license	V9.40P/60	first 200 lines
+version.dg__vasc-v820.txt	https://github.com/JuniorNatalin/VASC/blob/HEAD/BVTU/Backups/07.10.24/kjbvtu411400r01/VERSION.DG	no license	V8.20P/A2	first 200 lines
+summary.dg__pickingtools-v940.txt	https://github.com/slsdetectorgroup/pickingtools/blob/HEAD/Old_resources/controller_backup/Other%20stuff/summary.dg	no license	V9.40P/60	first 200 lines (HTML-ish sections)

@@ -24,8 +24,7 @@ Repository: `eponce00/fanuc-snpx` (private, Apache-2.0).
    protocol. Never decompile or patch vendor binaries.
 6. Generic library: no cell-specific register numbers, names or layouts in code, tests or examples. The test
    robot's identity may appear in docs/VALIDATION_LOG.md, docs/ASG_MAP.md and docs/TRACKER.md only.
-7. Never commit: `vendor-docs/` (FANUC/GE manuals and the owner's cell documents), `evidence/`,
-   `controller-dumps/`, `*.local.json` (policy files), controller files (`*.va`, `*.dg`, `*.ls`, ...).
+7. Never commit: `evidence/`, `controller-dumps/`, `*.local.json` (policy files), controller files (`*.va`, `*.dg`, `*.ls`, ...).
    `.gitignore` covers these; check `git status` before every commit.
 8. Never claim "verified on the robot" without a docs/VALIDATION_LOG.md entry with raw bytes and the FTP
    oracle value. When the robot disagrees with a doc, the robot wins: update docs/PROTOCOL.md.
@@ -46,11 +45,12 @@ Repository: `eponce00/fanuc-snpx` (private, Apache-2.0).
   `.venv\Scripts\python.exe -m ruff check src tests`, `.venv\Scripts\python.exe -m mypy`,
   `.venv\Scripts\python.exe -m pytest`.
 - `gh` is logged in as `eponce00` (active).
-- Local, git-ignored reference material: `vendor-docs/` (SNPX-related PDFs and markdown extracted from the
-  owner's zip `E:\ErnestoProfile\Desktop\Enclosure_Robot_and_Fanuc_Documentation.zip`) and
-  `vendor-docs/research/` (text extracts: FANUC B-82604EN CIMPLICITY manual = best public SNPX reference,
-  GE GFK-0582D, Kepware GE Ethernet manual). If missing, re-extract from the zip or see
-  docs/research/PUBLIC_SOURCES.md for URLs.
+- Reference material is committed in `vendor-docs/` (private; not packaged). Start with
+  `vendor-docs/README.md`. It holds the SNPX-related PDFs and notes from the owner's zip
+  (`E:\ErnestoProfile\Desktop\Enclosure_Robot_and_Fanuc_Documentation.zip`), text extracts in
+  `vendor-docs/research/` (FANUC B-82604EN CIMPLICITY manual chapter 6 = best SNPX reference; GE
+  GFK-0582D; Kepware), the MIT wire captures, and public controller-file samples. Research notes:
+  `docs/research/`. Do not copy unlicensed samples into `tests/`; write invented-value fixtures.
 - Reference implementations (re-clone if needed, read only):
   `https://github.com/valstad-shipworks/fanuc_ucl` (Apache-2.0, `src/hmi/`),
   `https://github.com/Booozie-Z/Fanuc_GESRTP_Driver` (MIT, `docs/srtp packets.txt` = wire captures).

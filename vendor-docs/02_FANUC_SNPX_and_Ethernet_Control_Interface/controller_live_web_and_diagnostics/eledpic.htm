@@ -1,0 +1,35 @@
+<html>
+<head>
+<script id=clientEventHandlersJS language=javascript>
+<!--
+function HourGlassOff() {
+   window.location.href = "/softpart/tptx?hourglass=0";
+}
+function HourGlassOn() {
+   window.parent.parent.parent.parent.cghide.window.location.href = "/softpart/tptx?hourglass=1";
+}
+//-->
+</script>
+</head>
+<body LANGUAGE=javascript onload="return HourGlassOff()" onunload="return HourGlassOn()">
+<table>
+  <tr>
+    <td>
+      <center><img name="img1" id="img1" border="0" src="/frs/lednone.gif"></center>
+    </td>
+    <td>
+      <center><img name="img2" id="img2" border="0" src="/frs/lednone.gif"></center>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <center><b>Module Status</b></center>
+    </td>
+    <td width>
+      <center><b>Network Status</b></center>
+    </td>
+  </tr>
+</table>
+</body>
+</html>
+
