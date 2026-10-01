@@ -1,0 +1,17 @@
+fanuc-snpx
+Copyright 2026 fanuc-snpx contributors
+
+This product is an independent, clean implementation of the GE SRTP / FANUC SNPX
+protocol. No vendor binaries were decompiled, patched or redistributed.
+
+Protocol knowledge was learned from these public sources (see docs/PROVENANCE.md):
+
+- valstad-shipworks/fanuc_ucl, Apache License 2.0
+  (frame layout, SNPX assignment usage, position data layout)
+- Booozie-Z/Fanuc_GESRTP_Driver, MIT License
+  (wire captures of a commercial driver talking to a FANUC controller)
+- Palatis/packet-ge-srtp, BSD 3-Clause License (Wireshark dissector field names)
+
+No source code was copied from these projects. FANUC, GE and other names are
+trademarks of their respective owners and are used only to identify compatible
+equipment.

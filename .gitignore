@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+htmlcov/
+
+# Never commit robot-specific or vendor material
+evidence/
+robot-policy.local.json
+*.local.json
+*.local.*
+vendor-docs/
+controller-dumps/
+dumps/
+*.va
+*.dg
+*.ls
+*.sv
+*.io
+
+# Editors / OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
