@@ -1,5 +1,7 @@
 # Plan
 
+Live status, checklists and open questions are in [TRACKER.md](TRACKER.md); this page is the overview.
+
 Goal: a generic, open, pure-Python SNPX client (a free substitute for the SNPX part of commercial .NET
 libraries) that is read-only by default and validated against the controller's own files.
 
