@@ -6,12 +6,13 @@ as stored by the controller. Reals are float32 values widened to Python floats.
 
 from __future__ import annotations
 
+import re
 import struct
 from dataclasses import dataclass
 from enum import Enum
 
 from .errors import RepresentationError
-from .memory import encode_float32, encode_int32
+from .memory import decode_string, encode_float32, encode_int32
 
 # --- positions ----------------------------------------------------------------
 
@@ -233,6 +234,148 @@ def encode_joints(j: Joints, *, multiply: float = 0.0) -> bytes:
         out += _real_bytes(v, multiply)
     out += struct.pack("<h", 1)
     return bytes(out)
+
+
+# --- alarms and program status (read only) ----------------------------------------
+
+ALARM_WORDS = 100
+PROGRAM_WORDS = 18
+
+ALARM_SEVERITY_NAMES: dict[int, str] = {
+    128: "NONE",
+    0: "WARN",
+    2: "PAUSE.L",
+    34: "PAUSE.G",
+    6: "STOP.L",
+    38: "STOP.G",
+    54: "SERVO",
+    11: "ABORT.L",
+    43: "ABORT.G",  # fanuc_ucl
+    45: "ABORT.G",  # FANUC B-82604EN table; sources disagree, the text field is authoritative
+    58: "SERVO2",
+    122: "SYSTEM",  # FANUC B-82604EN table
+    123: "SYSTEM",  # fanuc_ucl
+}
+
+
+def _str_field(data: bytes, first_word: int, word: int, n_words: int) -> str | None:
+    """Decode a string field at 1-based ``word`` (length ``n_words``) if it lies in the slice."""
+    lo = 2 * (word - first_word)
+    hi = lo + 2 * n_words
+    if word < first_word or hi > len(data):
+        return None
+    return decode_string(data[lo:hi])
+
+
+def _i16_field(data: bytes, first_word: int, word: int) -> int | None:
+    off = 2 * (word - first_word)
+    if word < first_word or off + 2 > len(data):
+        return None
+    return int(struct.unpack_from("<h", data, off)[0])
+
+
+@dataclass(frozen=True)
+class Alarm:
+    """One line of an alarm screen, via ``ALM[n]`` (active), ``ALM[En]`` (history) or
+    ``ALM[Pn]`` (password log). Fields outside an ``@`` slice are ``None``.
+
+    Layout (FANUC B-82604EN/01 §6.5, 100 words): 1 alarm ID, 2 number, 3 cause ID,
+    4 cause number, 5 severity, 6-11 year/month/day/hour/minute/second, 12-51 message,
+    52-91 cause message, 92-100 severity text.
+    """
+
+    alarm_id: int | None
+    number: int | None
+    cause_id: int | None
+    cause_number: int | None
+    severity: int | None
+    time: tuple[int, int, int, int, int, int] | None
+    message: str | None
+    cause_message: str | None
+    severity_text: str | None
+    raw: bytes
+
+    @property
+    def is_empty(self) -> bool:
+        return not any(self.raw)
+
+    @property
+    def is_reset(self) -> bool:
+        """A RESET line: ID and number 0 with a message."""
+        return self.alarm_id == 0 and self.number == 0 and bool(self.message)
+
+    @property
+    def code(self) -> str | None:
+        """``"SRVO-001"`` taken from the start of the message, if present."""
+        m = re.match(r"^([A-Z0-9]+-\d+)", self.message or "")
+        return m[1] if m else None
+
+    @property
+    def severity_name(self) -> str | None:
+        if self.severity_text:
+            return self.severity_text.strip()
+        return ALARM_SEVERITY_NAMES.get(self.severity) if self.severity is not None else None
+
+
+def decode_alarm(data: bytes, *, first_word: int = 1) -> Alarm:
+    """Decode a (possibly sliced) 100-word alarm element."""
+    f = first_word
+    fields = [_i16_field(data, f, w) for w in range(6, 12)]
+    time: tuple[int, int, int, int, int, int] | None = None
+    if all(x is not None for x in fields):
+        year, month, day, hour, minute, second = (int(x or 0) for x in fields)
+        time = (year, month, day, hour, minute, second)
+    return Alarm(
+        alarm_id=_i16_field(data, f, 1),
+        number=_i16_field(data, f, 2),
+        cause_id=_i16_field(data, f, 3),
+        cause_number=_i16_field(data, f, 4),
+        severity=_i16_field(data, f, 5),
+        time=time,
+        message=_str_field(data, f, 12, 40),
+        cause_message=_str_field(data, f, 52, 40),
+        severity_text=_str_field(data, f, 92, 9),
+        raw=bytes(data),
+    )
+
+
+class ProgramState(Enum):
+    ENDED = 0
+    PAUSED = 1
+    RUNNING = 2
+
+
+@dataclass(frozen=True)
+class ProgramStatus:
+    """Execution status of one task via ``PRG[n]`` (FANUC B-82604EN/01 §6.6, 18 words).
+
+    1-8 program name, 9 line, 10 state (0 end, 1 pause, 2 running), 11-18 the program
+    started first (the caller). All zero when no program runs.
+    """
+
+    name: str | None
+    line: int | None
+    state_code: int | None
+    caller: str | None
+    raw: bytes
+
+    @property
+    def state(self) -> ProgramState | None:
+        try:
+            return ProgramState(self.state_code) if self.state_code is not None else None
+        except ValueError:
+            return None
+
+
+def decode_program(data: bytes, *, first_word: int = 1) -> ProgramStatus:
+    f = first_word
+    return ProgramStatus(
+        name=_str_field(data, f, 1, 8),
+        line=_i16_field(data, f, 9),
+        state_code=_i16_field(data, f, 10),
+        caller=_str_field(data, f, 11, 8),
+        raw=bytes(data),
+    )
 
 
 # --- I/O families -------------------------------------------------------------------

@@ -188,6 +188,15 @@ Notes:
 - SNPX never says which representation a PR *stores*; `Position.is_cartesian` is only definite when exactly
   one view is valid.
 
+### Alarm screens and program status (read only)
+
+- `ALM[n]` = line n of the active-alarm screen, `ALM[En]` = alarm history, `ALM[Pn]` = password log; 100 words:
+  1 ID, 2 number, 3 cause ID, 4 cause number, 5 severity, 6-11 Y/M/D/h/m/s, 12-51 message (80 chars),
+  52-91 cause message, 92-100 severity text (18 chars). RESET lines have ID/number 0. Writes are ignored.
+- Severity codes: CIMP lists ABORT.G = 45 and SYSTEM = 122; UCL uses 43 and 123. The client trusts the text field.
+- `PRG[n]` = task n, 18 words: 1-8 program name, 9 line, 10 state (0 end, 1 pause, 2 running), 11-18 the first
+  program (caller). All zero when nothing runs. (ref; to verify)
+
 ### %G commands
 
 Written as ASCII to %G (selector `38`, index 0, count = byte length):

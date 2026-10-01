@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "assignments": [
+    { "address": 10001, "size": 40, "var_name": "R[1]", "multiply": 0, "slot": 2 },
+    { "address": 10041, "size": 500, "var_name": "PR[1]", "multiply": 0, "slot": 3 },
+    { "address": 10541, "size": 450, "var_name": "$MNUFRAME[1,1]", "multiply": 0, "slot": 4, "sysvar_type": "POSITION" },
+    { "address": 10991, "size": 450, "var_name": "$MNUTOOL[1,1]", "multiply": 0, "slot": 5, "sysvar_type": "POSITION" },
+    { "address": 11441, "size": 50, "var_name": "POS[G1:0]", "multiply": 0, "slot": 6 },
+    { "address": 11491, "size": 800, "var_name": "R[C1]", "multiply": 1, "slot": 7 }
+  ]
+}

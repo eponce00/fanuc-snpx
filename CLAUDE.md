@@ -41,8 +41,8 @@ Repository: `eponce00/fanuc-snpx` (private, Apache-2.0).
 - Windows 11, PowerShell. Repo: `E:\ErnestoProfile\Documents\GitHub\fanuc-snpx`. LF line endings.
 - Dev venv: `.venv` (Python 3.13): `.venv\Scripts\python.exe -m pip install -e ".[dev]"`.
 - Checks (all must pass before a PR):
-  `.venv\Scripts\python.exe -m ruff format --check src tests`,
-  `.venv\Scripts\python.exe -m ruff check src tests`, `.venv\Scripts\python.exe -m mypy`,
+  `.venv\Scripts\python.exe -m ruff format --check src tests examples`,
+  `.venv\Scripts\python.exe -m ruff check src tests examples`, `.venv\Scripts\python.exe -m mypy`,
   `.venv\Scripts\python.exe -m pytest`.
 - `gh` is logged in as `eponce00` (active).
 - Reference material is committed in `vendor-docs/` (private; not packaged). Start with
@@ -59,6 +59,6 @@ Repository: `eponce00/fanuc-snpx` (private, Apache-2.0).
 
 `srtp.py` frames + session (one request at a time, close on any error) · `memory.py` segments, the single
 `srtp_index()` conversion, packing · `assignments.py` `$SNPX_ASG` model, lookup, planner, session manager ·
-`client.py` typed API and guarded writes · `types.py` Position etc. · `policy.py` access policy ·
+`client.py` typed API and guarded writes (registers, PRs, sysvars, frames, current pose, I/O, comments, alarms, programs) · `types.py` Position etc. · `policy.py` access policy ·
 `oracle.py` read-only FTP · `parsers.py` controller files (numreg/posreg/sysframe/system.va/curpos/errall/iostate; `fanuc-snpx parse`) · `survey.py` Phase 2 read-only survey (also writes `asg_map.md`) · `compare.py` SRTP-vs-file comparison (`fanuc-snpx compare`) · `fanuc-snpx plan-asg` offline assignment layout · `status.py` GE error-code hints ·
-`testing.py` FakeSrtpServer/FakeController · `cli.py` `fanuc-snpx` command.
+`testing.py` FakeSrtpServer/FakeController · `cli.py` `fanuc-snpx` command · `examples/` adapter + demo · releases: docs/RELEASING.md, CHANGELOG.md.

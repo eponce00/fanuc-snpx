@@ -1,0 +1,8 @@
+# Source distributions carry the library, tests and docs only. vendor-docs/ is private
+# reference material and must never be packaged.
+prune vendor-docs
+prune evidence
+prune controller-dumps
+graft examples
+graft docs
+graft tests

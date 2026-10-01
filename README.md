@@ -13,7 +13,8 @@ macOS, and is **read-only by default**.
 
 - Numeric, position and string registers; comments; system variables (int, real, string, position);
   user frames/tools; current position (Cartesian and joints from one read); robot I/O (DI/DO, RI/RO,
-  UI/UO, SI/SO, WI/WO, WSI/WSO, GI/GO, AI/AO); controller short status.
+  UI/UO, SI/SO, WI/WO, WSI/WSO, GI/GO, AI/AO); alarm screens and history; program status;
+  controller short status.
 - Reads are resolved through the controller's `$SNPX_ASG` assignment table, so the client works with an
   existing table (read-only) or with session-scoped assignments it creates (a controller change, gated by
   your policy).
@@ -76,6 +77,11 @@ fanuc-snpx ftp-get 192.0.2.10 numreg.va posreg.va --dest controller-dumps
 fanuc-snpx write-reg 192.0.2.10 R 195 1.5 --map asg.json --policy robot-policy.local.json --reason "..."
 ```
 
+## Examples
+
+[examples/](examples/) has an application adapter (named operations, a `write_guard` that vetoes large
+frame changes) and a demo that runs it against the fake controller: `python examples/demo_fake.py`.
+
 ## Testing your own code
 
 `fanuc_snpx.testing.FakeSrtpServer` is a local fake controller with a scriptable memory image, a model
@@ -83,7 +89,7 @@ of `$SNPX_ASG`, and fault injection (error replies, timeouts, split and stale re
 
 ## Documentation
 
-[TRACKER](docs/TRACKER.md) · [BRIEF](docs/BRIEF.md) · [ASSIGNMENT_OPTIONS](docs/ASSIGNMENT_OPTIONS.md) · [PROTOCOL](docs/PROTOCOL.md) · [ARCHITECTURE](docs/ARCHITECTURE.md) · [SAFETY](docs/SAFETY.md) ·
+[TRACKER](docs/TRACKER.md) · [BRIEF](docs/BRIEF.md) · [CHANGELOG](CHANGELOG.md) · [RELEASING](docs/RELEASING.md) · [ASSIGNMENT_OPTIONS](docs/ASSIGNMENT_OPTIONS.md) · [PROTOCOL](docs/PROTOCOL.md) · [ARCHITECTURE](docs/ARCHITECTURE.md) · [SAFETY](docs/SAFETY.md) ·
 [POLICY](docs/POLICY.md) · [RUNBOOK](docs/RUNBOOK.md) · [PLAN](docs/PLAN.md) ·
 [PROVENANCE](docs/PROVENANCE.md) · [VALIDATION_LOG](docs/VALIDATION_LOG.md) · [ASG_MAP](docs/ASG_MAP.md)
 
