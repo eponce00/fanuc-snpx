@@ -15,4 +15,14 @@ below; the implementation is written from the protocol facts they document. Fact
 | Other public SRTP clients surveyed (TheMadHatt3r/ge-ethernet-SRTP MIT, hoilung/go-gesrtp MIT, kkuba91/uGESRTP MIT, praetorian-inc/nerva Apache-2.0) | as listed | Cross-checks of the init packet, status bytes, selectors |
 | Palatis/Fanuc.RobotInterface, BiasedControls/snpx-client | no license file | **Not used for code.** Mentioned only where they agree with licensed sources |
 
+## Controller file formats (for `parsers.py`)
+
+Layouts of `numreg.va`, `posreg.va`, `sysframe.va`, `system.va` (`Field:` lines, `$SNPX_*`),
+`curpos.dg`, `summary.dg`, `errall.ls` and `iostate.dg` were learned from public files of real and
+ROBOGUIDE controllers (V7.70 to V9.40): onerobotics/go-fanuc `testdata/md` (MIT),
+KonstantynBely/karelCalibration (MIT), and controller backups published without a license in
+slsdetectorgroup/pickingtools, JuniorNatalin/VASC, Apllepie/draw_portret and ricardocastr0/MFI_DEMO (format
+facts only; nothing copied). The test fixtures in `tests/fixtures/` were written for this project with
+invented values in the same layout.
+
 Vendor manuals the user supplied are kept locally in `vendor-docs/`, which is git-ignored.

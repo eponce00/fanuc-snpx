@@ -139,6 +139,14 @@ unless noted):
 
 - 80 slots; each has `$ADDRESS` (1..16384), `$SIZE` (1..16384 words), `$VAR_NAME` (no blanks; STRING[37]
   per field reports), `$MULTIPLY` (0, or 0.0001..10000).
+- **Where to read them:** `$SNPX_ASG` and `$SNPX_PARAM` are in the controller's `system.va` (there is no
+  `syssnpx.va`). Field types seen in public V8.20/V9.30/V9.40 files: `$ADDRESS` SHORT, `$SIZE` SHORT,
+  `$VAR_NAME` STRING[37], `$MULTIPLY` REAL. `$SNPX_PARAM` on V9.40: `$TIMEOUT`, `$SNP_ID`, `$NUM_ASG` (80),
+  **`$NUM_CIMP` (0)**, `$NUM_FRIF` (4), `$VERSION` (RO, 2), `$STATUS`, `$DISP_INFO`, `$MODBUS_ADR`,
+  `$NUM_MODBUS`, `$MODBUS_PORT`, `$CMD_ENDIAN`, `$COMP_FLAG`; V8.20 lacks the last two. With the factory
+  `$NUM_CIMP = 0`, multi-connection is off, so on such a controller `CLRASG` erases the shared table.
+  `$NUM_FRIF` is most likely the connection count of the FANUC Robot Interface (port 60008). (ref, public
+  files; **to verify on the test robot**: `fanuc-snpx survey` writes `asg_map.md` from its `system.va`.)
 - Factory default slot 1: `1 / 10000 / R[1]@1.1 / 1`, i.e. %R1..%R10000 are R[1..10000] as 16-bit
   integers. The user's notes report exactly this on the test robot, with slots 2..80 empty (source of that
   capture not recorded; **to verify** with the controller's own file in Phase 2).
@@ -200,7 +208,7 @@ wipe the shared table, which is why this client never does it implicitly.
 1. Does 18245 need the `4F` session control? Does privilege (byte 51) matter for reads?
 2. Largest read the controller answers in one `94` reply (try 64, 256, 1024, 2048, 4096 bytes).
 3. Bytes 42-43 on a genuine read error (e.g. read beyond %R16384).
-4. Contents of `$SNPX_PARAM` (`$VERSION`, `$NUM_CIMP` or equivalent) and `$SNPX_ASG` from the
-   controller's own files over FTP, to decide whether `CLRASG` is safe.
+4. Contents of `$SNPX_PARAM` (`$VERSION`, `$NUM_CIMP`) and `$SNPX_ASG` from the controller's own
+   `system.va` over FTP, to decide whether `CLRASG` is safe (expected: `$NUM_CIMP = 0` → not safe).
 5. Services `00`, `43`, `03`, `38`: raw replies.
 6. %R1..%R10 (factory int16 view) against `numreg.va`.

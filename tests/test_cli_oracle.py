@@ -85,3 +85,16 @@ def test_ftp_oracle_refuses_modifying_commands(cmd: str) -> None:
     ftp = ReadOnlyFtp()
     with pytest.raises(PermissionError, match="not allowed"):
         ftp.putcmd(cmd)
+
+
+def test_parse_command(capsys: pytest.CaptureFixture[str], tmp_path: Path) -> None:
+    fix = Path(__file__).parent / "fixtures"
+    target = tmp_path / "system.va"
+    target.write_bytes((fix / "system_va.txt").read_bytes())
+    out = run(capsys, "parse", str(target))
+    assert isinstance(out, dict)
+    assert out["multiplexed"] is False
+    assert out["snpx"]["params"]["$NUM_CIMP"] == 0
+    reg = run(capsys, "parse", str(fix / "numreg_va.txt"), "--kind", "numreg")
+    assert isinstance(reg, dict)
+    assert reg["3"]["value"] == 12.5

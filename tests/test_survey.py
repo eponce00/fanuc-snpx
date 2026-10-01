@@ -14,7 +14,12 @@ from helpers import fast_limiter
 
 class FakeFiles:
     def __init__(self, host: str) -> None:
-        self.files = {"numreg.va": b"[*NUMREG*]$NUMREG\n", "posreg.va": b"[*POSREG*]$POSREG\n"}
+        fix = Path(__file__).parent / "fixtures"
+        self.files = {
+            "numreg.va": (fix / "numreg_va.txt").read_bytes(),
+            "posreg.va": (fix / "posreg_va.txt").read_bytes(),
+            "system.va": (fix / "system_va.txt").read_bytes(),
+        }
         self.closed = False
 
     def list(self, path: str = "") -> list[str]:
@@ -57,8 +62,13 @@ def test_survey_is_read_only_and_reports(tmp_path: Path) -> None:
     assert steps["size_limit"].detail["largest_ok_bytes"] == 1024
     assert "SrtpServiceError" in steps["size_limit"].detail["2048B"]
     assert steps["latency_R1_30"].detail["samples"] == 20
-    assert steps["ftp_files"].detail["saved"] == ["numreg.va", "posreg.va"]
+    assert steps["ftp_files"].detail["saved"] == ["numreg.va", "posreg.va", "system.va"]
     assert len(steps["ftp_files"].detail["missing"]) == 7
+    assert steps["asg_map"].detail["multiplexed"] is False
+    assert steps["asg_map"].detail["NUM_CIMP"] == 0
+    assert (tmp_path / "asg_map.md").exists()
+    pairs = steps["oracle_R1_10"].detail["pairs(srtp_int16, numreg.va)"]
+    assert pairs[0] == (0, 7)  # the fake's %R image is empty; the file says R[1] = 7
     # Nothing but reads and information services went to the controller.
     assert all(f[31] == 0xC0 for f in frames)
     assert {f[42] for f in frames} <= {0x00, 0x03, 0x04, 0x38, 0x43, 0x4F}

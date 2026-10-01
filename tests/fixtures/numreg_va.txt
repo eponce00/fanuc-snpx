@@ -1,0 +1,14 @@
+[*NUMREG*]$NUMREG  Storage: SHADOW  Access: RW  : ARRAY[10] OF Numeric Reg
+  [1] = 7  'COUNT A'
+  [2] = -3  ''
+  [3] = 12.500000  'OFFSET Z'
+  [4] = -.250000  'SMALL'
+  [5] = 1234.567871  'Pad  '
+  [6] = 0  ''
+  [7] = Uninitialized  ''
+  [8] = 0  ''
+  [9] = 0  ''
+  [10] = 99999  'LAST'
+
+[*NUMREG*]$MAXREGNUM  Storage: CMOS  Access: RW  : INTEGER = 10
+
