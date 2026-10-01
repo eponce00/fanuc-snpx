@@ -1,0 +1,87 @@
+"""CLI against the fake server, and the read-only guarantees of the FTP oracle."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import pytest
+
+from fanuc_snpx.cli import main
+from fanuc_snpx.oracle import ReadOnlyFtp
+from fanuc_snpx.testing import FakeAssignment, FakeController, FakeSrtpServer
+
+
+@pytest.fixture
+def fake() -> FakeSrtpServer:
+    ctl = FakeController()
+    ctl.assign(1, FakeAssignment(1, 20, "R[1]", 0.0))
+    ctl.numeric_registers.update({1: 2.5, 2: 4})
+    ctl.bits[0x46][0] = 0b1
+    return FakeSrtpServer(ctl)
+
+
+def run(capsys: pytest.CaptureFixture[str], *argv: str) -> object:
+    assert main(list(argv)) == 0
+    return json.loads(capsys.readouterr().out)
+
+
+def test_probe(fake: FakeSrtpServer, capsys: pytest.CaptureFixture[str]) -> None:
+    with fake:
+        out = run(capsys, "probe", fake.host, "--port", str(fake.port), "--rate", "1000",
+                  "--controller-type")  # fmt: skip
+    assert isinstance(out, dict)
+    assert out["handshake"]["init_reply"].startswith("01 00")
+    assert out["short_status"]["privilege_level(unverified)"] == 4
+    assert "FAKE-SNPX" in out["controller_type"]["ascii"]
+
+
+def test_read_commands(
+    fake: FakeSrtpServer, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    amap = tmp_path / "map.json"
+    amap.write_text(
+        json.dumps({"version": 1, "assignments": [
+            {"address": 1, "size": 20, "var_name": "R[1]", "multiply": 0, "slot": 1}]}),
+        encoding="utf-8",
+    )  # fmt: skip
+    with fake:
+        base = [fake.host, "--port", str(fake.port), "--rate", "1000"]
+        assert run(capsys, "read-io", *base[:1], "DO", "1", "2", *base[1:]) == {
+            "DO[1]": True,
+            "DO[2]": False,
+        }
+        assert run(capsys, "read-reg", *base[:1], "R", "1", "2", *base[1:], "--map", str(amap)) == {
+            "R[1]": 2.5,
+            "R[2]": 4.0,
+        }
+        raw = run(capsys, "read-raw", *base[:1], "R", "1", "2", *base[1:])
+        assert raw == {"area": "%R", "address": 1, "words": [0, 0x4020]}
+
+
+def test_write_requires_policy_and_reason(fake: FakeSrtpServer) -> None:
+    with fake, pytest.raises(SystemExit):
+        main(["write-reg", fake.host, "--port", str(fake.port), "R", "1", "5"])
+
+
+def test_write_refused_by_policy(
+    fake: FakeSrtpServer, capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    policy = tmp_path / "robot-policy.local.json"
+    policy.write_text(json.dumps({"version": 1, "writable": {"digital_outputs": [[1, 4]]}}))
+    with fake:
+        args = ["write-io", fake.host, "--port", str(fake.port), "--rate", "1000",
+                "--policy", str(policy), "--reason", "cli test", "--yes"]  # fmt: skip
+        assert main([*args, "DO", "2", "1"]) == 0
+        assert json.loads(capsys.readouterr().out)["old"] == [False]
+        assert main([*args, "DO", "5", "1"]) == 2
+        assert "WriteNotAllowed" in capsys.readouterr().err
+    with fake.state() as ctl:
+        assert ctl.bits[0x46][0] == 0b11
+
+
+@pytest.mark.parametrize("cmd", ["STOR x", "DELE numreg.va", "RNFR a", "MKD d", "SITE x", "APPE y"])
+def test_ftp_oracle_refuses_modifying_commands(cmd: str) -> None:
+    ftp = ReadOnlyFtp()
+    with pytest.raises(PermissionError, match="not allowed"):
+        ftp.putcmd(cmd)
