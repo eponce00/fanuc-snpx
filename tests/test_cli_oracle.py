@@ -98,3 +98,19 @@ def test_parse_command(capsys: pytest.CaptureFixture[str], tmp_path: Path) -> No
     reg = run(capsys, "parse", str(fix / "numreg_va.txt"), "--kind", "numreg")
     assert isinstance(reg, dict)
     assert reg["3"]["value"] == 12.5
+
+
+def test_plan_asg(capsys: pytest.CaptureFixture[str], tmp_path: Path) -> None:
+    fix = Path(__file__).parent / "fixtures" / "system_va.txt"
+    out_map = tmp_path / "map.json"
+    rc = main(["plan-asg", "--existing", str(fix), "--item", "R[1] 20", "--item", "PR[1] 10",
+               "--item", "POS[G1:0]", "--out-map", str(out_map)])  # fmt: skip
+    assert rc == 0
+    text = capsys.readouterr().out
+    assert "| 5 | 10515 | 40 | R[1] | 0 | %R10515..%R10554 |" in text
+    assert "SETASG 10515 40 R[1] 0" in text
+    assert "F[1]" in text  # existing slot the package cannot decode is reported
+    data = json.loads(out_map.read_text(encoding="utf-8"))
+    assert [e["slot"] for e in data["assignments"]] == [1, 2, 5, 6, 7]
+    assert main(["plan-asg", "--item", "PR[1] 250", "--block", "10001-16384"]) == 2
+    assert "whole plan needs 12500 words" in capsys.readouterr().err

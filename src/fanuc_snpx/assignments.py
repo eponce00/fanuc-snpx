@@ -31,7 +31,7 @@ from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass, field, replace
 from enum import Enum
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Protocol
 
 from .errors import SnpxAssignmentError, WriteNotAllowed
 
@@ -509,6 +509,18 @@ def _array_distance(base: str, want: str) -> int | None:
 # --- creating assignments ----------------------------------------------------------
 
 
+class Span(Protocol):
+    """Anything occupying %R words: an :class:Assignment or a raw slot read from a file."""
+
+    @property
+    def address(self) -> int: ...
+
+    @property
+    def last_address(self) -> int: ...
+
+    def overlaps(self, address: int, words: int) -> bool: ...
+
+
 @dataclass(frozen=True)
 class AssignmentRequest:
     """What to map: ``count`` consecutive elements starting at ``var``."""
@@ -530,15 +542,39 @@ class AssignmentRequest:
         v = VarName.parse(var) if isinstance(var, str) else var
         return cls(v, count, multiply, sysvar_type)
 
+    @classmethod
+    def parse_spec(cls, spec: str) -> AssignmentRequest:
+        """Parse ``"PR[1] 300"``, ``"$MNUFRAME[1,1] 9 POSITION"``, ``"R[1] 200 mult=1"``.
+
+        Tokens after the variable: a count, a :class:`SysvarType` name, ``mult=<x>``.
+        """
+        tokens = spec.split()
+        if not tokens:
+            raise ValueError("empty assignment spec")
+        count, multiply, sysvar_type = 1, None, None
+        for tok in tokens[1:]:
+            if tok.isdigit():
+                count = int(tok)
+            elif tok.lower().startswith("mult="):
+                multiply = float(tok[5:])
+            elif tok.upper() in SysvarType.__members__:
+                sysvar_type = SysvarType[tok.upper()]
+            else:
+                raise ValueError(f"unknown token {tok!r} in {spec!r}")
+        return cls.of(tokens[0], count, multiply=multiply, sysvar_type=sysvar_type)
+
 
 def plan_assignments(
     requests: Sequence[AssignmentRequest],
     block: tuple[int, int],
     *,
-    avoid: Iterable[Assignment] = (),
+    avoid: Iterable[Span] = (),
+    slots: Sequence[int] | None = None,
 ) -> list[Assignment]:
     """Allocate ``requests`` back to back inside the %R ``block`` (inclusive).
 
+    ``slots`` gives the ``$SNPX_ASG`` slot numbers to use, in order (default
+    1, 2, ...; use :func:`free_slots` when adding to an existing table).
     Raises if the block is too small, if more than 80 entries result, or if any
     planned entry overlaps an assignment in ``avoid`` (entries this client did
     not create).
@@ -548,10 +584,13 @@ def plan_assignments(
         raise SnpxAssignmentError(f"invalid %R block {block}")
     if len(requests) > MAX_SLOTS:
         raise SnpxAssignmentError(f"at most {MAX_SLOTS} assignments")
+    numbers = list(slots) if slots is not None else list(range(1, len(requests) + 1))
+    if len(numbers) < len(requests):
+        raise SnpxAssignmentError(f"{len(requests)} requests but only {len(numbers)} slots")
     foreign = list(avoid)
     out: list[Assignment] = []
     address = first
-    for slot, req in enumerate(requests, start=1):
+    for slot, req in zip(numbers[: len(requests)], requests, strict=True):
         if req.count < 1:
             raise SnpxAssignmentError(f"{req.var}: count must be >= 1")
         if req.var.family == "POS" and req.count != 1:
@@ -563,20 +602,38 @@ def plan_assignments(
         size = -(-req.count // 16) if probe.packed_io else probe.words_per_element * req.count
         entry = Assignment(address, size, req.var, mult, slot, req.sysvar_type)
         if entry.last_address > last:
+            total = sum(request_words(r) for r in requests)
             raise SnpxAssignmentError(
                 f"{req.var} x{req.count} needs %R{address}..%R{entry.last_address}, "
-                f"beyond the block end %R{last}"
+                f"beyond the block end %R{last}; the whole plan needs {total} words, "
+                f"the block has {last - first + 1}"
             )
         clash = [f for f in foreign if f.overlaps(entry.address, entry.size)]
         if clash:
             raise SnpxAssignmentError(
                 f"{entry.var} at %R{entry.address}..%R{entry.last_address} overlaps "
-                f"existing assignment {clash[0].var} "
+                f"existing assignment {getattr(clash[0], 'var', '?')} "
                 f"at %R{clash[0].address}..%R{clash[0].last_address}"
             )
         out.append(entry)
         address = entry.last_address + 1
     return out
+
+
+def request_words(req: AssignmentRequest) -> int:
+    """%R words a request occupies once planned."""
+    mult = req.multiply if req.multiply is not None else default_multiply(req.var, req.sysvar_type)
+    probe = Assignment(1, 1, req.var, mult, None, req.sysvar_type)
+    return -(-req.count // 16) if probe.packed_io else probe.words_per_element * req.count
+
+
+def free_slots(used: Iterable[int], n: int) -> list[int]:
+    """The `n` lowest slot numbers (1..80) not in `used`."""
+    taken = set(used)
+    free = [s for s in range(1, MAX_SLOTS + 1) if s not in taken]
+    if len(free) < n:
+        raise SnpxAssignmentError(f"need {n} free $SNPX_ASG slots, only {len(free)} are free")
+    return free[:n]
 
 
 class AssignmentManager:

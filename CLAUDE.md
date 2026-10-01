@@ -60,5 +60,5 @@ Repository: `eponce00/fanuc-snpx` (private, Apache-2.0).
 `srtp.py` frames + session (one request at a time, close on any error) · `memory.py` segments, the single
 `srtp_index()` conversion, packing · `assignments.py` `$SNPX_ASG` model, lookup, planner, session manager ·
 `client.py` typed API and guarded writes · `types.py` Position etc. · `policy.py` access policy ·
-`oracle.py` read-only FTP · `parsers.py` controller files (numreg/posreg/sysframe/system.va/curpos/errall/iostate; `fanuc-snpx parse`) · `survey.py` Phase 2 read-only survey (also writes `asg_map.md`) · `status.py` GE error-code hints ·
+`oracle.py` read-only FTP · `parsers.py` controller files (numreg/posreg/sysframe/system.va/curpos/errall/iostate; `fanuc-snpx parse`) · `survey.py` Phase 2 read-only survey (also writes `asg_map.md`) · `compare.py` SRTP-vs-file comparison (`fanuc-snpx compare`) · `fanuc-snpx plan-asg` offline assignment layout · `status.py` GE error-code hints ·
 `testing.py` FakeSrtpServer/FakeController · `cli.py` `fanuc-snpx` command.

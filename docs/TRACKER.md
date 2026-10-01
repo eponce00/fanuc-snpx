@@ -56,7 +56,7 @@ Needs assignments that map reals, PRs, frames, current position. Either the owne
 pendant (no code writes) or, after GATE 1 approval, `AssignmentManager.apply_session(...,
 multiplex_confirmed=True)` with the policy's `snpx_assignments` block (that sends `CLRASG`/`SETASG`).
 
-For each, read twice via SRTP and FTP while values are static; float32 compare; log in VALIDATION_LOG:
+Tool: `fanuc-snpx compare 10.50.160.51 --map <asg.json> --files evidence/<run>/files --registers 1-50 --pr 1-20 --frames 1-9 --tools 1-9 --curpos --out evidence/<run>/compare.md` (download fresh files first; run twice). For each, read twice via SRTP and FTP while values are static; float32 compare; log in VALIDATION_LOG:
 - ⬜ R[] real view (multiply 0) and int view vs `numreg.va`
 - ⬜ PR[] Cartesian + config + turns + UF/UT, joint-stored PR, untaught PR (VALIDC/VALIDJ: whole word vs
   high byte, see PROTOCOL §7) vs `posreg.va`
@@ -94,7 +94,7 @@ For each, read twice via SRTP and FTP while values are static; float32 compare; 
 | Q5 | ROBOGUIDE available? A virtual controller with the HMI option would allow earlier testing | ❓ open |
 | Q6 | Rate-limit default (5 req/s) vs block-read speed targets | ❓ decide after Phase 3 measurements |
 | Q7 | May the survey run the optional error probe / large reads (may post PRIO-090)? | ❓ open |
-| Q8 | Public V9.x files show `$SNPX_PARAM.$NUM_CIMP = 0` (multi-connection off), so `CLRASG` would wipe the shared `$SNPX_ASG`. How should mappings for reals/PRs/frames/current pose be created? (a) owner adds them on the pendant in free slots (no code writes); (b) owner enables `$NUM_CIMP` > 0 (controller setting, may need a restart) so the client can use session-scoped tables; (c) a persistent mode that adds/removes only its own slots via `SETASG`/`SETVAR` (not implemented) | ❓ open, decide at GATE 1 |
+| Q8 | Public V9.x files show `$SNPX_PARAM.$NUM_CIMP = 0` (multi-connection off), so `CLRASG` would wipe the shared `$SNPX_ASG`. How should mappings for reals/PRs/frames/current pose be created? (a) owner adds them on the pendant in free slots (no code writes); (b) owner enables `$NUM_CIMP` > 0 (controller setting, may need a restart) so the client can use session-scoped tables; (c) a persistent mode that adds/removes only its own slots via `SETASG`/`SETVAR` (not implemented). Options, sizing limit (%R10001..%R16384 = 6384 words after the factory slot) and a recommendation (A for Phase 3): [ASSIGNMENT_OPTIONS.md](ASSIGNMENT_OPTIONS.md) | ❓ open, decide at GATE 1 |
 
 ## 6. Hypotheses to verify on the robot (from docs/PROTOCOL.md)
 
@@ -115,8 +115,10 @@ For each, read twice via SRTP and FTP while values are static; float32 compare; 
 |---|---|---|
 | FTP file parsers | ✅ / ⬜ | ✅ numreg, posreg, sysframe, system.va `$SNPX_*`, curpos/summary, errall, iostate (from public V7.70-V9.40 files; fixtures are invented values in the same layout). ⬜ `strreg.va` (no public file with a stored string). ⬜ confirm all against the robot's files |
 | Build the map from the controller file | ✅ | `parse_snpx_config(system_va).to_table(sysvar_types)`; system-variable entries need their type, unsupported entries are reported, never dropped |
-| Oracle comparison tool: SRTP vs FTP report → VALIDATION_LOG rows | ⬜ | Phase 3 |
-| Persistent assignment mode (SETASG without CLRASG + cleanup via SETVAR) | 🚫 until decided | currently not implemented on purpose |
+| Oracle comparison tool: SRTP vs FTP report → VALIDATION_LOG rows | ✅ | `fanuc-snpx compare` / `compare.py` (R, PR, frames/tools, current pose; tolerance = file precision) |
+| Assignment layout planner | ✅ | `fanuc-snpx plan-asg` (free slots, no overlaps, size check, map JSON); sends nothing |
+| Persistent assignment mode (SETASG without CLRASG + cleanup via SETVAR) | 🚫 until decided | option C in ASSIGNMENT_OPTIONS.md; not implemented on purpose |
+| Is %R above 16384 served? | ⬜ | decides how much can be mapped; survey `--error-probe` reads %R16385 (needs Q7 OK) |
 | Alarm history (`ALM[]`, 100 words) and program status (`PRG[]`, 18 words) decoders | ⬜ | layouts in CIMPLICITY §6.5/6.6; read-only |
 | Flags `F[]` | ⬜ | syntax unknown |
 | Comments for flags and string registers | ⬜ | no documented SNPX path; FTP read-only fallback |
