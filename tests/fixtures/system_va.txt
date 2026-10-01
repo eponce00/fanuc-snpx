@@ -1,0 +1,39 @@
+[*SYSTEM*]$SCR  Storage: CMOS  Access: RW  : SCR_T =
+   Field: $SCR.$NUM_GROUP Access: RO: INTEGER = 1
+
+[*SYSTEM*]$SNPX_ASG  Storage: CMOS  Access: RW  : ARRAY[6] OF SNPX_ASG_T
+     Field: $SNPX_ASG[1].$ADDRESS Access: RW: SHORT = 1
+     Field: $SNPX_ASG[1].$SIZE Access: RW: SHORT = 10000
+     Field: $SNPX_ASG[1].$VAR_NAME Access: RW: STRING[37] = 'R[1]@1.1'
+     Field: $SNPX_ASG[1].$MULTIPLY Access: RW: REAL = 1.000000e+00
+     Field: $SNPX_ASG[2].$ADDRESS Access: RW: SHORT = 10001
+     Field: $SNPX_ASG[2].$SIZE Access: RW: SHORT = 500
+     Field: $SNPX_ASG[2].$VAR_NAME Access: RW: STRING[37] = 'PR[G1:1]'
+     Field: $SNPX_ASG[2].$MULTIPLY Access: RW: REAL = 0.000000e+00
+     Field: $SNPX_ASG[3].$ADDRESS Access: RW: SHORT = 10501
+     Field: $SNPX_ASG[3].$SIZE Access: RW: SHORT = 12
+     Field: $SNPX_ASG[3].$VAR_NAME Access: RW: STRING[37] = '$MNUFRAME[1,1]@1.6'
+     Field: $SNPX_ASG[3].$MULTIPLY Access: RW: REAL = 0.000000e+00
+     Field: $SNPX_ASG[4].$ADDRESS Access: RW: SHORT = 10513
+     Field: $SNPX_ASG[4].$SIZE Access: RW: SHORT = 2
+     Field: $SNPX_ASG[4].$VAR_NAME Access: RW: STRING[37] = 'F[1]'
+     Field: $SNPX_ASG[4].$MULTIPLY Access: RW: REAL = 1.000000e+00
+     Field: $SNPX_ASG[5].$ADDRESS Access: RW: SHORT = 0
+     Field: $SNPX_ASG[5].$SIZE Access: RW: SHORT = 0
+     Field: $SNPX_ASG[5].$VAR_NAME Access: RW: STRING[37] = ''
+     Field: $SNPX_ASG[5].$MULTIPLY Access: RW: REAL = 1.000000e+00
+     Field: $SNPX_ASG[6].$ADDRESS Access: RW: SHORT = 0
+     Field: $SNPX_ASG[6].$SIZE Access: RW: SHORT = 0
+     Field: $SNPX_ASG[6].$VAR_NAME Access: RW: STRING[37] = Uninitialized
+     Field: $SNPX_ASG[6].$MULTIPLY Access: RW: REAL = 1.000000e+00
+
+[*SYSTEM*]$SNPX_PARAM  Storage: CMOS  Access: FP  : SNPX_PARAM_T =
+   Field: $SNPX_PARAM.$TIMEOUT Access: RW: INTEGER = 5000
+   Field: $SNPX_PARAM.$SNP_ID Access: RW: STRING[9] = Uninitialized
+   Field: $SNPX_PARAM.$NUM_ASG Access: RW: INTEGER = 80
+   Field: $SNPX_PARAM.$NUM_CIMP Access: RW: INTEGER = 0
+   Field: $SNPX_PARAM.$NUM_FRIF Access: RW: INTEGER = 4
+   Field: $SNPX_PARAM.$VERSION Access: RO: INTEGER = 2
+   Field: $SNPX_PARAM.$STATUS Access: RW: INTEGER = 0
+   Field: $SNPX_PARAM.$CMD_ENDIAN Access: RW: BYTE = 1
+

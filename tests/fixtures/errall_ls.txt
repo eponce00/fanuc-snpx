@@ -1,0 +1,6 @@
+ERRALL.LS      Robot Name ROBOT 01-OCT-26 09:00:10
+
+1003" 01-OCT-26 09:00:05 " SRVO-003 Deadman switch released                  " " SERVO                         00110110" act"
+1002" 01-OCT-26 08:59:58 " HOST-222 DHCP: server 192.0.2.1                    " HOST-223 DHCP: using IP 192.0.2.10                " WARN                          00000000"    "
+1001" 01-OCT-26 08:59:50 " R E S E T                                         " "                               00000000"    "
+1000" 30-SEP-26 17:00 " INTP-685 (PROG1, 10)TIMER[1] has already been started" " WARN                          00000000"    "

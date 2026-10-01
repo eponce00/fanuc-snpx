@@ -26,6 +26,7 @@ from .errors import SnpxError, SrtpServiceError
 from .evidence import EvidenceLog
 from .memory import Segment
 from .oracle import ControllerFiles
+from .parsers import parse_numreg, parse_snpx_config
 from .srtp import DEFAULT_PORT, RateLimiter, ServiceCode, SrtpSession
 
 DEFAULT_FTP_FILES = (
@@ -33,7 +34,8 @@ DEFAULT_FTP_FILES = (
     "posreg.va",
     "strreg.va",
     "sysframe.va",
-    "syssnpx.va",
+    "system.va",  # holds $SNPX_ASG and $SNPX_PARAM (there is no syssnpx.va)
+    "iostate.dg",
     "curpos.dg",
     "errall.ls",
     "version.dg",
@@ -106,7 +108,7 @@ def _record(report: SurveyReport, name: str, fn: Callable[[Step], None]) -> Step
                 msg_type=f"0x{exc.msg_type:02X}",
                 header=(exc.frame or b"").hex(" "),
             )
-    except OSError as exc:
+    except Exception as exc:  # noqa: BLE001 - a survey step must never abort the survey
         step.ok = False
         step.error = f"{type(exc).__name__}: {exc}"
     step.seconds = time.perf_counter() - t0
@@ -265,12 +267,63 @@ def run_survey(
                     src.close()
 
             _record(report, "ftp_files", files)
-
+            _record(report, "asg_map", lambda step: _asg_map(out, step))
+            _record(report, "oracle_R1_10", lambda step: _compare_r1_10(out, report, step))
         evidence.record("survey_end", steps=len(report.steps))
 
     (out / "survey.json").write_text(report.to_json(), encoding="utf-8")
     (out / "survey.md").write_text(report.to_markdown(), encoding="utf-8")
     return report
+
+
+def _asg_map(out: Path, step: Step) -> None:
+    """Parse ``system.va`` into ``asg_map.md`` / ``asg_map.json`` (read-only, offline)."""
+    path = out / "files" / "system.va"
+    if not path.exists():
+        step.ok = False
+        step.error = "system.va was not downloaded"
+        return
+    cfg = parse_snpx_config(path.read_text(encoding="latin-1"))
+    table, problems = cfg.to_table()
+    (out / "asg_map.md").write_text(cfg.to_markdown(), encoding="utf-8")
+    (out / "asg_map.json").write_text(
+        json.dumps(
+            {
+                "params": cfg.params,
+                "slots": [asdict(s) for s in cfg.used_slots],
+                "table": json.loads(table.to_json()),
+                "problems": problems,
+            },
+            indent=2,
+            default=repr,
+        ),
+        encoding="utf-8",
+    )
+    step.detail.update(
+        used_slots=len(cfg.used_slots),
+        multiplexed=cfg.multiplexed,
+        NUM_CIMP=cfg.params.get("$NUM_CIMP"),
+        NUM_FRIF=cfg.params.get("$NUM_FRIF"),
+        VERSION=cfg.params.get("$VERSION"),
+        problems=problems,
+    )
+
+
+def _compare_r1_10(out: Path, report: SurveyReport, step: Step) -> None:
+    """Show %R1..%R10 (as signed 16-bit) next to R[1..10] from numreg.va. No verdict."""
+    path = out / "files" / "numreg.va"
+    reads = next((s for s in report.steps if s.name == "small_reads" and s.ok), None)
+    if not path.exists() or reads is None:
+        step.ok = False
+        step.error = "needs numreg.va and a successful small_reads step"
+        return
+    raw = bytes.fromhex(str(reads.detail["R1_10_words"]))
+    words = [int.from_bytes(raw[i : i + 2], "little", signed=True) for i in range(0, 20, 2)]
+    regs = parse_numreg(path.read_text(encoding="latin-1"))
+    step.detail["pairs(srtp_int16, numreg.va)"] = [
+        (w, regs[i + 1].value if i + 1 in regs else None) for i, w in enumerate(words)
+    ]
+    step.detail["note"] = "files are snapshots; the int16 view assumes slot 1 = R[1]@1.1"
 
 
 def _bits(values: list[bool]) -> str:

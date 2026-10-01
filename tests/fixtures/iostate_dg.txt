@@ -1,0 +1,15 @@
+F Number: X000000
+VERSION : HandlingTool
+$VERSION: V9.30000      1/1/2026
+DATE:     01-OCT-26 09:00
+
+IO STATUS::
+
+DIN[   1]  ON  Part present
+DIN[   2] OFF
+DOUT[   1] OFF  Gripper close
+GIN[   1]    0  Recipe
+GOUT[   3]  560  Status code
+UI[   1]  ON  *IMSTP
+UO[   1] OFF  Cmd enabled
+FLG[   1] OFF                         FLG[   2]  ON

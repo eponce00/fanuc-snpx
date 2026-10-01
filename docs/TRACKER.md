@@ -12,6 +12,7 @@ Last updated: 2026-10-01 (end of PC-only work; robot not contacted yet).
 | 0 Research, protocol hypothesis | ✅ | docs/PROTOCOL.md, docs/research/PUBLIC_SOURCES.md |
 | 1 PC-only core | ✅ | PR #1 merged. 180+ tests, ruff, mypy --strict, CI on Linux/Windows/macOS × 3.10/3.13 |
 | 2 prep (PC) | ✅ | `fanuc-snpx survey`, GE status hints, handoff docs |
+| Oracle parsers (PC) | ✅ | `parsers.py`: numreg, posreg, sysframe, system.va (`$SNPX_*`), curpos/summary, errall, iostate; `fanuc-snpx parse`. Learned from public V7.70-V9.40 files; re-check against the robot's files |
 | 2 Robot read-only: handshake, info, small reads, ASG map | ⬜ ❓ | waiting for the owner to say "connected" → GATE 1 |
 | 3 Robot read-only: every data type vs FTP oracle | ⬜ | → GATE 2 |
 | 4 Writes on scratch targets | ⬜ ❓ | needs the owner's policy file + named targets → GATE 3 |
@@ -33,19 +34,20 @@ Steps:
    bytes with docs/PROTOCOL.md §2-4; fix `srtp.py` with a test reproducing the robot's bytes. Robot wins.
 3. ⬜ Record in docs/VALIDATION_LOG.md: init reply, `0x4F` reply, short status bytes 42-55 with and
    without `0x4F` (byte 51 privilege?), the raw `0x43`/`0x03`/`0x38` replies, largest read size, latency.
-4. ⬜ Look at `files/` from the survey. Find the file that contains `$SNPX_ASG` / `$SNPX_PARAM`. The
-   survey guesses `syssnpx.va`; if it is missing, look in `ftp-listing.txt` (also try `ftp-get --list`
-   with a path such as `md:`) and download candidates with `fanuc-snpx ftp-get`.
-5. ⬜ Fill docs/ASG_MAP.md: every slot (address, size, var name, multiply), `$SNPX_PARAM` fields,
-   especially whatever controls multi-connection (`$NUM_CIMP` per the CIMPLICITY manual; the owner's notes
-   showed `$NUM_FRIF: 4` instead). Decide from evidence whether `CLRASG` would be session-scoped.
-6. ⬜ Compare %R1..%R10 (factory `R[1]@1.1` 16-bit view) with `numreg.va` (rounded integers).
-   Compare DO/DI/GO/GI reads with `iostate.dg` if available.
+4. ⬜ Check the survey's `asg_map` step and `asg_map.md` (parsed from `files/system.va`, which holds
+   `$SNPX_ASG`/`$SNPX_PARAM`). If `system.va` is missing, look in `ftp-listing.txt` (also
+   `fanuc-snpx ftp-get 10.50.160.51 --list`) and fetch it with `fanuc-snpx ftp-get`.
+5. ⬜ Fill docs/ASG_MAP.md: every used slot and the `$SNPX_PARAM` fields. Record `$NUM_CIMP`
+   (public V9.x files: 0) and the survey's `multiplexed` verdict. If `multiplexed` is False, `CLRASG`
+   would erase the shared table: session-scoped assignments are NOT available (see Q8).
+6. ⬜ Read the survey's `oracle_R1_10` step: %R1..%R10 (factory `R[1]@1.1` 16-bit view) next to
+   `numreg.va`. Compare DO/DI/GO/GI reads with `files/iostate.dg` (`fanuc-snpx parse files/iostate.dg`).
 7. ⬜ Optional, only with the owner's OK (may post PRIO-090 on the pendant): `--error-probe` to learn the
    real error status bytes; `--large-sizes` to find the size limit above 2 KiB.
-8. ⬜ Write the parsers for the real file formats (see §6 backlog) with fixtures made from the downloaded
-   files **with all values replaced** (no cell data in the repo).
-9. ⬜ GATE 1 report (format in CLAUDE.md). Ask: may we create session-scoped assignments? Which %R block?
+8. ⬜ Run `fanuc-snpx parse` on every downloaded file. Where the robot's format differs from the
+   fixtures in `tests/fixtures/`, fix `parsers.py` and add a fixture in the robot's layout **with all
+   values replaced** (no cell data in the repo). Write the `strreg.va` parser from the real file.
+9. ⬜ GATE 1 report (format in CLAUDE.md). Ask Q3 and Q8 (how assignments get created).
 
 ## 3. Phase 3 checklist (read-only, after GATE 1)
 
@@ -91,6 +93,7 @@ For each, read twice via SRTP and FTP while values are static; float32 compare; 
 | Q5 | ROBOGUIDE available? A virtual controller with the HMI option would allow earlier testing | ❓ open |
 | Q6 | Rate-limit default (5 req/s) vs block-read speed targets | ❓ decide after Phase 3 measurements |
 | Q7 | May the survey run the optional error probe / large reads (may post PRIO-090)? | ❓ open |
+| Q8 | Public V9.x files show `$SNPX_PARAM.$NUM_CIMP = 0` (multi-connection off), so `CLRASG` would wipe the shared `$SNPX_ASG`. How should mappings for reals/PRs/frames/current pose be created? (a) owner adds them on the pendant in free slots (no code writes); (b) owner enables `$NUM_CIMP` > 0 (controller setting, may need a restart) so the client can use session-scoped tables; (c) a persistent mode that adds/removes only its own slots via `SETASG`/`SETVAR` (not implemented) | ❓ open, decide at GATE 1 |
 
 ## 6. Hypotheses to verify on the robot (from docs/PROTOCOL.md)
 
@@ -99,7 +102,7 @@ For each, read twice via SRTP and FTP while values are static; float32 compare; 
 - ⬜ Replies: `D4` inline ≤ 6 bytes, `94` for larger; status 42-43 on errors (captures show `00 00` + `D1`).
 - ⬜ Largest single read; whether the controller ever sends multi-packet replies.
 - ⬜ Services `00`, `03`, `38`, `43` reply layouts (currently returned raw).
-- ⬜ `$SNPX_ASG` contents, `$SNPX_PARAM` multi-connection field, `CLRASG` scope.
+- ⬜ `$SNPX_ASG` contents; `$SNPX_PARAM.$NUM_CIMP` (expected 0) and therefore `CLRASG` scope.
 - ⬜ 32-bit word order; VALIDC/VALIDJ encoding; `@1.1` = low word of the int32 view.
 - ⬜ I/O offsets for SI/SO/WI/WO/WSI/WSO (0- or 1-based index), GI/GO signed or unsigned.
 - ⬜ `F[]` flags assignment syntax (undocumented; currently `NotImplementedError`).
@@ -109,8 +112,8 @@ For each, read twice via SRTP and FTP while values are static; float32 compare; 
 
 | Item | State | Notes |
 |---|---|---|
-| FTP file parsers (`numreg.va`, `posreg.va`, `strreg.va`, `sysframe.va`, `syssnpx.va`, `curpos.dg`, `errall.ls`) | ⏳ | A search for public sample files was started 2026-10-01; parsers must be confirmed against the robot's real files in Phase 2/3 |
-| `AssignmentTable.from_controller_file(...)` (build the map from the sysvar file) | ⬜ | depends on parsers |
+| FTP file parsers | ✅ / ⬜ | ✅ numreg, posreg, sysframe, system.va `$SNPX_*`, curpos/summary, errall, iostate (from public V7.70-V9.40 files; fixtures are invented values in the same layout). ⬜ `strreg.va` (no public file with a stored string). ⬜ confirm all against the robot's files |
+| Build the map from the controller file | ✅ | `parse_snpx_config(system_va).to_table(sysvar_types)`; system-variable entries need their type, unsupported entries are reported, never dropped |
 | Oracle comparison tool: SRTP vs FTP report → VALIDATION_LOG rows | ⬜ | Phase 3 |
 | Persistent assignment mode (SETASG without CLRASG + cleanup via SETVAR) | 🚫 until decided | currently not implemented on purpose |
 | Alarm history (`ALM[]`, 100 words) and program status (`PRG[]`, 18 words) decoders | ⬜ | layouts in CIMPLICITY §6.5/6.6; read-only |

@@ -15,7 +15,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
-from . import __version__
+from . import __version__, parsers
 from .assignments import AssignmentTable
 from .client import SnpxClient
 from .errors import SnpxError
@@ -33,7 +33,10 @@ def _jsonable(obj: Any) -> Any:
     if isinstance(obj, list | tuple):
         return [_jsonable(x) for x in obj]
     if isinstance(obj, dict):
-        return {str(k): _jsonable(v) for k, v in obj.items()}
+        return {
+            (k if isinstance(k, str) else str(list(k) if isinstance(k, tuple) else k)): _jsonable(v)
+            for k, v in obj.items()
+        }
     return obj
 
 
@@ -152,6 +155,29 @@ def cmd_ftp_get(args: argparse.Namespace) -> None:
         _print({"saved": saved})
 
 
+_PARSERS: dict[str, Any] = {
+    "numreg": parsers.parse_numreg,
+    "posreg": parsers.parse_posreg,
+    "sysframe": parsers.parse_sysframe,
+    "system": lambda text: {
+        "snpx": parsers.parse_snpx_config(text),
+        "multiplexed": parsers.parse_snpx_config(text).multiplexed,
+    },
+    "curpos": parsers.parse_curpos,
+    "summary": parsers.parse_curpos,
+    "errall": parsers.parse_errall,
+    "iostate": parsers.parse_iostate,
+}
+
+
+def cmd_parse(args: argparse.Namespace) -> None:
+    kind = args.kind or Path(args.file).name.lower().split(".")[0]
+    if kind not in _PARSERS:
+        raise SystemExit(f"unknown file kind {kind!r}; use --kind {'/'.join(_PARSERS)}")
+    text = Path(args.file).read_text(encoding="latin-1")
+    _print(_PARSERS[kind](text))
+
+
 def cmd_survey(args: argparse.Namespace) -> None:
     report = run_survey(
         args.host,
@@ -267,6 +293,11 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--group", type=int, default=1)
     sp.add_argument("--frame", type=int, default=0, help="0 world, 1-9 user frame, 15 current")
     sp.set_defaults(func=cmd_read_pos)
+
+    sp = sub.add_parser("parse", help="parse a downloaded controller file to JSON (offline)")
+    sp.add_argument("file", type=Path)
+    sp.add_argument("--kind", choices=sorted(_PARSERS), help="default: from the file name")
+    sp.set_defaults(func=cmd_parse)
 
     sp = sub.add_parser("survey", help="read-only first-contact survey (Phase 2) with a report")
     sp.add_argument("host")
