@@ -72,6 +72,7 @@ Tool: `fanuc-snpx compare 10.50.160.51 --map <asg.json> --files evidence/<run>/f
   PRIO-096 "SNPX Connection is full"); then close all
 - ⬜ Session-scoped vs persistent assignments: after a session ends, are its entries gone? (read the
   controller file again)
+- ⬜ Alarm screens and program status: map `ALM[E1]` (a few lines) and `PRG[1]`; compare with `errall.ls` and the pendant; settle the severity codes (43 vs 45, 122 vs 123)
 - ⬜ GATE 2 report with the comparison table
 
 ## 4. Phase 4 checklist (writes) — only after GATE 2 and with the owner's inputs
@@ -119,11 +120,12 @@ Tool: `fanuc-snpx compare 10.50.160.51 --map <asg.json> --files evidence/<run>/f
 | Assignment layout planner | ✅ | `fanuc-snpx plan-asg` (free slots, no overlaps, size check, map JSON); sends nothing |
 | Persistent assignment mode (SETASG without CLRASG + cleanup via SETVAR) | 🚫 until decided | option C in ASSIGNMENT_OPTIONS.md; not implemented on purpose |
 | Is %R above 16384 served? | ⬜ | decides how much can be mapped; survey `--error-probe` reads %R16385 (needs Q7 OK) |
-| Alarm history (`ALM[]`, 100 words) and program status (`PRG[]`, 18 words) decoders | ⬜ | layouts in CIMPLICITY §6.5/6.6; read-only |
+| Alarm screens (`ALM[n]`/`ALM[En]`/`ALM[Pn]`, 100 words) and program status (`PRG[n]`, 18 words) | ✅ | `client.alarms`, `client.programs`; read-only; layouts from CIMPLICITY §6.5/6.6; severity codes ABORT.G (43/45) and SYSTEM (122/123) differ between sources, the text field is authoritative; verify in Phase 3 |
+| Example application adapter | ✅ | `examples/` (adapter, demo on the fake, example policy and map); run by `tests/test_examples.py` |
 | Flags `F[]` | ⬜ | syntax unknown |
 | Comments for flags and string registers | ⬜ | no documented SNPX path; FTP read-only fallback |
 | Controller identity (model, software, serial) | ⬜ | via string sysvars or `version.dg`/`summary.dg` |
-| Release: version, changelog, tag, wheel | ⬜ | Phase 5; wheel build checked OK 2026-10-01 |
+| Release: version, changelog, tag, wheel | ✅ prepared / ⬜ first tag | `CHANGELOG.md`, `docs/RELEASING.md`, `.github/workflows/release.yml` (tag → build, test wheel, GitHub release); `MANIFEST.in` keeps `vendor-docs/` out of packages. Tag v0.1.0 after Phase 3 |
 | Branch protection on `main` | 🚫 | GitHub plan does not allow it for a private repo; follow PR-only by hand |
 | Local note: CPython 3.10.0 + Hypothesis 6.168 fails inside Hypothesis | — | not our code; CI uses latest 3.10 and passes |
 

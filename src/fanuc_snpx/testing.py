@@ -98,6 +98,37 @@ def position_image(
     return bytes(b)
 
 
+def alarm_image(
+    *,
+    alarm_id: int,
+    number: int,
+    message: str,
+    severity: int = 0,
+    severity_text: str = "WARN",
+    time: tuple[int, int, int, int, int, int] = (2026, 10, 1, 9, 0, 0),
+    cause_id: int = 0,
+    cause_number: int = 0,
+    cause_message: str = "",
+) -> bytes:
+    """The 100-word alarm structure (FANUC B-82604EN/01 §6.5)."""
+    b = bytearray(200)
+    struct.pack_into("<5h", b, 0, alarm_id, number, cause_id, cause_number, severity)
+    struct.pack_into("<6h", b, 10, *time)
+    b[22 : 22 + len(message)] = message.encode("ascii")[:80]
+    b[102 : 102 + len(cause_message)] = cause_message.encode("ascii")[:80]
+    b[182 : 182 + len(severity_text)] = severity_text.encode("ascii")[:18]
+    return bytes(b)
+
+
+def program_image(name: str, line: int, state: int, caller: str = "") -> bytes:
+    """The 18-word program status structure (FANUC B-82604EN/01 §6.6)."""
+    b = bytearray(36)
+    b[0 : len(name)] = name.encode("ascii")[:16]
+    struct.pack_into("<hh", b, 16, line, state)
+    b[20 : 20 + len(caller or name)] = (caller or name).encode("ascii")[:16]
+    return bytes(b)
+
+
 @dataclass
 class FakeAssignment:
     address: int
@@ -124,6 +155,8 @@ class FakeController:
     position_registers: dict[int, bytes] = field(default_factory=dict)
     string_registers: dict[int, str] = field(default_factory=dict)
     comments: dict[tuple[str, int], str] = field(default_factory=dict)
+    alarms: dict[tuple[str, int], bytes] = field(default_factory=dict)
+    programs: dict[int, bytes] = field(default_factory=dict)
     sysvars: dict[str, int | float | str | bytes] = field(default_factory=dict)
     current_position: dict[tuple[int, int], bytes] = field(default_factory=dict)
     table: list[FakeAssignment | None] = field(default_factory=lambda: [None] * 80)
@@ -187,6 +220,10 @@ class FakeController:
             return _scale_scalar(self.numeric_registers.get(n, 0), mult)
         if base == "PR" and sub == "":
             return _scale_position(self.position_registers.get(n, bytes(POSITION_BYTES)), mult)
+        if base == "ALM":
+            return self.alarms.get((sub, n), bytes(200))
+        if base == "PRG":
+            return self.programs.get(n, bytes(36))
         if base == "SR":
             return self.string_registers.get(n, "").encode("ascii")[:80].ljust(80, b"\x00")
         if base == "POS":
@@ -206,7 +243,7 @@ class FakeController:
             if isinstance(value, bytes):
                 return 50
             return 40 if isinstance(value, str) else 2
-        return {"R": 2, "PR": 50, "SR": 40, "POS": 50}.get(base, 2)
+        return {"R": 2, "PR": 50, "SR": 40, "POS": 50, "ALM": 100, "PRG": 18}.get(base, 2)
 
     def _table_for(self, local: list[FakeAssignment | None] | None) -> list[FakeAssignment | None]:
         return local if local is not None else self.table

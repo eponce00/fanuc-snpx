@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "description": "EXAMPLE ONLY - copy to robot-policy.local.json and replace every value with your own, agreed with the cell owner",
+  "controller": { "host": "192.0.2.10" },
+  "protected": {
+    "numeric_registers": [[1, 19]],
+    "position_registers": [[1, 9]],
+    "system_variables": ["$SNPX_*", "$MNUFRAME[1,9]"],
+    "digital_inputs": "*",
+    "digital_outputs": "*",
+    "group_inputs": "*",
+    "group_outputs": "*"
+  },
+  "writable": {
+    "numeric_registers": [[20, 20]],
+    "position_registers": [[10, 10]],
+    "system_variables": ["$MNUFRAME[1,1]"],
+    "comments.numeric_registers": [[20, 20]]
+  },
+  "limits": { "max_numeric_register": 200, "max_position_register": 100 }
+}

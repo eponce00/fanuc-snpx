@@ -54,13 +54,17 @@ from .types import (
     W_VALIDC,
     W_VALIDJ,
     W_X,
+    Alarm,
     Cartesian,
     IoFamily,
     Joints,
     Position,
+    ProgramStatus,
     RawServiceReply,
     ShortStatus,
+    decode_alarm,
     decode_position,
+    decode_program,
     encode_cartesian,
     encode_joints,
 )
@@ -163,6 +167,8 @@ class SnpxClient:
         self.io = IoAccess(self)
         self.comments = Comments(self)
         self.controller = ControllerInfo(self)
+        self.alarms = Alarms(self)
+        self.programs = Programs(self)
         self.assignments = AssignmentManager(self)
 
     # -- lifecycle -------------------------------------------------------------
@@ -845,7 +851,42 @@ class ControllerInfo(_Api):
         return RawServiceReply(int(ServiceCode.RETURN_FAULT_TABLE), r.header, r.text)
 
 
+class Alarms(_Api):
+    """Alarm screens via ``ALM[...]`` assignments (read only; the controller ignores writes).
+
+    ``active(n)`` is line ``n`` of the active-alarm screen (``ALM[n]``), ``history`` the alarm
+    history (``ALM[En]``, newest first), ``password_log`` the password history (``ALM[Pn]``,
+    password option only).
+    """
+
+    def _lines(self, sub: str, first: int, count: int) -> list[Alarm]:
+        return [
+            decode_alarm(d, first_word=a.slice_first_word)
+            for a, d in self._c._read_elements("ALM", first, count, sub=sub)
+        ]
+
+    def active(self, first: int = 1, count: int = 1) -> list[Alarm]:
+        return self._lines("", first, count)
+
+    def history(self, first: int = 1, count: int = 1) -> list[Alarm]:
+        return self._lines("E", first, count)
+
+    def password_log(self, first: int = 1, count: int = 1) -> list[Alarm]:
+        return self._lines("P", first, count)
+
+
+class Programs(_Api):
+    """Program execution status per task via ``PRG[n]`` assignments (read only)."""
+
+    def status(self, task: int = 1) -> ProgramStatus:
+        loc = self._c.table.locate("PRG", task)
+        return decode_program(
+            self._c._read_located(loc), first_word=loc.assignment.slice_first_word
+        )
+
+
 __all__ = [
+    "Alarms",
     "Comments",
     "ControllerInfo",
     "CurrentPosition",
@@ -853,6 +894,7 @@ __all__ = [
     "IoAccess",
     "NumericRegisters",
     "PositionRegisters",
+    "Programs",
     "RawMemory",
     "SnpxClient",
     "StringRegisters",
