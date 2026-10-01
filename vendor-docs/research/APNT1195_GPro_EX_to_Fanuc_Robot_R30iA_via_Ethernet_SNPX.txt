@@ -1,0 +1,199 @@
+                                        1050 Highland Drive, Suite D | Ann Arbor, Michigan 48108
+                                         p: 800.289.9266 | f: 734.864.7347 | profaceamerica.com
+
+Application Note #1195:
+
+GPro EX to Fanuc Robot R30iA (R-J3iC) via Ethernet
+
+Introduction
+
+Many Fanuc Robotics controllers have a built-in GE Fanuc Series 90 PLC engine. Using this
+capability, Pro-face HMis can be used to communicate to the Robot controller with either serial
+or Ethernet connections using the GE Series 90 SNPX protocol. Earlier models such as the R-
+J3iB only allowed SNPX support via RS232.
+
+This document gives details of tested connections to a Fanuc Robot Controller via Ethernet.
+
+Fanuc Robotics provides a HMI Device Setup and Operations Manual and a supplemental HMI
+Users Manual (MARUIBHMI03031E) which details the addressing and setup of system
+variables for these Controllers.
+
+Note: In some markets, an optional item which provides an "unlock code" is required to enable
+the Controller to communicate via Ethernet to an HMI. Check with your local Fanuc Robotics
+supplier for details and pricing.
+
+Fanuc Robotics Item #                   Description
+RTL-R553-HT                             HMI Device (SNPX)
+
+Equipment used for testing:
+
+Fanuc Robotics Controller               R30iA (R-J3iC System)
+Fanuc Robotics Option #                 RTL-R553-HT. HMI Device (SNPX)
+Pro-face HMI                            AGP3650T (Any GP with Ethernet or WinGP should work.
+AGP Programming Software                GP-PRO-EX V2.10.100 and V2.60.000
+Communication Driver                    GE Fanuc Automation, Series 90 Ethernet V1.11.02
+
+Note: The above controller is used to power a wide range of Fanuc Robots for different
+applications and Industries.
+
+Email: customercare@profaceamerica.com  APNT#1195 | GPro EX to Fanuc Robot R30iA via Ethernet
+Page 1 of 6                                                          Date: January 2015 | Revision: none
+                                               1050 Highland Drive, Suite D | Ann Arbor, Michigan 48108
+                                                p: 800.289.9266 | f: 734.864.7347 | profaceamerica.com
+
+Tested Configurations:
+
+AGP                                     R30iA  AGP                             R30iA
+
+     Switch                                         Switch
+
+                                                                               R30iA
+
+2 x AGP : 1 x R30iA Connection                 2 x AGP : 2 x R30iA Connection
+
+       AGP                                            AGP
+
+AGP                                     R30iA  AGP                             R30iA
+
+     Switch                                         Switch
+
+                                                                               R30iA
+
+Note: The tested configurations do not represent the maximum number of units in a single connection.
+GP-PRO-EX allows you to configure up to 16 nodes, although this is no guarantee that the response time
+will be acceptable.
+The maximum number of Ethernet connections that the R30iA will accept is not known at the time of
+writing.
+
+Email: customercare@profaceamerica.com         APNT#1195 | GPro EX to Fanuc Robot R30iA via Ethernet
+Page 2 of 6                                                                 Date: January 2015 | Revision: none
+                                                       1050 Highland Drive, Suite D | Ann Arbor, Michigan 48108
+                                                        p: 800.289.9266 | f: 734.864.7347 | profaceamerica.com
+
+Robot Controller Set Up:
+
+The R30iA has two individually configured Ethernet ports. On the controller they are labelled A
+& B. On the teach pendant they are referred to as #1 and #2. The AGP can connect to either
+port. The only settings are IP Address and Subnet Mask. The following settings were used for
+testing..
+
+Robot 1                                 192.168.0.10
+Port#1 IP                               255.255.255.0
+Address:
+Subnet mask:
+
+Robot 2                                 192.168.0.11
+Port#1 IP                               255.255.255.0
+Address:
+Subnet mask:
+
+The local host settings are not necessary. However, if you add the AGPs to this list then you
+can test the Ethernet connection to them by using the Ping command on the teach pendant.
+
+GP-Pro EX Communication Set Up:
+Device/PLC Settings in GP-PRO EX
+
+Disabling "Use AutoSelect" in the "Individual Device Settings" window allows you to select the
+relevant series. Select "PACSystems RX7i" from the list when connecting to the R30iA robot
+controller. You must also enter the IP address of the controller you wish to connect to.
+
+Add more devices to configure more than one Robot controller.
+
+Email: customercare@profaceamerica.com                 APNT#1195 | GPro EX to Fanuc Robot R30iA via Ethernet
+Page 3 of 6                                                                         Date: January 2015 | Revision: none
+                                        1050 Highland Drive, Suite D | Ann Arbor, Michigan 48108
+                                         p: 800.289.9266 | f: 734.864.7347 | profaceamerica.com
+
+GP Ethernet Communication Set Up:
+The Ethernet settings for each AGP screen are set in the offline menus.
+
+To enter offline mode, press the top left hand corner followed by the bottom right hand corner
+(or vice versa) of the touch screen within 0.5S of each other but not simultaneously. Then select
+Offline form the menu bar at the bottom of the screen.
+
+                                        In Offline mode slect "Main Unit
+                                        Settings", then "Ethernet Local
+                                        Settings" and Setup the IP
+                                        address and Subnet Mask.
+
+                                        The settings used for testing were..
+
+                                        AGP 1                            192.168.0.100
+                                        IP Address:                      255.255.255.0
+                                        Subnet
+                                        mask:
+
+                                        AGP 2                            192.168.0.24
+                                        IP Address:                      255.255.255.0
+                                        Subnet
+                                        mask:
+
+Email: customercare@profaceamerica.com  APNT#1195 | GPro EX to Fanuc Robot R30iA via Ethernet
+Page 4 of 6                                                          Date: January 2015 | Revision: none
+                                                 1050 Highland Drive, Suite D | Ann Arbor, Michigan 48108
+                                                  p: 800.289.9266 | f: 734.864.7347 | profaceamerica.com
+
+Robot Controller Addresses in GPPRO-EX:
+
+The robot controller's data memory can be configured from the teach pendant. It comprises of
+Internal registers (R) which can be configured as 16 or 32 bit integers or Strings, Inputs (Q) and
+Outputs (I).
+
+   Device   Device Type                 Data Types                                 Action
+   R_*****  Internal Registers          16 Bit Integer, 32 Bit Integer*, String**  Read/Write
+   I_*****  Outputs                     Discrete                                   Read/Write
+   Q_*****  Inputs                      Discrete                                   Read only
+
+Notes:
+***** Represents a numeric value
+
+*  32 bit Integer addressing is different in the Robot controller is different to the AGP. The
+
+   robot uses one R register per 32 bit Integer, whereas the AGP uses 2. Eg. For a block of
+
+   5 x 32 bit integers from R200, the following addressing would apply.
+
+                                         Robot       AGP
+                                        Address  Addressing
+                                         R_200
+                                         R_201      R_200
+                                         R_202      R_202
+                                         R_203      R_204
+                                         R_204      R_206
+                                                    R_208
+
+** Strings occupy 40 x R registers.
+
+Error Codes:
+
+RHAA083 Socket Error 8[8H]
+
+This error has been observed when using more than one screen to talk to one Robot Controller.
+If this error occurs:
+
+              1. Clear out the Ethernet settings for that controller using the teach pendant.
+              2. Restart the controller to save the empty Ethernet settings
+              3. Re-enter the Ethernet settings via the teach pendant
+              4. Restart the controller to save the new settings.
+
+Alternatively, you can use the second Ethernet port. If you do this make sure that you clear out
+the configuration on the original port first of all.
+
+                       ---------------------------------------------------------------------------------------
+For more information on Pro-face and our full line of HMI, Operator Interface and Industrial PC
+products please visit our web site at www.profaceamerica.com.
+
+For technical support email: support@profaceamerica.com or call: 800.289.9266.
+                       ---------------------------------------------------------------------------------------
+
+© 2015 Pro-face America. Specifications may change without notice. Pro-face is a registered trademark of Digital
+Corporation. Other brand or product names are the property of their respective owners.
+
+Email: customercare@profaceamerica.com           APNT#1195 | GPro EX to Fanuc Robot R30iA via Ethernet
+Page 5 of 6                                                                   Date: January 2015 | Revision: none
+                                        1050 Highland Drive, Suite D | Ann Arbor, Michigan 48108
+                                         p: 800.289.9266 | f: 734.864.7347 | profaceamerica.com
+
+Email: customercare@profaceamerica.com  APNT#1195 | GPro EX to Fanuc Robot R30iA via Ethernet
+Page 6 of 6                                                          Date: January 2015 | Revision: none
+

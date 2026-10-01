@@ -1,8 +1,3 @@
-> Research snapshot from Phase 0 (2026-10-01), written by a research sub-agent from public sources.
-> It is background, not a specification: [../PROTOCOL.md](../PROTOCOL.md) is the maintained reference and
-> the robot is the authority. Text extracts of the manuals it cites are in
-> `vendor-docs/research/` (third-party copyright; private repository only).
-
 # GE SRTP / FANUC SNPX: what public sources say (as of 2026-10-01)
 
 Conventions: offsets are 0-based into the 56-byte header. Multi-byte fields are little-endian. "Index" is a 0-based element address, so %R1 is index 0. Tags such as [S1] refer to the source list at the end. **INFERRED** marks a conclusion I drew rather than read.
@@ -413,7 +408,7 @@ ScienceDirect returned 403. **Skipped** as instructed. The search snippets confi
 - **S7** https://github.com/TakkoTheBoss/gesrtp-fuzzer
 - **S8** https://github.com/BiasedControls/snpx-client
 - **S9** https://cscapehelp.hornerautomation.com/Content/HW_Config/ETN-SRTP.htm
-- **S10** FANUC B-82604EN/01, https://icdn.tradew.com/file/201606/1569362/pdf/7066339.pdf (text extract: `vendor-docs/research/cimplicity_b82604.txt`)
+- **S10** FANUC B-82604EN/01, https://icdn.tradew.com/file/201606/1569362/pdf/7066339.pdf (text extract in this folder: `cimplicity_b82604.txt`)
 - **S11** robot-forum.com threads:
   - a: /thread/40240
   - b: /thread/15582 and /thread/21949
@@ -424,7 +419,7 @@ ScienceDirect returned 403. **Skipped** as instructed. The search snippets confi
 - **S12** https://underautomation.com/fanuc/documentation/snpx (and `-registers`, `-io`, `-variables`, `-position`, `-alarms-tasks`, `-batch`)
 - **S13** https://github.com/MisoRobotics/fanuc-hmi-jointstreaming (BSD-3)
 - **S14** https://cdn.automationdirect.com/static/helpfiles/c-more/cm5/Content/121.htm and `.../370.htm`
-- **S15** Kepware GE Ethernet Driver Help v5, https://www.opcturkey.com/uploads/v5-ge-ethernet-manual.pdf (text extract: `vendor-docs/research/kepware_ge_ethernet.txt`)
+- **S15** Kepware GE Ethernet Driver Help v5, https://www.opcturkey.com/uploads/v5-ge-ethernet-manual.pdf (text extract: `kepware_ge_ethernet.txt`)
 - **S16** GE RX3i manual GFK-2224Q, p. 234: https://www.manualslib.com/manual/1258748/Ge-Rx3i.html?page=234
 - **S17** https://github.com/automayt/ICS-pcap/blob/master/GE-SRTP/Notes.txt
 - **S18** https://doc.realvirtual.io/components-and-scripts/interfaces/fanuc-pro

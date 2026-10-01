@@ -1,0 +1,572 @@
+<html>
+<head>
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-store">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title> ROBOT (robot) Homepage </title>
+
+
+<script language=javascript>
+<!--
+var openSetupWin = [null, null, null, null];
+var openLogWin = null;
+var openRuntimeWin = null;
+var openPickStatusWin = null;
+var openImageRegisters = null;
+var openTutorialListWin = null;
+var openTutorialWin = null;
+var openLenseWin = null;
+var appConf = [{page: "vsfrmn.stm", width: 1070, height: 960},
+               {page: "pufrmn.stm", width: 1070, height: 960},
+               {page: "bpiafr.stm", width: 1070, height: 840},
+               {page: "bppmfr.stm", width: 1070, height: 960},
+               {page: "vdfrmn.stm", width: 1070, height: 960},
+               {page: "vsmnsv.stm", width: 960,  height: 840}];
+
+function CenterPopup(URL, width, height) {
+  var left = (screen.width-width)/2;
+  if (left < 0) {
+    left = 0;
+  }
+  var top = (screen.height-height)/2;
+  if (top < 0) {
+    top = 0;
+  }
+  var features='toolbar=no, location=no, status=no, menubar=no, scrollbars=no, resizable=yes, ' +
+      'width=' + width + ', ' +
+      'height=' + height + ', ' +
+      'top=' + top + ', ' + //
+      'left=' + left;
+  var popup = null;
+  try {
+    popup = window.open(URL, "_blank", features, false);
+    if (popup == null) {
+      alert("Please enable pop-up windows in Internet Explorer.");
+    }
+    else {
+      popup.focus()
+    }
+  }
+  catch (err) {
+    alert("Failed to open window.\nCause: (" + err.name + " " + (err.number & 0xFFFF) + ") " + err.message + "\nRemedy: Please contact your FANUC technical representative.");
+  }
+  return popup;
+}
+
+function OpenVisionSetup(appType) {
+  if (appConf[appType - 1] !== undefined) {
+    try {
+      if (openSetupWin[appType - 1] && !openSetupWin[appType - 1].closed) {
+        // already open
+        openSetupWin[appType - 1].focus();
+        return;
+      }
+    } catch (err) {
+    }
+    openSetupWin[appType - 1] = CenterPopup("/frh/vision/vsset.stm?_toppage=" + appConf[appType - 1].page + "&_apptype=" + appType,
+                                            appConf[appType - 1].width, appConf[appType - 1].height);
+  }
+}
+
+function OpenVisionPage(varName, url, width, height) {
+  try {
+    if (window[varName] && !window[varName].closed) {
+      // already open
+      window[varName].focus();
+      return;
+    }
+  } catch (err) {
+  }
+  window[varName] = CenterPopup(url, width, height);
+}
+
+function OpenVisionLog() {
+  OpenVisionPage("openLogWin", "/frh/vision/vlfrmn.stm", 1024, 800);
+}
+function OpenVisionRuntime() {
+  OpenVisionPage("openRuntimeWin", "/frh/vision/vrfrmn.stm", 1024, 800);
+}
+function OpenImageRegisters() {
+  OpenVisionPage("openImageRegisters", "/frh/vision/vimreg.stm", 1024, 800);
+}
+function OpenIRPickStatus() {
+  OpenVisionPage("openPickStatusWin", "/frh/vision/psfrmn.stm", 1024, 840);
+}
+function OpenTutorialList() {
+  OpenVisionPage("openTutorialListWin", "/frh/vision/vtuthead.stm", 1280, 840);
+}
+function OpenTutorial() {
+  OpenVisionPage("openTutorialWin", "/frh/vision/vtuthead.stm?tutorialName=vtbggn", 1280, 840);
+}
+function OpenLense() {
+  OpenVisionPage("openLenseWin", "/frh/vision/lenseguide.htm", 1280, 840);
+}
+//-->
+</script>
+
+
+
+<script language=javascript>
+<!--
+var openIDEWin = null;
+var openPCEchoWin = null;
+var openPCNavWin = null;
+var openPCJogWin = null;
+var ietitle = 6;
+var tpkeys = 54;
+
+function CenterJogPopup(URL, width, height) {
+  var left = (screen.width-width)/2;
+  if (left < 0) {
+    left = 0;
+    width = screen.width;
+  }
+  var top = (screen.height-height)/2;
+  if (top < 0) {
+    top = 0;
+    height = screen.height;
+  }
+  var features='"toolbar=no, location=no, status=no, menubar=no, scrollbars=no, resizable=yes, ' +
+      'width=' + width + ', ' +
+      'height=' + height + ', ' +
+      'top=' + top + ', ' + //
+      'left=' + left + '"';
+  var popup = window.open(URL, "_blank", features, false);
+  if (popup == null) {
+    alert("Please enable pop-up windows in Internet Explorer.");
+  }
+  else {
+    popup.focus()
+  }
+  return popup;
+}
+
+function OpenIDEWin(hmi) {
+  try {
+    if (openIDEWin && !openIDEWin.closed) {
+      // already open
+      openIDEWin.focus();
+      return;
+    }
+  } catch (err) {
+  }
+  var htcg_port = parseInt("3080");
+  if (!htcg_port) {
+    htcg_port = 3080;
+  }
+  var ipaddr = 'http://' + location.hostname + ':' + htcg_port;
+  // Open jQuery connection
+  openIDEWin = CenterJogPopup(ipaddr + '/frh/jcgtp/irprog.stm', 1024, 800);
+}
+
+function OpenPCEchoWin(hmi) {
+  try {
+    if (openPCEchoWin && !openPCEchoWin.closed) {
+      // already open
+      openPCEchoWin.focus();
+      return;
+    }
+  } catch (err) {
+  }
+  if (hmi == true) {
+    // Open jQuery connection
+    openPCEchoWin = CenterJogPopup('/frh/jcgtp/echo.stm', 672 + 20, 504 + ietitle + 110);
+  }
+  else {
+    // Not quite 640x480 - sized to match iPendant Display
+    openPCEchoWin = CenterJogPopup('/frh/cgtp/echo.htm', 672, 504 + ietitle);
+  }
+}
+
+function OpenPCNavWin(hmi) {
+  try {
+    if (openPCNavWin && !openPCNavWin.closed) {
+      // already open
+      openPCNavWin.focus();
+      return;
+    }
+  } catch (err) {
+  }
+  if (hmi == true) {
+    // Open jQuery connection
+    openPCNavWin = CenterJogPopup('/frh/jcgtp/cgtp.stm', 1024, 800 - tpkeys);
+  }
+  else {
+    // Not quite 640x480 - sized to match iPendant Display
+    openPCNavWin = CenterJogPopup('/frh/cgtp/cgtp.htm', 672, 504 + ietitle);
+  }
+}
+
+function OpenPCJogWin(hmi) {
+  try {
+    if (openPCJogWin && !openPCJogWin.closed) {
+      // already open
+      openPCJogWin.focus();
+      return;
+    }
+  } catch (err) {
+  }
+  var htcg_port = parseInt("3080");
+  if (!htcg_port) {
+    htcg_port = 3080;
+  }
+  var ipaddr = 'http://' + location.hostname + ':' + htcg_port;
+  if (hmi == true) {
+    // Open jQuery connection
+    openPCJogWin = CenterJogPopup(ipaddr + '/frh/jcgtp/itp.stm', 1024, 800 - tpkeys);
+  }
+  else {
+    // Not quite 640x480 - sized to match iPendant Display
+    openPCJogWin = CenterJogPopup(ipaddr + '/frh/cgtp/itp.htm', 672, 504 + ietitle);
+  }
+}
+
+// Perform the genlink url with proper connect_id
+function genlink_url(menuhref) {
+  if (typeof (top.g_connect_id) == 'undefined') {
+    window.location.href = '/softpart/genlink?' + menuhref;
+  }
+  else {
+    window.location.href = '/softpart/genlink?connect_id=' + top.g_connect_id + '&' + menuhref;
+  }
+} // genlink_url
+
+//-->
+
+//Open Soft Panel
+function OpenSoftPanel(hmi) {
+  try {
+    if (openSoftPanel && !openSoftPanel.closed) {
+      // already open
+      openSoftPanel.focus();
+      return;
+    }
+  } catch (err) {
+  }
+  // Open jQuery connection
+  openSoftPanel = CenterJogPopup('/frh/jcgtp/sop.stm', 1024, 800);
+}
+
+</script>
+
+
+</head>
+<BODY bgcolor= #FFF9e3>
+
+<table width="100%" border="2">
+  <tr>
+  <td>
+  <table width="100%" bgcolor=#FFFFFF>
+  <tr>
+  <td width=175 align=center valign=middle><img src="/frs/logo.png"></td>
+  <td align=center valign=middle><strong><font color=#bc1e33 size=6>
+                WEB SERVER</font><br>
+        <font color=black size=3>
+                Hostname: ROBOT<br>
+                Robot No: F546175   <br>
+                File Name: /md/version.dg<br>
+                Date:  26/10/02
+                Time: 07:19:54
+        </font></strong></td>
+  <td width=175></td>
+  </tr>
+  </table>
+  </td>
+  </tr>
+</table>
+<PRE>
+F Number: F546175   
+VERSION : LR HandlingTool      
+$VERSION: V9.30146      5/27/2021
+DATE:     02-OCT-26 07:19 
+
+VERSION INFORMATION::
+SOFTWARE:              ID:
+LR HandlingTool       7DF3/17
+S/W Serial No.      : 2574750003
+Controller ID       : 8072033   
+Robot No.           : F546175   
+Manufacturing ID    : 
+LR Mate 200iD/7L, LR Handling 
+LR Mate 200iD/7L      V9.30P/17 
+Servo Code          : V09.01    
+Cart. Mot. Parameter: V3.00
+JNT. Mot. Parameter : V3.00
+DCS                 : V4.2.14
+Stop pattern        : A
+Software Edition No.: V9.30P/17 
+Update Version      : None
+Customization Ver.  : None
+Root Version        : V9.30146  
+Boot MONITOR        : V9.40P/18
+Teach Pendant       : 7D0A/01P
+Browser Plugins     : V9.30146
+TP Core Firmware    : V9.30P/17
+TP Operating System : 01.55/7.0
+HTML5 Browser       : 1.2.0.0
+FPGA Version        : 1
+Media from FRA        06/01/2021
+
+CONFIG::
+FEATURE:              ORD NO:
+LR HandlingTool       H551
+English Dictionary    H521
+4D Standard           R782
+Analog I/O            H550
+Angle Shift           J614
+Auto Software Update  ATUP
+Automatic Backup      J545
+Background Editing    J616
+Camera I/F            VCAM
+Common calib UIF      CUIF
+Condition Monitor     J628
+Control Reliable      CNRE
+DHCP                  R526
+Data Acquisition      R631
+Diagnostic log        RSCH
+Displaying License    LICE
+Document Viewer       DOCV
+Dual Check Safety UIF DCSU
+Enhanced UIF          R869
+Enhanced User Frame   J604
+Ext. DIO Config       EIOC
+Extended Error Log    R542
+Extended User Frames  R696
+External DI BWD       ESET
+FCTN Menu Save        J516
+FTP Interface         J716
+GigE Interface        R681
+Group Mask Exchange   MASK
+HTTP Proxy Svr        PRXY
+High-Speed Skip       J627
+Host Communications   HOCO
+Hour Meter            J513
+I/O Interconnect 2    J542
+Incr Instruction      J510
+Incremental Jog       J637
+KAREL Cmd. Language   J650
+KAREL Run-Time Env    J539
+Kernel + Basic S/W    H510
+License Checker       LCHK
+LogBook(System)       OPLG
+MACROs, Skip/Offset   J503
+MH Core               MHCR
+MMR Motion log        PSLG
+Mate controller       MATE
+MechStop Protection   MCSP
+Mirror Shift          J506
+Mixed logic           J554
+Mode Switch           MDSW
+Motion Diag. Core     MDCO
+Motion Optm. Core     OPCO
+Motion Profiler       MPRO
+Motion logger         R637
+Multi-Tasking         J600
+PCM function          PCMF
+Palletizing           J500
+Position Registers    J514
+Print Function        J507
+Prog Num Selection    J515
+Program Adjust        J517
+Program Shift         J505
+Program Status        PRST
+Program Viewer        J697
+RDM Robot Discovery   FRDM
+Realtime Freq Anlys   FREQ
+Remote Conn Standard  RMCN
+Robot Servo Code      H930
+SNPX basic            SNBA
+SNTP Client           R610
+Shift Library         SHLB
+Shift and Mirror Lib  SMLB
+Socket Messaging      R636
+TCP Auto Set          J520
+TCP/IP Interface      HTCP
+TMILIB Interface      TMIL
+TP Firmware           R789
+TP Menu Accounting    TPAC
+TPTX                  TPTX
+Telnet Interface      TELN
+Tool Offset           J509
+Torque Simulator I/F  J882
+Touch Panel           R781
+Trouble Diag. & Prev. J958
+Tutorial              TUTO
+USR EVNT              UEVT
+Unexcepted motn Check UECK
+User Frame            UFRM
+VCalibration Common   VCCM
+Vision Core           VCOR
+Vision Library        VIPL
+Vision SP CSCX        CSCX
+Vision SP CSGE        CSGE
+Vision SP CSUI        CSUI
+Web Plus              WEBP
+Web Server            HTTP
+Web Svr Enhancements  R626
+ZDT Application       R882
+ZDT EOAT Setup        ATUI
+iPendant              CGTP
+iPendant Grid Display IGUI
+iPendant Setup        IPGS
+iRCalib. Standard     IRCL
+iRDiag Core           DGCO
+LR Mate 200iD/7L      H753
+2D Guidance Plus      R905
+4D Graphics           R764
+ADV-CP Path Ctrl      R806
+ADV-CP Speed Ctrl     R805
+Advanced DCS Package  R859
+Advanced EIP ADP Pkg  R860
+Alarm Cause/Remedy    R665
+AutoSingularityAvoidM R512
+Collision Guard       R534
+Collision Guard Pack  J684
+Constant Path         R663
+Cycle Time Priority   J523
+DCS Pos./Speed check  J567
+DCS Safe I/O connect  J568
+Data trans.betw.Robot J740
+Domain Name Serv.     J755
+Ethernet/IP Adapter   R784
+Ethernet/IP EDA       R822
+FRA Params            R650
+HMI Device (SNPX)     R553
+Internet Conn/Custo   R558
+Jog in Auto Mode      R694
+Math Function         J593
+Motion Interface      R583
+Motion Package        R809
+NRTL                  J547
+Online Help           R664
+PC Remote iPendant    R850
+Persistent Strg       NVDT
+ROS Ethernet Packets  R603
+Remote iPendant       R843
+Singularity Avoidance R792
+Vision support tools  J873
+iPendant Haptic       R848
+iRVision 2D Pkg       R685
+iRVision GiGe Camera  R697
+iRVision Img. File CS R728
+iRVision Inspect Pkg  R688
+64MB DRAM             D064
+64MB FROM             F064
+Auto SingularityAvoid RTSA
+Cell I/O              CLIO
+Common shell          R645
+Common shell core     CMSC
+Common softpanel      CMSP
+Common style select   STYL
+Corner Region         R654
+Cycle time Opt.       CTOP
+DCS Pos./speed common DCSC
+Demo Control          R769
+EMAIL Enhancements    JNN8
+Email Client          JNN7
+Enhanced Rob Serv Req ORSR
+Enhanced T1 Mode      R680
+Ethernet/IP I/O Adp.  R538
+HapticMotion          HPMO
+Include Remote TP     JCGT
+Linear Distance       R633
+MR Standard           MRST
+Max Speed             R634
+No memory card        NOMC
+OPC-UA                OPCU
+OPT TP Ins            OPIS
+Process Speed         R644
+Real Simple Syn.(RSS) R679
+Requires CP           CPRQ
+Robot Library Setup   RLCM
+Robot Service Request SRSR
+SMB Client            R677
+Servo Schedule        SVSH
+Vision 3DL Lib        V3DL
+Vision Image File CS  CSIF
+Vision Karel Builtin  PBVX
+Vision SP APLC        APLC
+Vision SP APVO        APVO
+Vision SP CCGP        CCGP
+Vision SP CCRG        CCRG
+Vision SP CDCM        CDCM
+Vision SP CDLS        CDLS
+Vision SP CSBU        CSBU
+Vision SP CSKW        CSKW
+Vision SP CTAC        CTAC
+Vision SP CTBI        CTBI
+Vision SP CTBL        CTBL
+Vision SP CTCB        CTCB
+Vision SP CTCC        CTCC
+Vision SP CTCE        CTCE
+Vision SP CTCF        CTCF
+Vision SP CTCO        CTCO
+Vision SP CTCS        CTCS
+Vision SP CTCT        CTCT
+Vision SP CTEH        CTEH
+Vision SP CTEP        CTEP
+Vision SP CTEV        CTEV
+Vision SP CTEX        CTEX
+Vision SP CTFI        CTFI
+Vision SP CTFL        CTFL
+Vision SP CTGC        CTGC
+Vision SP CTGL        CTGL
+Vision SP CTGS        CTGS
+Vision SP CTHS        CTHS
+Vision SP CTIA        CTIA
+Vision SP CTIS        CTIS
+Vision SP CTLN        CTLN
+Vision SP CTML        CTML
+Vision SP CTMO        CTMO
+Vision SP CTMW        CTMW
+Vision SP CTNS        CTNS
+Vision SP CTPA        CTPA
+Vision SP CTPC        CTPC
+Vision SP CTRI        CTRI
+Vision SP CTSC        CTSC
+Vision SP CTSI        CTSI
+Vision SP CTWI        CTWI
+Vision SP CTWS        CTWS
+Vision SP VGFS        VGFS
+Vision SP VP2M        VP2M
+Vision SP VP2N        VP2N
+Vision SP VP2S        VP2S
+Vision SP VPDS        VPDS
+Vision SP VPFF        VPFF
+Vision SP VPIS        VPIS
+Vision TUT VP2S01     VT21
+Vision TUT VP2S02     VT22
+Vision TUT VTBGGN     VTBG
+Vision Training UIF   CVSU
+iHMI UIF Components   IHCP
+iRConnect for iRVisn  VIRC
+iRVision KAREL Calib  KLVC
+iRVision KAREL I/F    CVKL
+iRVision TPP I/F      CVTP
+
+CONFIG2::
+DEMO. FEATURE:        ORD NO:
+
+MOTOR::
+    GR: AX:     MOTOR ID AND INFO:
+     1   1      biSR1/6000 20A H1 DSP1-S1
+     1   2      biSR1/6000 20A H2 DSP1-S2
+     1   3    biSR0.5/6000 20A H3 DSP1-S3
+     1   4    biSR0.4/6000 20A H4 DSP1-S4
+     1   5    biSR0.2/6000 10A H5 DSP1-S5
+     1   6    biSR0.2/6000 10A H6 DSP1-S6
+
+SERVO::
+GROUP: AXIS:  SERVO PARAM ID:
+     1   1    P02.02
+     1   2    P02.02
+     1   3    P02.02
+     1   4    P02.02
+     1   5    P02.02
+     1   6    P02.02
+
+</PRE>
+</BODY>
+</HTML>
+

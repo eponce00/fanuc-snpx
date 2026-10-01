@@ -1,0 +1,120 @@
+<HTML> <HEAD> <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE"></HEAD> <BODY> <PRE>
+F Number: F00000    
+VERSION : HandlingTool         
+$VERSION: V9.10121      11/9/2018
+DATE:     13-JAN-20 08:54 
+
+IO STATUS::
+
+AIN[   1]    0  
+AOUT[   1]    0  test
+GIN[   1]    0  RecipeReadData
+GOUT[   1]    0  RecipeEchoData
+UI[   1] OFF  *IMSTP
+UI[   2] OFF  *Hold
+UI[   3] OFF  *SFSPD
+UI[   4] OFF  Cycle stop
+UI[   5]  ON  Fault reset
+UI[   6]  ON  Start
+UI[   7] OFF  Home
+UI[   8]  ON  Enable
+UI[   9] OFF  RSR1/PNS1/STYLE1
+UI[  10] OFF  RSR2/PNS2/STYLE2
+UI[  11] OFF  RSR3/PNS3/STYLE3
+UI[  12] OFF  RSR4/PNS4/STYLE4
+UI[  13] OFF  RSR5/PNS5/STYLE5
+UI[  14] OFF  RSR6/PNS6/STYLE6
+UI[  15] OFF  RSR7/PNS7/STYLE7
+UI[  16] OFF  RSR8/PNS8/STYLE8
+UI[  17] OFF  PNS strobe
+UI[  18] OFF  Prod start
+UO[   1] OFF  Cmd enabled
+UO[   2] OFF  System ready
+UO[   3] OFF  Prg running
+UO[   4] OFF  Prg paused
+UO[   5]  ON  Motion held
+UO[   6]  ON  Fault
+UO[   7] OFF  At perch
+UO[   8]  ON  TP enabled
+UO[   9] OFF  Batt alarm
+UO[  10] OFF  Busy
+UO[  11] OFF  ACK1/SNO1
+UO[  12] OFF  ACK2/SNO2
+UO[  13] OFF  ACK3/SNO3
+UO[  14] OFF  ACK4/SNO4
+UO[  15] OFF  ACK5/SNO5
+UO[  16] OFF  ACK6/SNO6
+UO[  17] OFF  ACK7/SNO7
+UO[  18] OFF  ACK8/SNO8
+UO[  19] OFF  SNACK
+UO[  20] OFF  Reserved
+SI[   1] OFF  Fault reset
+SI[   2]  ON  Remote
+SI[   3]  ON  Hold
+SI[   4] OFF  
+SI[   5] OFF  
+SI[   6] OFF  Cycle start
+SI[   7] OFF  
+SI[   8]  ON  CE/CR Select b0
+SI[   9]  ON  CE/CR Select b1
+SI[  10] OFF  
+SI[  11] OFF  
+SI[  12] OFF  
+SI[  13] OFF  
+SI[  14] OFF  
+SI[  15] OFF  
+SI[  16] OFF  
+SO[   1] OFF  Cycle start
+SO[   2]  ON  Hold
+SO[   3]  ON  Fault LED
+SO[   4] OFF  Batt alarm
+SO[   5] OFF  
+SO[   6] OFF  
+SO[   7]  ON  TP enabled
+SO[   8] OFF  
+SO[   9] OFF  
+SO[  10] OFF  
+SO[  11] OFF  
+SO[  12] OFF  
+SO[  13] OFF  
+SO[  14] OFF  
+SO[  15] OFF  
+SO[  16] OFF  
+RI[   1] OFF  rin1
+RI[   2] OFF  
+RI[   3] OFF  
+RI[   4] OFF  
+RI[   5] OFF  
+RI[   6] OFF  
+RI[   7] OFF  
+RI[   8] OFF  
+RO[   1] OFF  rout
+RO[   2] OFF  
+RO[   3] OFF  
+RO[   4] OFF  
+RO[   5] OFF  
+RO[   6] OFF  
+RO[   7] OFF  
+RO[   8] OFF  
+FLG[   1] OFF  asdf                      FLG[ 513] OFF                          
+FLG[   2] OFF                            FLG[ 514] OFF                          
+FLG[   3] OFF                            FLG[ 515] OFF                          
+FLG[   4] OFF                            FLG[ 516] OFF                          
+FLG[   5]  ON                            FLG[ 517] OFF                          
+FLG[   6]  ON                            FLG[ 518] OFF                          
+FLG[   7] OFF                            FLG[ 519] OFF                          
+FLG[   8]  ON                            FLG[ 520] OFF                          
+FLG[   9] OFF                            FLG[ 521] OFF                          
+FLG[  10] OFF                            FLG[ 522] OFF                          
+FLG[  11] OFF                            FLG[ 523] OFF                          
+FLG[  12] OFF                            FLG[ 524] OFF                          
+FLG[  13] OFF                            FLG[ 525] OFF                          
+FLG[  14] OFF                            FLG[ 526] OFF                          
+FLG[  15] OFF                            FLG[ 527] OFF                          
+FLG[  16] OFF                            FLG[ 528] OFF                          
+FLG[  17] OFF                            FLG[ 529] OFF                          
+FLG[  18] OFF                            FLG[ 530] OFF                          
+FLG[  19] OFF                            FLG[ 531] OFF                          
+FLG[  20] OFF                            FLG[ 532] OFF                          
+FLG[  21] OFF                            FLG[ 533] OFF                          
+FLG[  22] OFF                            FLG[ 534] OFF                          

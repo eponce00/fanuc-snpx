@@ -1,0 +1,23 @@
+<html>
+<head>
+<!-- Reload the document every 1 second -->
+<META HTTP-EQUIV="refresh" CONTENT="1">
+<title>Picture</title>
+</head>
+<body bgcolor="#FFFFFF">
+<script id=clientEventHandlersJS language=javascript>
+<!--
+var drive = '/frs/';
+
+  if (window.parent.pic.document.img1.src != drive + 'ledr.gif')
+    window.parent.pic.document.img1.src = drive + 'ledr.gif';
+
+
+
+  if (window.parent.pic.document.img2.src != drive + 'lednone.gif')
+    window.parent.pic.document.img2.src = drive + 'lednone.gif';
+
+//-->
+</script>
+</body>
+</html>

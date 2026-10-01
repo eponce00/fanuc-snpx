@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="eg">
+<head>
+<meta charset="iso-8859-1">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-store">
+<meta http-equiv="Pragma" content="no-cache">
+
+
+
+
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+<link href="/frs/robothp.css" rel="stylesheet" type="text/css">
+
+<script>
+if (window.navigator.userAgent.toLowerCase().indexOf("msie") != -1){
+  if (window.navigator.appVersion.toLowerCase().indexOf("msie 6.") != -1){
+    window.location.href = "../FRSU/OLDHP.STM";
+  }
+}
+</script>
+<script src="/frh/jcgtp/jquery.js"></script>
+<script>
+jQuery(function($) {
+  /* variable */
+  var ua = window.navigator.userAgent.toLowerCase();
+  var MAINCOL_MARGINE = 2;
+  var MAINCOL_PARENT_SIZE_LIMIT = 620;
+  var MAINCOL_JCGTP_SIZE_LIMIT = 510;
+  var MAINCOL_CGTP_SIZE_LIMIT = 425;
+  var CGTP_SIZE_MIN_HEIGHT = "520px";
+  var naviWidth;
+  var maincolSize;
+  var maincolLimit;
+  var visionElem;
+
+  /* functions */
+  function selectedNavi(hash){
+    $(".c-navi__item>a").each(function() {
+      if ($(this).attr('href') == hash) {
+        if (!$(this).parent().hasClass("c-navi__item--active")) {
+          $(this).parent().removeClass("c-navi__item--focus");
+          $(this).parent().addClass("c-navi__item--active");
+        }
+      } else {
+        $(this).parent().removeClass("c-navi__item--active");
+        $(this).parent().removeClass("c-navi__item--focus");
+      }
+    });
+  }
+
+  function changePage(hash){
+    $(".p-maincolinner > a").each(function(){
+      var name = $(this).attr("name");
+      if (name == hash) {
+        $(this).parent().css("display", "block");
+      } else {
+        $(this).parent().css("display", "none");
+      }
+    });
+  }
+
+  function AdjustMaincol(){
+    setTimeout(function(){
+      maincolSize = $(window).width() - naviWidth;
+      if (ua.indexOf("echo") == -1) {
+        if (maincolSize <= maincolLimit) {
+          maincolSize = maincolLimit;
+        }
+      }
+      $("#maincol").width(maincolSize - MAINCOL_MARGINE);
+    }, 300);
+  }
+
+  /* init config*/
+  if ( (ua.indexOf("msie 7") != -1) && (ua.indexOf("trident") != -1) ) {
+    if (window.matchMedia) {
+      ua = ua.replace("msie 7", "");
+    }
+  }
+  if (ua.indexOf("msie 7") != -1) {
+    $('body').addClass('ie7');
+    if (top.document.location.href.toLowerCase().indexOf('cgtp') == -1) {
+      $('body').addClass('parent');
+    }
+  }
+  if (top.location.href.toLowerCase().indexOf("cgtp") == -1) {
+    maincolLimit = MAINCOL_PARENT_SIZE_LIMIT;
+  } else if ( (top.location.href.toLowerCase().indexOf("jcgtp") > -1)) {
+    $('body').addClass('remote');
+    maincolLimit = MAINCOL_JCGTP_SIZE_LIMIT;
+  } else {
+    $('body').addClass('remote');
+    maincolLimit = MAINCOL_CGTP_SIZE_LIMIT;
+    $('body').addClass('cgtp');
+    $('body').css("min-height", CGTP_SIZE_MIN_HEIGHT);
+  }
+
+  /* bind events */
+  $('.p-linkbtnwrap .c-linkbtn a')
+    .focusin(function() {
+      this.style.backgroundColor = '#4a7799';
+    })
+    .focusout(function() {
+      this.style.backgroundColor = '#67727e';
+    });
+
+  if (ua.indexOf("msie 7") > -1) {
+    var oldHash = location.hash.replace("#", "");
+    var curHash;
+    var checkHash = setInterval(function(){
+      curHash = location.hash.replace("#", "");
+      if (curHash != oldHash) {
+        changePage(curHash);
+        selectedNavi(location.hash);
+        oldHash = curHash;
+      }
+    }, 100);
+  } else {
+    $(window).on("hashchange", function() {
+      var hash = location.hash.replace("#", "");
+      changePage(hash);
+      selectedNavi(location.hash);
+    });
+  }
+
+  /* init display */
+  if ( (top.document.location.href.toLowerCase().indexOf('jcgtp') > -1) && (top.document.location.href.toLowerCase().indexOf('echo') > -1) ) {
+    var mainfrm = $('#mainfrm',parent.parent.document).height();
+    var primstat = $('#primstat',parent.document).height();
+    var zoomResize = mainfrm - primstat;
+    $('#prim',parent.document).css("height", zoomResize);
+    $(window).resize(function(){
+      setTimeout(function(){
+        var mainfrm = $('#mainfrm',parent.parent.document).height();
+        var primstat = $('#primstat',parent.document).height();
+        var zoomResize = mainfrm - primstat;
+        $('#prim',parent.document).css("height", zoomResize);
+      }, 500);
+    });
+  }
+
+  if ( (ua.indexOf("msie 7") > -1) || (ua.indexOf("msie 8") > -1) ) {
+    naviWidth = $("#navi").width();
+    $(window).on("resize", function(){
+      AdjustMaincol();
+    });
+    AdjustMaincol();
+  }
+
+  if (location.hash == "") {
+    $(".p-maincolinner").eq(0).css("display", "block");
+  } else {
+    changePage(location.hash.replace("#", ""));
+  }
+
+  /* adjust min-width & min-height when display iRVision */
+  visionElem = document.getElementById('sbj01');
+  if (visionElem !== null) {
+    $('body').addClass('vision');
+  }
+});
+
+//$("c-navi__item>a") HTMLAnchorElement is undefined sometimese when onready in IE9.
+$(window).load(function(){
+  var urlTxt = location.hash;
+  var liHref;
+
+  /* bind events */
+  $('.c-navi__item>a')
+    .focusin(function(e) {
+      $(this).parent().addClass("c-navi__item--focus");
+    })
+    .focusout(function(e) {
+      $(this).parent().removeClass("c-navi__item--focus");
+    });
+
+  /* init display */
+  if($(".c-navi__item>a").attr("href").indexOf(urlTxt)){
+    $(".c-navi__item>a").each(function(){
+      liHref = $(this).attr("href");
+      if(urlTxt == liHref){
+        $(this).parent().addClass("c-navi__item--active");
+      }
+    });
+  }else{
+    $(".c-navi__item").eq(0).addClass("c-navi__item--active");
+  }
+});
+
+</script>
+
+
+<title>ROBOT Homepage</title>
+
+
+<script language=javascript>
+<!--
+var openSetupWin = [null, null, null, null];
+var openLogWin = null;
+var openRuntimeWin = null;
+var openPickStatusWin = null;
+var openImageRegisters = null;
+var openTutorialListWin = null;
+var openTutorialWin = null;
+var openLenseWin = null;
+var appConf = [{page: "vsfrmn.stm", width: 1070, height: 960},
+               {page: "pufrmn.stm", width: 1070, height: 960},
+               {page: "bpiafr.stm", width: 1070, height: 840},
+               {page: "bppmfr.stm", width: 1070, height: 960},
+               {page: "vdfrmn.stm", width: 1070, height: 960},
+               {page: "vsmnsv.stm", width: 960,  height: 840}];
+
+function CenterPopup(URL, width, height) {
+  var left = (screen.width-width)/2;
+  if (left < 0) {
+    left = 0;
+  }
+  var top = (screen.height-height)/2;
+  if (top < 0) {
+    top = 0;
+  }
+  var features='toolbar=no, location=no, status=no, menubar=no, scrollbars=no, resizable=yes, ' +
+      'width=' + width + ', ' +
+      'height=' + height + ', ' +
+      'top=' + top + ', ' + //
+      'left=' + left;
+  var popup = null;
+  try {
+    popup = window.open(URL, "_blank", features, false);
+    if (popup == null) {
+      alert("Please enable pop-up windows in Internet Explorer.");
+    }
+    else {
+      popup.focus()
+    }
+  }
+  catch (err) {
+    alert("Failed to open window.\nCause: (" + err.name + " " + (err.number & 0xFFFF) + ") " + err.message + "\nRemedy: Please contact your FANUC technical representative.");
+  }
+  return popup;
+}
+
+function OpenVisionSetup(appType) {
+  if (appConf[appType - 1] !== undefined) {
+    try {
+      if (openSetupWin[appType - 1] && !openSetupWin[appType - 1].closed) {
+        // already open
+        openSetupWin[appType - 1].focus();
+        return;
+      }
+    } catch (err) {
+    }
+    openSetupWin[appType - 1] = CenterPopup("/frh/vision/vsset.stm?_toppage=" + appConf[appType - 1].page + "&_apptype=" + appType,
+                                            appConf[appType - 1].width, appConf[appType - 1].height);
+  }
+}
+
+function OpenVisionPage(varName, url, width, height) {
+  try {
+    if (window[varName] && !window[varName].closed) {
+      // already open
+      window[varName].focus();
+      return;
+    }
+  } catch (err) {
+  }
+  window[varName] = CenterPopup(url, width, height);
+}
+
+function OpenVisionLog() {
+  OpenVisionPage("openLogWin", "/frh/vision/vlfrmn.stm", 1024, 800);
+}
+function OpenVisionRuntime() {
+  OpenVisionPage("openRuntimeWin", "/frh/vision/vrfrmn.stm", 1024, 800);
+}
+function OpenImageRegisters() {
+  OpenVisionPage("openImageRegisters", "/frh/vision/vimreg.stm", 1024, 800);
+}
+function OpenIRPickStatus() {
+  OpenVisionPage("openPickStatusWin", "/frh/vision/psfrmn.stm", 1024, 840);
+}
+function OpenTutorialList() {
+  OpenVisionPage("openTutorialListWin", "/frh/vision/vtuthead.stm", 1280, 840);
+}
+function OpenTutorial() {
+  OpenVisionPage("openTutorialWin", "/frh/vision/vtuthead.stm?tutorialName=vtbggn", 1280, 840);
+}
+function OpenLense() {
+  OpenVisionPage("openLenseWin", "/frh/vision/lenseguide.htm", 1280, 840);
+}
+//-->
+</script>
+
+
+<script language=javascript>
+<!--
+var openIDEWin = null;
+var openPCEchoWin = null;
+var openPCNavWin = null;
+var openPCJogWin = null;
+var ietitle = 6;
+var tpkeys = 54;
+
+function CenterJogPopup(URL, width, height) {
+  var left = (screen.width-width)/2;
+  if (left < 0) {
+    left = 0;
+    width = screen.width;
+  }
+  var top = (screen.height-height)/2;
+  if (top < 0) {
+    top = 0;
+    height = screen.height;
+  }
+  var features='"toolbar=no, location=no, status=no, menubar=no, scrollbars=no, resizable=yes, ' +
+      'width=' + width + ', ' +
+      'height=' + height + ', ' +
+      'top=' + top + ', ' + //
+      'left=' + left + '"';
+  var popup = window.open(URL, "_blank", features, false);
+  if (popup == null) {
+    alert("Please enable pop-up windows in Internet Explorer.");
+  }
+  else {
+    popup.focus()
+  }
+  return popup;
+}
+
+function OpenIDEWin(hmi) {
+  try {
+    if (openIDEWin && !openIDEWin.closed) {
+      // already open
+      openIDEWin.focus();
+      return;
+    }
+  } catch (err) {
+  }
+  var htcg_port = parseInt("3080");
+  if (!htcg_port) {
+    htcg_port = 3080;
+  }
+  var ipaddr = 'http://' + location.hostname + ':' + htcg_port;
+  // Open jQuery connection
+  openIDEWin = CenterJogPopup(ipaddr + '/frh/jcgtp/irprog.stm', 1024, 800);
+}
+
+function OpenPCEchoWin(hmi) {
+  try {
+    if (openPCEchoWin && !openPCEchoWin.closed) {
+      // already open
+      openPCEchoWin.focus();
+      return;
+    }
+  } catch (err) {
+  }
+  if (hmi == true) {
+    // Open jQuery connection
+    openPCEchoWin = CenterJogPopup('/frh/jcgtp/echo.stm', 672 + 20, 504 + ietitle + 110);
+  }
+  else {
+    // Not quite 640x480 - sized to match iPendant Display
+    openPCEchoWin = CenterJogPopup('/frh/cgtp/echo.htm', 672, 504 + ietitle);
+  }
+}
+
+function OpenPCNavWin(hmi) {
+  try {
+    if (openPCNavWin && !openPCNavWin.closed) {
+      // already open
+      openPCNavWin.focus();
+      return;
+    }
+  } catch (err) {
+  }
+  if (hmi == true) {
+    // Open jQuery connection
+    openPCNavWin = CenterJogPopup('/frh/jcgtp/cgtp.stm', 1024, 800 - tpkeys);
+  }
+  else {
+    // Not quite 640x480 - sized to match iPendant Display
+    openPCNavWin = CenterJogPopup('/frh/cgtp/cgtp.htm', 672, 504 + ietitle);
+  }
+}
+
+function OpenPCJogWin(hmi) {
+  try {
+    if (openPCJogWin && !openPCJogWin.closed) {
+      // already open
+      openPCJogWin.focus();
+      return;
+    }
+  } catch (err) {
+  }
+  var htcg_port = parseInt("3080");
+  if (!htcg_port) {
+    htcg_port = 3080;
+  }
+  var ipaddr = 'http://' + location.hostname + ':' + htcg_port;
+  if (hmi == true) {
+    // Open jQuery connection
+    openPCJogWin = CenterJogPopup(ipaddr + '/frh/jcgtp/itp.stm', 1024, 800 - tpkeys);
+  }
+  else {
+    // Not quite 640x480 - sized to match iPendant Display
+    openPCJogWin = CenterJogPopup(ipaddr + '/frh/cgtp/itp.htm', 672, 504 + ietitle);
+  }
+}
+
+// Perform the genlink url with proper connect_id
+function genlink_url(menuhref) {
+  if (typeof (top.g_connect_id) == 'undefined') {
+    window.location.href = '/softpart/genlink?' + menuhref;
+  }
+  else {
+    window.location.href = '/softpart/genlink?connect_id=' + top.g_connect_id + '&' + menuhref;
+  }
+} // genlink_url
+
+//-->
+
+//Open Soft Panel
+function OpenSoftPanel(hmi) {
+  try {
+    if (openSoftPanel && !openSoftPanel.closed) {
+      // already open
+      openSoftPanel.focus();
+      return;
+    }
+  } catch (err) {
+  }
+  // Open jQuery connection
+  openSoftPanel = CenterJogPopup('/frh/jcgtp/sop.stm', 1024, 800);
+}
+
+</script>
+
+
+</head>
+<!-- On iPendant -->
+<body>
+
+
+
+
+
+
+
+<!-- On iPendant -->
+  
+    
+    
+      
+    
+    
+      
+    
+    
+  
+
+
+
+<!-- On iPendant -->
+  
+    
+      
+      
+        
+      
+    
+  
+
+
+<style>
+.cvsu_avail {
+
+}
+</style>
+
+<div id="wrapper">
+  <div class="header"></div>
+  <div id="container">
+    <div id="navi">
+      <div class="c-navi__header">
+        <h1>ROBOT<br>Homepage</h1>
+        <br>
+        Hostname: ROBOT<br>
+        Robot No: F546175   <br>
+      </div>
+      <div class="c-navi__list">
+        <ul>
+
+           <!--Include Remote TP -->
+          <!-- On iPendant -->
+          
+          
+          <li class="c-navi__item c-navi__item--enable"><a class="" href="#sbj04">HMI iPendant</a></li>
+          
+          
+          
+          
+
+            <!--COLD START ONLY-->
+          
+          
+          <li class="c-navi__item c-navi__item--enable"><a class="" href="#sbj01">iRVision</a></li>
+          
+          
+          
+
+          
+          <li class="c-navi__item c-navi__item--enable"><a class="" href="#sbj03">PC iPendant</a></li>
+          
+
+          <li class="c-navi__item c-navi__item--enable"><a class="" href="#sbj05">Current Robot Status</a></li>
+          <li class="c-navi__item c-navi__item--enable"><a class="twoline" href="#sbj06">Active Program/<br>Variables/Diagnostics</a></li>
+
+               <!--Requires Web Svr Enhancements -->
+          <li class="c-navi__item c-navi__item--enable"><a class="" href="#sbj07">Robot Tools</a></li>
+          
+
+          
+          <li class="c-navi__item c-navi__item--enable"><a class="" href="#sbj08">RSS Alarm Feed</a></li>
+          
+          <li class="c-navi__item c-navi__item--enable"><a class="" href="#sbj09">Contact Information</a></li>
+          <li class="c-navi__item c-navi__item--enable"><a class="" href="#sbj10">Note</a></li>
+        </ul>
+      </div>
+    </div>
+    <div id="maincol">
+       <!--Include Remote TP -->
+      
+      <div class="p-maincolinner">
+          <a id="sbj04" name="sbj04"></a>
+        <div class="p-maintitle">
+          <h2>HMI iPendant</h2>
+        </div>
+        <div class="p-maincontents">
+          <div class="p-linkbtnwrap">
+              <!--COLD START ONLY-->
+            <!-- PC Editor -->
+            
+             <!--Remote iPendant -->
+            <div class="c-linkbtn">
+              <a href="" onClick="this.href='JavaScript:OpenPCEchoWin(true)'">
+                <span class="c-linkbtn__txt btnlink27">Monitor<br>iPendant<br>(JECHO)</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_27"></div></span>
+              </a>
+            </div>
+            <div class="c-linkbtn">
+              <a href="" onClick="this.href='JavaScript:OpenPCNavWin(true)'">
+                <span class="c-linkbtn__txt btnlink28">Navigate<br>iPendant<br>(JCGTP)</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_28"></div></span>
+              </a>
+            </div>
+            <div class="c-linkbtn">
+              <a href="" onClick="this.href='JavaScript:OpenPCJogWin(true)'">
+                <span class="c-linkbtn__txt btnlink29">Jogging<br>iPendant<br>(JITP)</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_29"></div></span>
+              </a>
+            </div>
+            
+            <div class="c-linkbtn">
+              <a href="../FRH/JCGTP/WEBGL.STM">
+                <span class="c-linkbtn__txt btnlink24">Full<br>Screen<br>4D Display</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_24"></div></span>
+              </a>
+            </div>
+            
+            
+              <!--COLD START ONLY-->
+            <div class="c-linkbtn">
+              <a href="" onClick="this.href='JavaScript:OpenSoftPanel()'">
+                <span class="c-linkbtn__txt btnlink4">Soft Operator Panel</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_54"></div></span>
+              </a>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      
+      
+
+        <!--COLD START ONLY-->
+      
+      <div class="p-maincolinner">
+        <a id="sbj01" name="sbj01"></a>
+        <div class="p-maintitle">
+          
+            <h2>iRVision</h2>
+          
+        </div>
+        <div class="p-horizontal_element">
+          <div class="p-first_element cvsu_avail">
+
+            <div class="c-teaching_item__txt">
+              Teaching
+            </div>
+            <div class="p-line"></div>
+            <div class="c-linkbtn_2">
+              <a href="" onClick="this.href='JavaScript:OpenVisionSetup(1)'">
+                <span class="c-linkbtn_2__txt btnlink4">iRVision<br>Vision Setup</span>
+                <span class="c-linkbtn_2__icn"><div class="c-img_btnlink_04"></div></span>
+              </a>
+            </div>
+
+            
+
+            <div class="c-linkbtn_2_2__txt">
+              Perform all the work necessary for teaching iRVision, such as initializing the camera settings and creating a vision process.<br>You can also run tests of the vision process you created to confirm its operation.
+            </div>
+
+            
+          </div>
+
+          
+
+          <div class="p-third_element">
+            <div class="c-production_status_item__txt">
+              Production Status
+            </div>
+            <div class="p-line"></div>
+
+            <div class="c-linkbtn_6">
+              <a href="" onClick="this.href='JavaScript:OpenVisionRuntime()'">
+                <span class="c-linkbtn_6__txt btnlink5">iRVision<br>Vision Runtime</span>
+                <span class="c-linkbtn_6__icn"><div class="c-img_btnlink_05"></div></span>
+              </a>
+            </div>
+
+            
+
+            <div class="c-linkbtn_6_2__txt">
+              Display vision results and images during production.
+            </div>
+
+            
+          </div>
+
+          <div class="p-fourth_element cvsu_avail">
+            <div class="c-info_item__txt">
+              Information and Settings
+            </div>
+            <div class="p-line"></div>
+
+            <div class="c-linkbtn_8">
+              <a href="" onClick="this.href='JavaScript:OpenVisionSetup(5)'">
+                <span class="c-linkbtn_8__txt btnlink43">Vision Devices</span>
+                <span class="c-linkbtn_8__icn"><div class="c-img_btnlink_43"></div></span>
+              </a>
+            </div>
+
+            <div class="c-linkbtn_9">
+              <a href="" onClick="this.href='JavaScript:OpenVisionLog()'">
+                <span class="c-linkbtn_9__txt btnlink6">Vision Log</span>
+                <span class="c-linkbtn_9__icn"><div class="c-img_btnlink_06"></div></span>
+              </a>
+            </div>
+
+            <div class="c-linkbtn_11">
+              <a href="" onClick="this.href='JavaScript:OpenImageRegisters()'">
+                <span class="c-linkbtn_11__txt btnlink53">Image Registers</span>
+                <span class="c-linkbtn_11__icn"><div class="c-img_btnlink_53"></div></span>
+              </a>
+            </div>
+
+            <div class="c-linkbtn_10">
+              <a href="" onClick="this.href='JavaScript:OpenVisionSetup(6)'">
+                <span class="c-linkbtn_10__txt btnlink42">Vision Config</span>
+                <span class="c-linkbtn_10__icn"><div class="c-img_btnlink_42"></div></span>
+              </a>
+            </div>
+
+
+            <div class="c-linkbtn_8_2__txt">
+              Display connection information about the iRVision devices connected to the robot controller.
+            </div>
+
+            <div class="c-linkbtn_9_2__txt">
+              Display vision results and images recorded in the vision log.
+            </div>
+
+            <div class="c-linkbtn_11_2__txt">
+              Display the images stored in the image register.<br>The image register is an area for temporarily storing captured images.
+            </div>
+
+            <div class="c-linkbtn_10_2__txt">
+              Configure the general iRVision system settings.<br>In most cases, you don't have to change these settings, and you can use iRVision with the default configuration.
+            </div>
+
+          </div>
+         </div>
+
+         <div class="p-fifth_element cvsu_avail">
+           <div class="c-linkbtn_12">
+             <a href="" onClick="this.href='JavaScript:OpenTutorial()'">
+               <span class="c-linkbtn_12__txt btnlink4">Information for Beginners</span>
+             </a>
+           </div>
+
+            <div class="c-linkbtn_12_2__txt">
+              Explanations of iRVision basic concepts, setup procedures, and fundamental terminology.<br>Please read this before using iRVision for the first time.
+            </div>
+
+            <div class="c-linkbtn_13">
+              <a href="" onClick="this.href='JavaScript:OpenTutorialList()'">
+                <span class="c-linkbtn_13__txt btnlink4">Tutorials</span>
+                <span class="c-linkbtn_13__icn"><div class="c-img_btnlink_52"></div></span>
+              </a>
+            </div>
+
+            <div class="c-linkbtn_13_2__txt">
+              Materials for learning the basics of using iRVision.<br>By following the tutorials, you can learn how to set up a typical application.
+            </div>
+
+            
+
+        </div>
+
+        <div class="p-clearfix">
+        </div>
+      </div>
+      
+
+      
+      
+
+      
+      <div class="p-maincolinner">
+        <a id="sbj03" name="sbj03"></a>
+        <div class="p-maintitle">
+          <h2>PC iPendant</h2>
+        </div>
+        <div class="p-maincontents">
+          <div class="p-linkbtnwrap">
+            <div class="c-linkbtn">
+              <a href="" onClick="this.href='JavaScript:OpenPCEchoWin(false)'">
+                <span class="c-linkbtn__txt btnlink22">Monitor<br>iPendant<br>(ECHO)</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_22"></div></span>
+              </a>
+            </div>
+            
+            <div class="c-linkbtn">
+              <a href="" onClick="this.href='JavaScript:OpenPCNavWin(false)'">
+                <span class="c-linkbtn__txt btnlink23">Navigate<br>iPendant<br>(CGTP)</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_23"></div></span>
+              </a>
+            </div>
+            
+            <div class="c-linkbtn">
+              <a href="../FRH/CGTP/TPGL.STM">
+                <span class="c-linkbtn__txt btnlink24">Full<br>Screen<br>4D Display</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_24"></div></span>
+              </a>
+            </div>
+            
+            <div class="c-linkbtn">
+              <a href="/FRS/FILEVIEW.STM">
+                <span class="c-linkbtn__txt btnlink25">TreeView/File</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_25"></div></span>
+              </a>
+            </div>
+            
+                         <!--PC Remote iPendant -->
+            <div class="c-linkbtn">
+              <a href="" onClick="this.href='JavaScript:OpenPCJogWin(false)'">
+                <span class="c-linkbtn__txt btnlink26">Jogging<br>iPendant<br>(ITP)</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_26"></div></span>
+              </a>
+            </div>
+            <!--Jog in Auto Mode -->
+          </div>
+        </div>
+      </div>
+      
+
+      <div class="p-maincolinner">
+        <a id="sbj05" name="sbj05"></a>
+        <div class="p-maintitle">
+          <h2>Current Robot Status</h2>
+        </div>
+        <div class="p-maincontents">
+          <div class="p-linkbtnwrap">
+            
+            
+            <div class="c-linkbtn">
+              
+              
+              
+              <a href="../MD/SUMMARY.DG?_TEMPLATE=FRS:SUMMTMP">
+              
+              
+                <span class="c-linkbtn__txt btnlink12">Summary<br>Configuration<br>/Status</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_12"></div></span>
+              </a>
+            </div>
+            <div class="c-linkbtn">
+              <a href="../MD/ERRALL.LS">
+                <span class="c-linkbtn__txt btnlink13">Error Listing</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_13"></div></span>
+              </a>
+            </div>
+            <div class="c-linkbtn">
+              <a href="../MD/PRGSTATE.DG">
+                <span class="c-linkbtn__txt btnlink14">Current<br>Program<br>States</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_14"></div></span>
+              </a>
+            </div>
+            <div class="c-linkbtn">
+              <a href="../MD/IOSTATE.DG">
+                <span class="c-linkbtn__txt btnlink15">Current<br>IO Values</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_15"></div></span>
+              </a>
+            </div>
+            <div class="c-linkbtn">
+              <a href="../MD/SFTYSIG.DG">
+                <span class="c-linkbtn__txt btnlink16">Current<br>Stop<br>Signals</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_16"></div></span>
+              </a>
+            </div>
+            <div class="c-linkbtn">
+              <a href="../MD/CURPOS.DG">
+                <span class="c-linkbtn__txt btnlink17">Current<br>Robot<br>Position</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_17"></div></span>
+              </a>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      <div class="p-maincolinner">
+        <a id="sbj06" name="sbj06"></a>
+        <div class="p-maintitle">
+          <h2>Active Program Variables / Diagnostics</h2>
+        </div>
+        <div class="p-maincontents">
+          <div class="p-linkbtnwrap">
+            <div class="c-linkbtn">
+              <a href="../MD/INDEX_VR.HTM">
+                <span class="c-linkbtn__txt btnlink18">Variable files<br>available<br>on MD:</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_18"></div></span>
+              </a>
+            </div>
+            <div class="c-linkbtn">
+              <a href="../MD/INDEX_TP.HTM">
+                <span class="c-linkbtn__txt btnlink19">TP Program<br>files available<br>on MD:</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_19"></div></span>
+              </a>
+            </div>
+            <!-- Torch Angle -->
+            
+            <div class="c-linkbtn">
+              <a href="../MD/INDEX_VD.HTM" onClick="">
+                <span class="c-linkbtn__txt btnlink7">Vision<br>Data Files</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_07"></div></span>
+              </a>
+            </div>
+            
+            <div class="c-linkbtn">
+              <a href="../MD/INDEX_ER.HTM">
+                <span class="c-linkbtn__txt btnlink20">Error/Diagnostic<br>files (text)<br>available on MD:</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_20"></div></span>
+              </a>
+            </div>
+            <div class="c-linkbtn">
+              <a href="../MD/INDEX_OT.HTM">
+                <span class="c-linkbtn__txt btnlink21">Other files<br>available<br>on MD:</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_21"></div></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+           <!--Requires Web Svr Enhancements -->
+      <div class="p-maincolinner">
+        <a id="sbj07" name="sbj07"></a>
+        <div class="p-maintitle">
+          <h2>Robot Tools</h2>
+        </div>
+        <div class="p-maincontents">
+          <div class="p-linkbtnwrap">
+            
+            <div class="c-linkbtn">
+              <a href="/KAREL/COMMAIN">
+                <span class="c-linkbtn__txt btnlink30">Comment<br>Tool</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_30"></div></span>
+              </a>
+            </div>
+            <div class="c-linkbtn">
+              <a href="/KAREL/COMUSER">
+                <span class="c-linkbtn__txt btnlink31">Browser<br>Tool</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_31"></div></span>
+              </a>
+            </div>
+            <div class="c-linkbtn">
+              <a href="/KAREL/COMSEARCH">
+                <span class="c-linkbtn__txt btnlink32">Search<br>Tool</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_32"></div></span>
+              </a>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="p-maincolinner">
+        <a id="sbj08" name="sbj08"></a>
+        <div class="p-maintitle">
+          <h2>RSS Alarm Feed</h2>
+        </div>
+        <div class="p-maincontents">
+          <div class="p-linkbtnwrap">
+            <div class="c-linkbtn">
+              <a href="../RSS/RSS.STM">
+                <span class="c-linkbtn__txt btnlink50">Monitor Alarms<br>using RSS</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--btnlink_50"></div></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="p-maincolinner">
+        <a id="sbj09" name="sbj09"></a>
+        <div class="p-maintitle">
+          <h2>Contact Information</h2>
+        </div>
+        <div class="p-maincontents">
+          <div class="p-linkbtnwrap">
+            <div class="c-linkbtn">
+              <a href="http://www.fanuc.co.jp/">
+                <span class="c-linkbtn__txt btnlink1">FANUC<br>Corporation</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--fanucja"></div></span>
+              </a>
+            </div>
+            <div class="c-linkbtn">
+              <a href="http://www.fanucamerica.com/">
+                <span class="c-linkbtn__txt btnlink2">FANUC<br>America<br>Corporation</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--fanucus"></div></span>
+              </a>
+            </div>
+            <div class="c-linkbtn">
+              <a href="http://www.fanuc.eu/">
+                <span class="c-linkbtn__txt btnlink3">FANUC<br>Europe<br>Corporation</span>
+                <span class="c-linkbtn__icn"><div class="c-sprite c-sprite--fanuceu"></div></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-maincolinner">
+        <a id="sbj10" name="sbj10"></a>
+        <div class="p-maintitle">
+          <h2>Note</h2>
+        </div>
+        <div class="p-maincontents">
+          <p class="p-notetxt">The default homepage can be overridden by placing the desired homepage on the robot (FR:INDEX.HTM). If the Web Enhancements Option is loaded, a dynamic homepage can be used (FR:INDEX.STM).</p>
+          
+          <br><p class="p-notetxt"><strong>NOTE 2 :</strong> PC Remote iPendant Access requires that the iPendant Controls be loaded on your PC.  The ECHO screen requires a physical iPendant be attached to the robot.  The CGTP screen requires that the IPCC option be loaded. Full Screen 4D Display requires the 4D Graphics Option.</p>
+          <script>
+          var ip = 0;
+          try {
+            var tgbtn = new ActiveXObject("FRIPControls.FRIPToggleButton.1");
+            tgbtn = null;
+            ip = 1;
+          } catch (err) { /* nop */ };
+          if (ip) {
+            document.write('<br><p class="p-notetxt">iPendant Controls detected.</p>');
+          }
+          else {
+            document.write('<br><p class="p-notetxt">iPendant Controls not detected.</p>');
+          }
+          </script>
+          
+          <br><p class="p-notetxt">Browser Agent: <script>document.write(navigator.userAgent);</script></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</BODY>
+</HTML>

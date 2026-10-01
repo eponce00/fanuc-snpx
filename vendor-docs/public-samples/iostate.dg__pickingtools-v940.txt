@@ -1,0 +1,120 @@
+F Number: E210325  
+VERSION : LR HandlingTool      
+$VERSION: V9.40373      5/31/2024
+DATE:     04-JUL-28 16:04 
+
+IO STATUS::
+
+DIN[  81]  ON  Hold
+DIN[  82] OFF  RESET
+DIN[  83] OFF  START
+DIN[  84]  ON  ENABLE
+DIN[  85] OFF  
+DIN[  86] OFF  
+DIN[  87] OFF  
+DIN[  88] OFF  
+DIN[ 101]  ON  Schutztuer
+DIN[ 102]  ON  TABLAR_LINKS
+DIN[ 103]  ON  TABLAR_RECHTS
+DIN[ 104]  ON  Druckluft
+DIN[ 105] OFF  Vakuum Greifer
+DIN[ 106] OFF  Vakuum r. Tablar Pick
+DIN[ 107] OFF  
+DIN[ 108] OFF  
+DIN[ 109] OFF  
+DIN[ 110] OFF  
+DIN[ 111] OFF  
+DIN[ 112] OFF  
+DOUT[  81] OFF  Green
+DOUT[  82]  ON  Red
+DOUT[  83] OFF  None
+DOUT[  84] OFF  Orange
+DOUT[ 101] OFF  
+DOUT[ 102] OFF  
+DOUT[ 103] OFF  
+DOUT[ 104] OFF  
+DOUT[ 105] OFF  
+DOUT[ 106] OFF  
+DOUT[ 107] OFF  
+DOUT[ 108] OFF  
+DOUT[ 109] OFF  
+DOUT[ 110] OFF  
+DOUT[ 111] OFF  
+DOUT[ 112] OFF  
+UI[   1]  ON  *IMSTP
+UI[   2]  ON  *Hold
+UI[   3]  ON  *SFSPD
+UI[   4] OFF  Cycle stop
+UI[   5] OFF  Fault reset
+UI[   6] OFF  Start
+UI[   8]  ON  Enable
+UI[   9] OFF  RSR1/PNS1/STYLE1
+UI[  10] OFF  RSR2/PNS2/STYLE2
+UI[  11] OFF  RSR3/PNS3/STYLE3
+UI[  12] OFF  RSR4/PNS4/STYLE4
+UI[  17] OFF  PNS strobe
+UO[   1] OFF  Cmd enabled
+UO[   6]  ON  Fault
+UO[   9] OFF  Batt alarm
+UO[  10] OFF  Busy
+SI[   1] OFF  Fault reset
+SI[   2]  ON  Remote
+SI[   3]  ON  Hold
+SI[   4] OFF  
+SI[   5] OFF  
+SI[   6] OFF  Cycle start
+SI[   7] OFF  
+SI[   8]  ON  CE/CR Select b0
+SI[   9] OFF  CE/CR Select b1
+SI[  10] OFF  
+SI[  11] OFF  
+SI[  12] OFF  
+SI[  13] OFF  
+SI[  14] OFF  
+SI[  15] OFF  
+SI[  16]  ON  
+SO[   1] OFF  Cycle start
+SO[   2] OFF  Hold
+SO[   3]  ON  Fault LED
+SO[   4] OFF  Batt alarm
+SO[   5] OFF  
+SO[   6] OFF  
+SO[   7]  ON  TP enabled
+SO[   8] OFF  
+SO[   9] OFF  
+SO[  10] OFF  
+SO[  11] OFF  
+SO[  12] OFF  
+SO[  13] OFF  
+SO[  14] OFF  
+SO[  15] OFF  
+SO[  16] OFF  
+RI[   1] OFF  Vakuum EIN
+RI[   2] OFF  
+RI[   3] OFF  
+RI[   4] OFF  
+RI[   5] OFF  
+RI[   6] OFF  
+RI[   7] OFF  
+RI[   8] OFF  
+RO[   1]  ON  Vakuum ausschalten
+RO[   2] OFF  Vakuum einschalten
+RO[   3]  ON  Wafer Vakuum AUS
+RO[   4] OFF  Wafer Vakuum EIN
+RO[   5] OFF  
+RO[   6] OFF  
+RO[   7] OFF  
+RO[   8] OFF  
+FLG[   1] OFF  start_bit                 FLG[ 513] OFF                          
+FLG[   2] OFF                            FLG[ 514] OFF                          
+FLG[   3] OFF                            FLG[ 515] OFF                          
+FLG[   4] OFF                            FLG[ 516] OFF                          
+FLG[   5] OFF                            FLG[ 517] OFF                          
+FLG[   6] OFF                            FLG[ 518] OFF                          
+FLG[   7] OFF                            FLG[ 519] OFF                          
+FLG[   8] OFF                            FLG[ 520] OFF                          
+FLG[   9] OFF                            FLG[ 521] OFF                          
+FLG[  10] OFF                            FLG[ 522] OFF                          
+FLG[  11] OFF                            FLG[ 523] OFF                          
+FLG[  12] OFF                            FLG[ 524] OFF                          
+FLG[  13] OFF                            FLG[ 525] OFF                          

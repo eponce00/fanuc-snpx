@@ -51,6 +51,6 @@ The session layer refuses any write that does not carry a `WriteAuthorization` p
 
 ## Operating rules
 
-- Do not commit policy files, evidence logs, controller dumps or vendor manuals (`.gitignore` covers them).
+- Do not commit policy files, evidence logs or controller dumps (`.gitignore` covers them). Vendor manuals live only in `vendor-docs/` (private reference, never packaged; remove from history before any public release).
 - Hardware tests are read-only and run only with `FANUC_SNPX_HARDWARE=1`.
 - Writes on a real robot only on targets the robot owner named, with someone at the pendant.

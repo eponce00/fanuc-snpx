@@ -1,0 +1,3283 @@
+GE Ethernet Driver Help
+
+             © 2013 Kepware Technologies
+2                                                                                      GE Ethernet Driver Help
+
+  Table of Contents                                                                                               2
+                                                                                                                  5
+       Table of Contents                                                                                          5
+           GE Ethernet Driver Help                                                                                6
+           Overview                                                                                               7
+                                                                                                                  8
+       Device Setup                                                                                               8
+           Communications Parameters                                                                             10
+           Variable Import Settings                                                                              10
+           PLC Settings                                                                                          11
+                                                                                                                 12
+       Automatic Tag Database Generation                                                                         12
+           Tag Hierarchy                                                                                         14
+           Import File-to-Server Name Conversions                                                                14
+           Importing VersaPro Tags                                                                               15
+                                                                                                                 15
+                 VersaPro Import Preparation: VersaPro Steps                                                     16
+                 VersaPro Import Preparation: OPC Server Steps                                                   17
+                 Highlighting VersaPro Variables                                                                 18
+                 VersaPro Array Tag Import                                                                       18
+           Importing Cimplicity Logic Developer Tags                                                             18
+                 Cimplicity Logic Developer Import Preparation: Logic Developer Steps                            18
+                 Cimplicity Logic Developer Import Preparation: OPC Server Steps                                 21
+                 Highlighting Cimplicity Logic Developer Variables                                               21
+                 Cimplicity Logic Developer Array Tag Import                                                     21
+           Importing Proficy Logic Developer Tags                                                                23
+                 Proficy Logic Developer Import Preparation: Logic Developer Steps                               25
+                 Proficy Logic Developer Import Preparation: OPC Server Steps                                    26
+                 Highlighting Proficy Logic Developer Variables                                                  26
+                 Proficy Logic Developer Array Tag Import                                                        27
+                                                                                                                 30
+       Optimizing Your GE Ethernet Communications                                                                31
+       Data Types Description                                                                                    32
+       Address Descriptions                                                                                      32
+                                                                                                                 33
+           PACSystems Addressing                                                                                 34
+           Symbolic Variables                                                                                    35
+           311 Addressing                                                                                        36
+           313 Addressing                                                                                        37
+           331 Addressing
+           341 Addressing
+           350 Addressing
+           360 Addressing
+           731 Addressing
+           732 Addressing
+           771 Addressing
+
+                                                                   www. kepware.com
+GE Ethernet Driver Help                                                                                       3
+
+772 Addressing                                                                                                38
+
+781 Addressing                                                                                                39
+
+782 Addressing                                                                                                40
+
+GE OPEN Addressing                                                                                            41
+
+Horner OCS Addressing                                                                                         42
+
+VersaMax Addressing                                                                                           43
+
+Advanced Addressing                                                                                           44
+
+Special Items                                                                                                 45
+
+Error Descriptions                                                                                            48
+
+Address Validation Error Messages                                                                             48
+
+Address '<address>' is out of range for the specified device or register                                      49
+
+Array size is out of range for address '<address>'                                                            49
+
+Array support is not available for the specified address: '<address>'                                         49
+
+Data Type '<type>' is not valid for device address '<address>'                                                49
+
+Device address '<address>' contains a syntax error                                                            49
+
+Device address '<address>' is not supported by model '<model name>'                                           50
+
+Device address '<address>' is Read Only                                                                       50
+
+Missing address                                                                                               50
+
+Device Status Messages                                                                                        50
+
+Attempting to reacquire symbolic variable mapping information for device '<device name>'. Cannot read
+
+or write symbolic variables until complete                                                                    50
+
+Device '<device name>' not responding                                                                         50
+
+Unable to write to '<address>' on device '<device name>'                                                      51
+
+Driver Error Messages                                                                                         51
+
+Bit access is invalid for the device data type '<native data type>' at address '<address>' in device
+
+'<device>'                                                                                                    51
+
+Bit index '<bit index>' is not valid for the device data type '<native data type>' at address '<address>' in
+
+device '<device>'                                                                                             52
+
+Device '<device name>' returned error code <error num> reading n byte(s) starting at <address>                52
+
+The address length of the symbolic variable addressed by '<tag name>' on device '<device>' is bigger
+
+than the configured block size for this device. Deactivating tag                                              52
+
+The array size of address '<address>' on device '<device name>' must be the same as symbolic variable's
+
+array size of [rows][cols]                                                                                    52
+
+The data type of the symbolic variable addressed by '<address>' on device '<device name>' is not com-
+
+patible with tag                                                                                              52
+
+The symbolic discrete array size of '<size in bytes>' bytes at address '<address>' on device '<device>'
+
+exceeds the configured '<block size>' maximum request bytes                                                   53
+
+The symbolic variable name in tag address '<address>' does not exist in current configuration of device
+
+'<device name>'                                                                                               53
+
+Winsock initialization failed (OS Error = n)                                                                  53
+
+Winsock V1.1 or higher must be installed to use the GE Ethernet device driver                                 54
+
+Automatic Tag Database Generation Messages                                                                    54
+
+Database Error: Array tags '<orig. tag name><dimensions>' exceed 31 characters. Tags renamed to '<new
+
+                                   www. kepware.com
+4                                                                GE Ethernet Driver Help
+
+   tag name><dimensions>'                                                                                 54
+
+   Database Error: Data type '<type>' arrays are currently not supported. Tag '<array tag name>' not
+
+   created                                                                                                54
+
+   Database Error: Data type '<type>' for tag '<tag name>' is currently not supported. Tag not created    55
+
+   Database Error: Data type '<type>' for tag '<tag name>' not found in import file. Setting to default   55
+
+   Database Error: Logic Developer Variable Arrays are currently not supported. Array Tag(s) '<array tag
+
+   name>' not created                                                                                     55
+
+   Database Error: No Reference Address found for tag '<tag name>' in import file. Tag not created        55
+
+   Database Error: Only variables with Data Source '<data source name>' are imported. Data Source '<data
+
+   source name>' is not supported. Tag '<tag name>' not created                                           56
+
+   Database Error: Tag '<orig. tag name>' exceeds 31 characters. Tag renamed to '<new tag name>'          56
+
+   Unable to generate a tag database for device <device name>. Reason: Import file is invalid or corrupt 56
+
+   Unable to generate a tag database for device <device name>. Reason: Low memory resources               56
+
+   Index                                                                                                  57
+
+                           www. kepware.com
+5                    GE Ethernet Driver Help
+
+   GE Ethernet Driver Help
+
+   Help version 1.061
+
+   CONTENTS
+
+   Overview
+   What is the GE Ethernet Driver?
+
+   Device Setup
+   How do I configure a device for use with this driver?
+
+   Automatic Tag Database Generation
+   How can I easily configure tags for the GE Ethernet Driver?
+
+   Optimizing Your GE Ethernet Communications
+   How do I get the best performance from the GE Ethernet Driver?
+
+   Data Types Description
+   What data types does this driver support?
+
+   Address Descriptions
+   How do I address a data location on a GE device?
+
+   Error Descriptions
+   What error messages does the GE Ethernet Driver produce?
+
+   Overview
+
+   The GE Ethernet Driver provides an easy and reliable way to connect GE Ethernet controllers to OPC Client appli-
+   cations, including HMI, SCADA, Historian, MES, ERP and countless custom applications. It is intended for use
+   with GE Programmable Logic Controllers that may be accessed via an Ethernet module.
+
+   www. kepware.com
+GE Ethernet Driver Help                    6
+
+Device Setup
+
+Supported Devices
+Series 90-30 311/313, 331/341, 350, 360
+Series 90-70 731/732, 771/772, 781/782
+GE OPEN (Wide Range Model Support)
+Horner OCS (Horner's Operator Control Stations)
+PACSystems RX3i and RX7i
+VersaMax Family
+
+Communication Protocol
+Ethernet, using Winsock V1.1 or higher.
+
+Connection Timeout
+This parameter specifies the time that the driver will wait for a connection to be made with a device. Depending
+on network load, the connection time may vary with each attempt. The valid range is 1 to 60 seconds. The default
+setting is 3 seconds.
+
+Request Timeout
+This parameter specifies the time that the driver will wait on a response from the device before giving up and
+going on to the next request. Longer timeouts will only affect performance if a device is not responding. The valid
+range is 50 to 30000 milliseconds. The default setting is 1000 milliseconds.
+
+Retry Attempts
+This parameter specifies the number of times that the driver will retry a message before giving up and going on
+to the next message. The valid range is 1 to 10. The default setting is 3 retries.
+
+Device IDs
+Up to 1024 devices may be defined on a given channel. Each device on the channel must be uniquely identified
+by its own IP address. The LogicMaster 90 TCP software supplied by GE can be used to configure the IP address
+of an Ethernet module. In general, the Device ID has the following format: YYY.YYY.YYY.YYY, where YYY des-
+ignates the device IP address. Each YYY byte should be in the range of 0 to 255.
+
+Automatic Tag Database Generation
+For more information, refer to Variable Import Settings.
+
+Cable Diagrams
+
+                         www. kepware.com
+7  GE Ethernet Driver Help
+
+   Communications Parameters
+
+   This dialog is used to define the device's port number and the maximum number of bytes of data that can be
+   received in a single request.
+
+                                                                www. kepware.com
+GE Ethernet Driver Help  8
+
+Descriptions of the parameters are as follows:
+
+      l TCP/IP port: This parameter specifies the TCP/IP port number that the remote device is configured to
+           use. The default setting is 18245.
+
+      l Max. bytes per request: This parameter specifies the number of bytes that may be requested from a
+           device at one time. To refine this driver's performance, configure the request size to one of the following
+           settings: 32, 64, 128, 256, 512, 1024, or 2048 bytes. The default value is 2048 bytes.
+
+Variable Import Settings
+
+This dialog is used to locate the Variable Import File, specify the tag description import setting, and define how to
+use an alias data type.
+
+Descriptions of the parameters are as follows:
+      l Variable Import File: This parameter specifies the exact location of the variable import file (.snf or .csv
+           file extension) or Logic Developer variable import file (.txt or other file extension) from which variables will
+           be imported. It is this file that will be used when Automatic Tag Database Generation is instructed to
+           create the tag database. All tags will be imported and expanded according to their respective data types.
+      l Display Descriptions: When checked, this option will import tag descriptions. If necessary, a descrip-
+           tion will be given to tags with long names that state the original tag name.
+      l Use Alias Data Type If Possible: When checked, this option will use the data type assigned to an alias
+           tag in the import file. If the alias data type is incompatible with the source tag data type, the source tag
+           data type will be used instead.
+
+See Also: Automatic Tag Database Generation
+
+PLC Settings
+
+This dialog is used to define the Program Name and the CPU Slot Location.
+
+                                                             www. kepware.com
+9  GE Ethernet Driver Help
+
+   Descriptions of the parameters are as follows:
+         l Program Name: This parameter is required in order to access program block registers (P) or sub-
+              program block registers (L). It is also referred to as the Control Program Task Name, and must be seven
+              characters or less in length. The name will default to uppercase. It may be obtained by accessing _PROG-
+              NAME or from the following programming packages:
+              Proficy Machine Edition - Logic Developer
+              Cimplicity Machine Edition - Logic Developer
+              For 90-70 PLCs: The program name is referred to as the PLC Target Name. It is located under Target
+              Properties (Inspector).
+              For PACSystems: The program name is located under Properties for "Program Block _MAIN".
+              Note: In VersaPro, the program name is referred to as the Folder Nickname. It is located under PLC |
+              Status Info.
+         l CPU Slot Location: This parameter specifies the physical location of the device on the rack. For CPUs
+              that take up two slots, the leftmost slot covered is the CPU slot. The valid range is 0 to 15. The default set-
+              ting is slot 1.
+
+   See Also: Special Items
+
+                                                                www. kepware.com
+GE Ethernet Driver Help                    10
+
+Automatic Tag Database Generation
+
+The GE Ethernet Device Driver generates its tags offline based on variables imported from a text file. It is offline
+in that a connection to the device is not required to generate tags. The text file (variables to import) can originate
+from one of the following applications:
+
+     1. Proficy Machine Edition - Logic Developer
+
+     2. Cimplicity Machine Edition - Logic Developer
+
+     3. VersaPro
+
+There are two parts to Automatic Tag Database Generation: creating a variable import file from the application in
+use and generating tags based on the variable import file from the OPC server. It is recommended that users
+become familiar with the second part before starting the first part.
+
+Note: For information on creating variable import files, refer to Importing VersaPro Tags, Importing Proficy
+Logic Developer Tags or Importing Cimplicity Logic Developer Tags.
+
+Overview
+If the target device supports its own local tag database, the driver will read the device's tag information and use
+this data to generate OPC tags within the OPC server. If the device does not natively support its own named tags,
+the driver will create a list of tags based on driver-specific information. An example of these two conditions is as
+follows:
+
+     1. If a data acquisition system supports its own local tag database, the driver will use the tag names found in
+           the device to build the server's OPC tags.
+
+     2. If an Ethernet I/O system supports detection of its own available I/O module types, the driver will auto-
+           matically generate OPC tags in the server. These tags will be based on the types of I/O modules plugged
+           into the Ethernet I/O rack.
+
+The generated tags are assigned names in the OPC server that are based on the variables imported. These tags
+are also placed in meaningful tag groups to provide a structured and manageable interface. The end result is a
+well-organized OPC server project that directly reflects the variable import file.
+
+See Also: Tag Hierarchy and Import File-To-Server Name Conversions.
+
+Generating Tag Database While Preserving Previously Generated Tag Databases
+Under certain circumstances, multiple imports into the server are required to import all tags of interest. This is
+the case with importing VersaPro System variables and non-System variables into the same OPC server project.
+In the Database Creation dialog under Device Properties, click on the selection Perform the following action.
+The options available are "Delete on create," "Overwrite as necessary," "Do not overwrite," and "Do not overwrite,
+log error". After the first OPC server import/database creation completes, users should check that the action is
+set to "Do not overwrite" or "Do not overwrite, log error" for future imports. This will allow tags to be imported
+without deleting or overwriting tags that were previously imported.
+
+Tag Hierarchy
+
+The tags created through Automatic Tag Generation follow a specific hierarchy. The root level groups (or sub-
+group levels of the group specified in the "Add generated tags to the following group" parameter) are determined
+by the variable addresses referenced (such as R, G, M, and so forth). For example, every variable that is of
+address type "R" will be placed in a root level group called "R". Each array tag is provided in its own subgroup of
+the parent group. The name of the array subgroup provides a description of the array. For example, an array
+"R10[6]" defined in the import file would have a subgroup name "R10_x". X signifies that dimension 1 exists.
+
+Tags in "R10_x" Group
+
+Tag Name  Tag Address    Comment
+                         Full array
+R10_x     R10[6]         Array element 1
+                         Array element 2
+R10_10    R10            Array element 3
+                         Array element 4
+R10_11    R11            Array element 5
+                         Array element 6
+R10_12    R12
+
+R10_13    R13
+
+R10_14    R14
+
+R10_15    R15
+
+                         www. kepware.com
+11                                                     GE Ethernet Driver Help
+
+    Symbolic Variable Arrays
+    Symbolic variable tags (in PACSystems only) are placed in a group called Symbolic. Symbolic variable arrays are
+    not automatically broken out into individual element tags, and will not be placed in a separate group. A single
+    array tag will be generated for each symbolic variable array in the Symbolic group. For example, if a 2x3 array of
+    symbolic variables named "MySymbolicArray" is defined in the import file, then a single tag with name "MySym-
+    bolicArray" and address "!MySymbolicArray"[2][3] would be generated in the Symbolic group.
+
+    Although symbolic variable arrays are not automatically broken out into individual array element tags, an array ele-
+    ment tag will be placed in the Symbolic group if an individual array element symbolic variable is listed in the
+    import file. For example, an import file that contains an entry for array element (0,1) of the "MySymbolicArray"
+    would appear as "MySymbolicArray[0,1]". A tag with address "!MySymbolicArray{0}{1}" would be generated in
+    the Symbolic group.
+
+    See Also: Symbolic Variables
+
+    Import File-to-Server Name Conversions
+
+    Leading Characters
+
+          l The server does not accept group and tag names beginning with an underscore. Leading underscores (_)
+               in tag names will be replaced with U_.
+
+          l The server does not accept group and tag names beginning with a percent sign. Leading percents (%) in
+               tag names will be replaced with P_.
+
+          l The server does not accept group and tag names beginning with a pound sign. Leading pound signs (#)
+               in tag names will be replaced with PD_.
+
+          l The server does not accept group and tag names beginning with a dollar sign. Leading dollar signs ($) in
+               tag names will be replaced with D_.
+
+    Invalid Characters in Name
+    The only characters allowed in the server tag name are A-Z, a-z, 0-9, and underscore (_). As mentioned above, a
+    tag name cannot begin with an underscore. All other invalid characters encountered will be converted to a
+    sequence of characters that are valid. The table below displays the invalid character and sequence of characters
+    that it is replaced with when encountered in the import file variable name.
+
+    Invalid Character  Replace With
+    $                  D_
+    %                  P_
+    +                  PL_
+    -                  M_
+    #                  PD_
+    @                  A_
+    <                  L_
+    >                  G_
+    =                  E_
+
+    Group and Tag Name Length Limitations
+    The GE Ethernet Driver limits group and tag names to 31 characters. Names that exceed 31 characters will be
+    truncated as follows:
+
+    Non-Array
+
+         1. Determine a 5-digit Unique ID for this tag.
+         2. Given a tag name: ThisIsALongTagNameAndProbablyExceeds31
+         3. Truncate tag at 31: ThisIsALongTagNameAndProbablyEx
+         4. Room is made for the Unique ID: ThisIsALongTagNameAndProba#####
+         5. Insert this ID: ThisIsALongTagNameAndProba00000
+
+    Array
+
+                                     www. kepware.com
+GE Ethernet Driver Help                    12
+
+     1. Determine a 5-digit Unique ID for this array.
+     2. Given an array tag name: ThisIsALongTagNameAndProbablyExceeds31_23
+     3. Truncate tag at 31 while holding on to the element values: ThisIsALongTagNameAndPr_23
+     4. Room is made for the Unique ID: ThisIsALongTagName#####_23
+     5. Insert this ID: ThisIsALongTagName00001_23
+
+Importing VersaPro Tags
+
+This driver uses Shared Name Files (SNF) that are generated from VersaPro in order to generate the tag data-
+base. Certain aspects of the Automatic Tag Database Generation process depend on the application from which
+variables are imported. For more information on a specific aspect of VersaPro tag import, select a link from the list
+below.
+
+VersaPro Import Preparation: VersaPro Steps
+VersaPro Import Preparation: OPC Server Steps
+Highlighting VersaPro Variables
+VersaPro Array Tag Import
+
+Note: To import tags using a different application, refer to Automatic Tag Database Generation to verify that
+the application is supported.
+
+VersaPro Import Preparation: VersaPro Steps
+
+     1. To start, open the VersaPro project containing the tags (variables) that will be ported to the OPC server.
+     2. If the Variable Declaration Table is not already open, click View | Variable Declaration Table.
+     3. Next, specify the group to which the tags of interest belong. The default groups are Global, Local, All,
+
+           System, and Temporary.
+
+           Note: The All group does not include the variables from the System group. Multiple imports (or multiple
+           SNF files) are required to import System, Global, Local, and All variables.
+
+                         www. kepware.com
+13  GE Ethernet Driver Help
+
+    4. Next, click on the group's tab to bring its variables to the front. Then, highlight the tags of interest and
+         click Tools | Export Variables.
+
+                                                            www. kepware.com
+GE Ethernet Driver Help                                                                                                 14
+
+     5. When prompted, select Shared Name File (*.snf) and specify a name.
+
+           Note: VersaPro will export the project's contents into this SNF file.
+See Also: Highlighting VersaPro Variables
+
+VersaPro Import Preparation: OPC Server Steps
+
+     1. To start, right-click on the device for which tags will be generated and select Device Properties. Then,
+           open the Variable Import Settings tab.
+
+     2. In Variable Import File, enter or browse for the location of the VersaPro *.snf file newly created. Then,
+           click Apply.
+
+     3. Next, select the Database Creation tab. Then, click Auto-Create.
+     4. The OPC server will state in the Event Log that it is attempting to perform a tag import. When finished, it
+
+           will state that the tag import has completed. All variables exported out of VersaPro will appear in the OPC
+           server in the layout discussed in Tag Hierarchy.
+     5. Once finished, click OK.
+See Also: Variable Import Settings
+
+Highlighting VersaPro Variables
+
+Variables can be highlighted in VersaPro in the following ways:
+      l Single Variable Selecting: To do so, left-click on a variable of interest while pressing CTRL.
+      l Selecting a Range of Variables: To do so, left-click on the first variable in the range of interest. Then,
+           press SHIFT while left-clicking on the last variable in the range. All variables in the range will be high-
+           lighted.
+
+                                                             www. kepware.com
+15                    GE Ethernet Driver Help
+
+          l Selecting All Variables: To do so, left-click on a variable within the group of interest in the Variable Dec-
+               laration Table. The variable chosen is irrelevant. Then, click Edit | Select All. All variables will be high-
+               lighted with that group.
+
+    VersaPro Array Tag Import
+
+    Variables in VersaPro have a Length specification. Length is the number of elements for the given array variable.
+    In the driver, this element count can be used to create tags in the following two ways. The first is to create an
+    array tag with data in a row x column format. The second is an expanded group of tags, Length in number. The
+    following applies for variables with a Length > 1.
+
+    Array Tag
+    Since VersaPro arrays are 1-dimensional, the number of columns is always 1. As such, an array tag would have
+    the following syntax:
+
+    <array variable>[#rows = Length]
+
+    Note: This single array tag would retrieve Length elements starting at the base address defined in <array var-
+    iable>. The data will come back formatted in array form in order to be used in HMIs that support arrays.
+
+    Individual Elements
+    Element tags are simply the base address + element number. This has the following form, where n = Length - 1.
+
+    <array variable><base address + 0>
+    <array variable><base address + 1>
+    <array variable><base address + 2>
+    ...
+    <array variable><base address + n>
+
+    These tags are not array tags; they are just the reference tags for the array variable. It may be thought of as a list-
+    ing of all the addresses that are referenced in the array variable.
+
+    Example
+    Variable Imported:
+    MyArrayTag, Length = 10, Address = R1
+
+    Result as Array Tag:
+    MyArrayTag [10]
+
+    Result as Individual Elements:
+    R1
+    R2
+    R3
+    R4
+    R5
+    R6
+    R7
+    R8
+    R9
+    R10
+
+    Note: Variables of type BIT array can only be accessed as an expanded group of tags (not as an array tag).
+
+    Importing Cimplicity Logic Developer Tags
+
+    This driver uses user-generated ASCII text files from Logic Developer to generate the tag database. Certain
+    aspects of the Automatic Tag Database Generation process depend on the application from which variables are
+    imported. For more information on a specific aspect of Logic Developer tag import, select a link from the list
+    below.
+
+    Cimplicity Logic Developer Import Preparation: Logic Developer Steps
+    Cimplicity Logic Developer Import Preparation: OPC Server Steps
+    Highlighting Cimplicity Logic Developer Variables
+    Cimplicity Logic Developer Array Tag Import
+
+    www. kepware.com
+GE Ethernet Driver Help  16
+
+Note: To import tags using a different application, refer to Automatic Tag Database Generation to verify that
+the application is supported.
+
+Cimplicity Logic Developer Import Preparation: Logic Developer Steps
+
+1. To start, open the FrameworX project containing the tags (variables) that will be ported to the OPC server.
+     Then, open the Navigator window by pressing Shift+F4.
+
+2. Next, click on the Variables tab and select Variable List View.
+
+     Note: Each FrameworX project contains one or more targets, which is essentially the device on which the
+     application will run. Because variables are created on the target level, a target of interest must be spec-
+     ified before the variables that will be exported may be. In order for the target variables to be imported, the
+     variables must have GE PLC as the Data Source. To verify this, left-click on the variable and then look at
+     the Data Source properties in the Inspector window. Internal variables will not be imported.
+3. Next, sort the variables by target by right-clicking on the Variable List and selecting Sort | Target.
+4. Then, highlight the tags of interest in the target of interest and click Edit | Copy.
+
+                                                        www. kepware.com
+17  GE Ethernet Driver Help
+
+               Note: The highlighted variables should now be copied to the Clipboard.
+         5. Next, open a word processing program like Notepad or Wordpad. Then, click Edit | Paste.
+
+               Note: The variables on the Clipboard will now be pasted to the document, TAB delimited. Do not modify
+               the contents: modifications may cause the import to fail.
+
+         6. Save the text document with the text extension (.txt) in ANSI form.
+         7. The variables are now contained within the text document and can be imported into the OPC server.
+
+    Cimplicity Logic Developer Import Preparation: OPC Server Steps
+
+         1. To start, right-click on the device for which tags will be generated and select Device Properties. Then,
+               open the Variable Import Settings tab.
+
+         2. In Variable Import File, enter or browse for the location of the Logic Developer *.txt file newly created.
+               Then, click Apply.
+
+         3. Next, select the Database Creation tab. Then, click Auto-Create.
+         4. The OPC server will state in the Event Log that it is attempting to perform a tag import. When finished, it
+
+               will state that the tag import has completed. All variables exported out of Logic Developer will appear in
+               the OPC server in the layout discussed in Tag Hierarchy.
+         5. Once finished, click OK.
+    See Also: Variable Import Settings
+
+                                                                 www. kepware.com
+GE Ethernet Driver Help                    18
+
+Highlighting Cimplicity Logic Developer Variables
+
+Variables can be highlighted in Logic Developer in the following ways:
+
+      l Single Variable Selecting: To do so, left-click on a variable of interest.
+      l Pick-n-Choose: To do so, left-click on the first variable of interest. Then, press CTRL while left-clicking
+
+           on each successive variable of interest. Repeat until all variables of interest are highlighted.
+      l Selecting a Range of Variables: To do so, left-click on the first variable in the range of interest. Then,
+
+           press SHIFT while left-clicking on the last variable in the range. All variables in the range will be high-
+           lighted.
+      l Selecting All Variables: To do so, left-click on a variable within the target of interest in the Variable List
+           View. The variable chosen is irrelevant. Then, click Edit | Select All. All variables will be highlighted
+           within that target.
+
+Cimplicity Logic Developer Array Tag Import
+
+Array tags, or individual element breakdowns of array variables, are not supported when importing from Cim-
+plicity Logic Developer.
+
+Importing Proficy Logic Developer Tags
+
+This driver uses user-generated ASCII text files from Proficy Logic Developer to generate the tag database. Cer-
+tain aspects of the Automatic Tag Database Generation process depend on the application from which variables
+are imported. For more information on a specific aspect of Proficy Logic Developer tag import, select a link from
+the list below.
+
+Proficy Logic Developer Import Preparation: Logic Developer Steps
+Proficy Logic Developer Import Preparation: OPC Server Steps
+Highlighting Proficy Logic Developer Variables
+Proficy Logic Developer Array Tag Import
+
+Note: To import tags using a different application, refer to Automatic Tag Database Generation to verify that
+the application is supported.
+
+Proficy Logic Developer Import Preparation: Logic Developer Steps
+
+     1. To start, open the Proficy Logic Developer project containing the tags (variables) that will be ported to the
+           OPC server. Then, open the Navigator window by pressing Shift-F4.
+
+     2. Next, click on the Variables tab to bring the project's variables to the front. Then, click Variable List
+           View.
+
+           Note: Each Logic Developer project contains one or more targets, which is essentially the device on which
+           the application will run. Because variables are created on the target level, the target of interest must be
+           specified before the variables that will be exported may be. In order for the target variables to be
+           imported, the variables must have GE PLC chosen as the Data Source. To verify this, left-click on the
+           variable and then look at the Data Source properties in the Inspector window. Internal variables will not
+           be imported.
+
+     3. Next, sort the variables by target by right-clicking on the Variable List header and selecting Sort | Tar-
+           get.
+
+                         www. kepware.com
+19                                                                                         GE Ethernet Driver Help
+
+    4. To export all of the variables, right-click on the Variable List and click Export.
+
+    5. To export selected variables, highlight the tags of interest in the target of interest. Then, right-click on
+         one of the selected variables and click Export.
+
+                                                            www. kepware.com
+GE Ethernet Driver Help  20
+
+6. In the Save as Type drop-down list, select Standard Name Form (*.snf) or Comma Separated Var-
+     iable (*.csv) as the export file type. The dialogs should appear as shown below.
+
+                                                        www. kepware.com
+21  GE Ethernet Driver Help
+
+         7. Once finished, click Save.
+
+    Proficy Logic Developer Import Preparation: OPC Server Steps
+
+         1. To start, right-click on the device for which tags will be generated and select Device Properties. Then,
+               open the Variable Import Settings tab.
+
+         2. In Variable Import File, enter or browse for the location of the export file newly created *.snf or *.csv
+               file. Then, click Apply.
+
+         3. Next, select the Database Creation tab and then click Auto Create to import variables. Alternatively,
+               use the other settings in that dialog to automatically create the database later.
+
+         4. The OPC server will state in the Event Log that it is attempting to perform a tag import. When finished, it
+               will state that the tag import has completed. All variables exported out of Logic Developer will appear in
+               the OPC server in the layout discussed in Tag Hierarchy.
+
+         5. Once finished, click OK.
+
+    See Also: Variable Import Settings
+
+    Highlighting Proficy Logic Developer Variables
+
+    Variables can be highlighted in Logic Developer in the following ways:
+
+          l Single Variable Selecting: To do so, left-click on a variable of interest.
+          l Pick-n-Choose: To do so, left-click on the first variable of interest. Then, press CTRL while left-clicking
+
+               on each successive variable of interest. Repeat until all variables of interest are highlighted.
+          l Selecting a Range of Variables: To do so, left-click on the first variable in the range of interest. Then,
+
+               press SHIFT while left-clicking on the last variable in the range. All variables in the range will be high-
+               lighted.
+          l Selecting All Variables: To do so, left-click on a variable within the target of interest in the Variable List
+               View. The variable chosen is irrelevant. Then, click Edit | Select All. All variables will be highlighted
+               within that target.
+
+    Proficy Logic Developer Array Tag Import
+
+    Arrays of referenced variables and arrays of symbolic variables will be imported differently.
+
+    Referenced Variable Arrays
+    Arrays of referenced variables will be imported as described in VersaPro Array Tag Import. A group will be
+    created for each array. Each group will contain a single array tag, plus a number of tags addressing the individ-
+    ual array elements.
+
+                                                                 www. kepware.com
+GE Ethernet Driver Help                    22
+
+Symbolic Variable Arrays
+A single array tag will be generated for each symbolic variable array in the import file. All symbolic variable array
+tags will be placed in the Symbolic group along with all other symbolic variable tags. The driver will not generate
+tags for BOOL and STRING symbolic variable arrays.
+
+Importing Array Elements (Index)
+When importing array elements (such as "MyArrayTag[1,2]") into the driver, the '[' and ']' characters will be
+replaced with '{' and '}' respectively for internal reasons. The '[' and ']' characters are reserved by this driver for
+array notation. While communicating with the PLC at Runtime, however, the replacement will be reversed by the
+driver to comply with the standard GE syntax.
+
+See Also: Symbolic Variables
+
+                         www. kepware.com
+23  GE Ethernet Driver Help
+
+    Optimizing Your GE Ethernet Communications
+
+    The GE Ethernet Driver has been designed to provide the best performance with the least amount of impact on
+    the system's overall performance. While the GE Ethernet Driver is fast, there are a couple of guidelines that can
+    be used in order to control and optimize the application and gain maximum performance.
+
+    Our server refers to communications protocols like GE Ethernet as a channel. Each channel defined in the appli-
+    cation represents a separate path of execution in the server. Once a channel has been defined, a series of devices
+    must then be defined under that channel. Each of these devices represents a single GE controller from which
+    data will be collected. While this approach to defining the application will provide a high level of performance, it
+    won't take full advantage of the GE Ethernet Driver or the network. An example of how the application may appear
+    when configured using a single channel is shown below.
+
+                                                           Each device appears under a single GE Ethernet
+                                                           channel. In this configuration, the driver must
+                                                           move from one device to the next as quickly as pos-
+                                                           sible in order to gather information at an effective
+                                                           rate. As more devices are added or more infor-
+                                                           mation is requested from a single device, the over-
+                                                           all update rate begins to suffer.
+
+    If the GE Ethernet Driver could only define one single channel, then the example shown above would be the only
+    option available; however, the GE Ethernet DSriver can define up to 256 channels. Using multiple channels dis-
+    tributes the data collection workload by simultaneously issuing multiple requests to the network. An example of
+    how the same application may appear when configured using multiple channels to improve performance is shown
+    below.
+
+                                                           Each device has now been defined under its own
+                                                           channel. In this new configuration, a single path of
+                                                           execution is dedicated to the task of gathering data
+                                                           from each device. If the application has 256 or
+                                                           fewer devices, it can be optimized exactly how it is
+                                                           shown here.
+
+                                                            The performance will improve even if the appli-
+                                                           cation has more than 256 devices. While 256 or
+                                                           fewer devices may be ideal, the application will still
+                                                           benefit from additional channels. Although by
+                                                           spreading the device load across all channels will
+                                                           cause the server to move from device to device
+                                                           again, it can now do so with far less devices to proc-
+                                                           ess on a single channel.
+
+    The GE Ethernet Driver's performance can also be affected by Block Size, which refers to the number of bytes
+    that may be requested from a device at one time. It is available on each device. To refine the performance of this
+    driver when reading symbolic variables, configure Block Size to one of the following settings: 32, 64, 128, 256,
+    512, 1024, or 2048 bytes. Depending on the specific GE device, the block size setting can have a dramatic effect
+    on the application.
+
+          l GE Ethernet Driver for server versions 5.10 and earlier: The default setting of 256 bytes is rec-
+               ommended; however, users whose applications contain large requests for consecutively ordered data
+
+                                                                 www. kepware.com
+GE Ethernet Driver Help                    24
+
+           should increase the block size.
+      l GE Ethernet Driver for server versions 5.11 and later: The default setting of 2048 bytes is rec-
+
+           ommended. These versions have been enhanced to utilize multiple block reads in a single request. By
+           requesting multiple smaller blocks of data, users can potentially reduce the number of unnecessary bytes
+           in the response (especially when the requested data is not contiguous in memory). The Block Size param-
+           eter limits the number of bytes returned for all the blocks.
+
+See Also: Communications Parameters
+
+Note for PACSystem Models: It is recommended that referenced (mapped) variables and symbolic variables
+be placed on separate devices. For more information, refer to Symbolic Variables.
+
+                         www. kepware.com
+25                                             GE Ethernet Driver Help
+     Data Types Description
+
+Data Type  Description
+Boolean    Single bit.
+Byte       Unsigned 8 bit value.
+Word
+Short      bit 0 is the low bit.
+           bit 7 is the high bit.
+DWord      Unsigned 16 bit value.
+Long
+           bit 0 is the low bit.
+BCD        bit 15 is the high bit.
+LBCD       Signed 16 bit value.
+Float
+           bit 0 is the low bit.
+Double     bit 14 is the high bit.
+String     bit 15 is the sign bit.
+           Unsigned 32 bit value.
+
+           bit 0 is the low bit.
+           bit 31 is the high bit.
+           Signed 32 bit value.
+
+           bit 0 is the low bit.
+           bit 30 is the high bit.
+           bit 31 is the sign bit.
+           Two byte packed BCD.
+
+           Value range is 0-9999. Behavior is undefined for values beyond this
+           range.
+           Four byte packed BCD.
+
+           Value range is 0-99999999. Behavior is undefined for values beyond
+           this range.
+           32 bit floating point value.
+
+           The driver interprets two consecutive registers as a floating point
+           value by making the second register the high word and the first reg-
+           ister the low word.
+           64 bit floating point value.
+
+           The driver interprets four consecutive registers as a floating point
+           value.
+           Null terminated ASCII string.
+
+           Support includes HiLo LoHi byte order selection.
+
+                             www. kepware.com
+GE Ethernet Driver Help                                                                                              26
+
+Address Descriptions
+
+Address specifications vary depending on the model in use. Select a link from the following list to obtain specific
+address information for the model of interest.
+
+PACSystems Addressing
+Symbolic Variables
+311
+313
+331
+341
+350
+360
+731
+732
+771
+772
+781
+782
+GE OPEN
+Horner OCS
+VersaMax Addressing
+Advanced Addressing
+Special Items
+
+PACSystems Addressing
+
+The default data types for dynamic tags are shown in bold.
+
+Device Address           Range                              Data Type           Access
+Discrete Inputs          I00001 to I32768                                       Read/Write
+Discrete Outputs         I00001 to I32761 (every 8th bit)   Boolean             Read/Write
+Discrete Globals         I00001 to I32753 (every 8th bit)   Byte                Read/Write
+Internal Coils           Q00001 to Q32768                   Word, Short, BCD    Read/Write
+Temporary Coils          Q00001 to Q32761 (every 8th bit)                       Read/Write
+Status References        Q00001 to Q32753 (every 8th bit)   Boolean             Read Only
+(Same for SA, SB, SC)    G00001 to G7680                    Byte                Read/Write
+Register References      G00001 to G7673 (every 8th bit)    Word, Short, BCD
+                         G00001 to G7665 (every 8th bit)                        Read/Write
+Analog Inputs            M00001 to M32768                   Boolean
+                         M00001 to M32761 (every 8th bit)   Byte
+                         M00001 to M32753 (every 8th bit)   Word, Short, BCD
+                         T0001 to T1024
+                         T0001 to T1017 (every 8th bit)     Boolean
+                         T0001 to T1009 (every 8th bit)     Byte
+                         S001 to S128                       Word, Short, BCD
+                         S001 to S121 (every 8th bit)
+                         S001 to S113 (every 8th bit)       Boolean
+                         R1.0 to R32640.15                  Byte
+                         R00001 to R32640                   Word, Short, BCD
+                         R00001 to R32639
+                         R00001 to R32637                   Boolean
+                                                            Byte
+                         AI1.0 to AI32640.15                Word, Short, BCD
+                         AI00001 to AI32640
+                         AI00001 to AI32639                 Boolean
+                         AI00001 to AI32637                 Word, Short, BCD
+                                                            DWord, Long, LBCD,
+                                                            Float
+                                                            Double
+
+                                                            Boolean
+                                                            Word, Short, BCD
+                                                            DWord, Long, LBCD,
+                                                            Float
+                                                            Double
+
+                         www. kepware.com
+27                                                                   GE Ethernet Driver Help
+
+        Analog Outputs            AQ1.0 to AQ32640.15                Boolean             Read/Write
+                                  AQ00001 to AQ32640                 Word, Short, BCD    Read/Write
+        Program Block Registers*  AQ00001 to AQ32639                 DWord, Long, LBCD,  Read/Write
+                                  AQ00001 to AQ32637                 Float
+        SubProgram Block Reg-                                        Double
+        isters**
+                                  P1.0 to P8192.15                   Boolean
+                                  P00001 to P8192                    Word, Short, BCD
+                                  P00001 to P8191                    DWord, Long, LBCD,
+
+                                  P00001 to P8189                    Float
+                                                                     Double
+
+                                  L00001<SUBPRGM>.0 to L8192<SUBPRGM>.15 Boolean
+
+                                  L00001<SUBPRGM> to L8192<SUBPRGM>  Word, Short, BCD
+                                  L00001<SUBPRGM> to L8191<SUBPRGM>
+
+                                  L00001<SUBPRGM> to L8189<SUBPRGM>  DWord, Long, LBCD,
+                                                                     Float
+
+                                                                     Double
+
+Bulk Memory                       W1.0 to W33554432.15               Boolean             Read/Write
+                                  W00001 to W33554432                Word, Short, BCD
+                                  W00001 to W33554431                DWord, Long, LBCD,
+                                  W00001 to W33554429                Float
+                                                                     Double
+
+*Program specified in PLC Settings.
+
+**The SubProgram name/Block name <SUBPRGM> must match the name assigned in the PLC. This name can be
+found in VersaPro under "Block Properties."
+
+Note: For more information, refer to "Importing Array Elements (Index)" in Proficy Logic Developer Array
+Tag Import.
+
+See Also: Symbolic Variables
+
+Advanced Addressing
+Bit Access to Registers
+Default Data Type Override
+String Access to Registers
+Array Support
+
+Symbolic Variables
+
+A variable is a named storage space for data in the PLC. There are two types of variables: Reference and Sym-
+bolic. Descriptions of the variables are as follows:
+
+      l Reference Variable: This variable is mapped to a specific I/O or internal register location in the PLC
+           (such as I00001, R00100, and so forth).
+
+      l Symbolic Variable: This variable is not mapped to a specific register. The PLC will allocate memory for
+           symbolic variables as needed from its managed memory area. This driver has the ability to read and write
+           to symbolic variables defined in the PLC. Symbolic variables are only available in PAC Systems PLCs.
+
+Creating a Symbolic Variable
+
+     1. To start, load the PLC's current configuration project into the Proficy Logic Developer. Then, open the
+           Navigator View by pressing Shift-F4.
+
+     2. Next, click on the Variables tab.
+
+     3. To create a new variable, right-click on the Variables View and select New Variable. To edit an existing
+           variable, right-click on it and then select Properties.
+
+                                  www. kepware.com
+GE Ethernet Driver Help  28
+
+     4. In both cases, the variable's Properties Inspector dialog will appear as shown below.
+
+           Note: The variable displayed above is symbolic because the Ref Address parameter is left blank. The var-
+           iable is named "MySymbolicWORD" and has a data type of Word. An array of variables can be created by
+           setting the Array Dimension 1 parameter to a value greater than zero. The Array Dimension 2 param-
+           eter will appear in the variable inspector if Array Dimension 1 is set. A single dimension array is defined
+           when Array Dimension 2 is left at zero. The total number of array elements is limited by the Maximum
+           Bytes Per Request setting in Device Properties. For more information, refer to Device Setup.
+           Important: In order for a symbolic variable to be visible to this driver, Publish must be set to External.
+     5. Next, download the modified project to the PLC.
+     6. To access a symbolic variable with the OPC server, create a tag whose address references the variable by
+           name. It must be preceded by the "!" character.
+Examples
+
+                                                             www. kepware.com
+29                                                   GE Ethernet Driver Help
+
+    The syntax for addressing array elements uses curly brackets. These characters are specific to this server: other
+    servers or products may access array elements using square brackets instead. The appropriate conversion will
+    be done internally by the driver at Runtime while communicating with the PLC. For addressing purposes, users
+    must utilize curly brackets: square brackets are reserved by this driver for array notation.
+
+    Important: The tag must be assigned a data type that is compatible with the data type of the symbolic variable;
+    however, if the tag address references a bit of the symbolic variable, then the tag data type must be Boolean. Fur-
+    thermore, the dimensions of the array tag must be the same as the variable. The tag properties can only be val-
+    idated during Runtime.
+
+         1. !MySymbolicArray1D [4] addresses the symbolic variable named "MySymbolicArray1D," which is
+               assumed to have its Array Dimension 1 property set to 4.
+
+         2. !MySymbolicArray1D {3} addresses the index (3) of the above 1D symbolic array variable "MySym-
+               bolicArray1D."
+
+         3. !MySymbolicArray2D [3][4] addresses the symbolic variable named "MySymbolicArray2D," which is
+               assumed to have its Array Dimension 1 property set to 3, and its "Array Dimension 2" property set to 4.
+
+         4. !MySymbolicArray2D {2,3} addresses the index (2,3) of the above 2D symbolic array variable "MySym-
+               bolicArray2D."
+
+         5. !MySymbolicVariable.5 addresses the bit index 5 of the symbolic variable named "MySymbolicVariable."
+
+         6. !MySymbolicVariable.30 addresses the bit index 30 of the symbolic variable named "MySymbolicVariable,"
+               which is assumed to have a native data type of Dint or DWord.
+
+         7. !MySymbolicArray{3}.8 addresses the bit index 8 of the element at index 3 of the symbolic array named
+               "MySymbolicArray," which is assumed to have a native data type of Int, Uint, Word, Dint, or DWord.
+
+         8. !MySymbolicArray{3,2}.8 addresses the bit index 8 of the element at index 2 of the fourth array of the
+               symbolic array named "MySymbolicArray," which is assumed to have a native data type of Int, Uint, Word,
+               Dint, or DWord.
+
+         9. !MySymbolicUDTArray{5}.MyUDTMember.7 addresses the bit index 7 of the User Defined Type (UDT)
+               member variable named "MyUDTMember" of the element at index 5 of the symbolic array variable named
+               "MySymbolicUDTArray."
+
+       10. !MyUDT.MyUDTMember.16 addresses the bit index 16 of the symbolic variable named "MyUDTMember"
+               that is part of a UDT named "MyUDT." The MyUDTMember variable is assumed to have a native data type
+               of Dint or DWord.
+
+    Compatible Data Types
+    The driver assigns a default type of Word to tags that use Symbolic Addressing; however, Boolean is the default
+    data type assigned to the tags that have a bit index appended to the symbolic address.
+
+    Native Type (Device)  Compatible Types (Server)
+    Bool                  Bool (no arrays)
+    Byte                  Byte, Char
+    Int                   Word, Short
+    Uint                  Word, Short
+    Word                  Word, Short
+    Dint                  DWord, Long
+    DWord                 DWord, Long
+    Real                  Float, Double
+    LReal                 Double
+    String                String (no arrays)
+
+    Note: Users should be sure to specify an appropriate data type override for each dynamic tag. Dynamic Tags are
+    only defined in the client application and are created in the server on demand by the client. Their data type can be
+    specified by appending one of the following strings to the item name: @Boolean, @Byte, @Char, @Short,
+    @Word, @Long, @DWord, @Float or @String. For more information, refer to the OPC server help file.
+
+    Example
+    ItemName = "Channel1.Device1.!MySymbolicWordVariable @DWord"
+
+    Performance Considerations
+
+                          www. kepware.com
+GE Ethernet Driver Help                                                               30
+
+Block Size
+This driver attempts to optimize performance by reading blocks of symbolic variable memory. For the GE Ethernet
+Driver released in server versions 5.10 and earlier, it was generally faster to read a single large block of data
+(such as where only the first and last few bytes were needed to update two tags) than it was to perform two sep-
+arate reads for the few bytes needed for each tag. The amount of symbolic variable memory read per request was
+limited by the Maximum Bytes Per Request parameter located in Device Properties. As such, it was typically
+advantageous to maximize this setting.
+
+In some cases, however, performance would increase by reducing that setting. An example of this is when the
+variables being read most frequently were widely scattered in the controller's managed memory area. Users can-
+not control the mapping of symbolic variable data in the controller's memory: mapping largely depends on when
+the variables were added to the configuration project. As such, if performance was a primary concern for the
+GE Ethernet Driver in those server versions, it was recommended that users experiment with the Maximum Bytes
+Per Request parameter.
+
+The GE Ethernet Driver released in server version 5.11 has been enhanced to improve performance by allowing
+multiple small blocks in a single request. Only the desired bytes will be requested when the data is not con-
+tiguous, and a single request may include multiple small block requests. The Maximum Bytes Per Request param-
+eter will limit the total number of bytes in the response, but not the number of bytes in the individual blocks. As
+such, using this value's maximum setting will likely improve performance.
+
+Multi-Item Writes
+This driver will also attempt to optimize performance by performing multi-item writes. The number of tags
+included in a request is limited by the Maximum Bytes Per Request parameter. Unlike block reads, the variables'
+location in the controller's memory is of little consequence. Writes can further be optimized with the Write Opti-
+mizations setting located in Channel Properties.
+
+Note: If the driver finds that the variable named in a tag's address does not exist in the controller (or if it does
+not match the data type or array dimension), its OPC quality will be set to Bad. The driver will continue to check
+the controller for the named variable should a new configuration be downloaded. It is recommended that users do
+not utilize those tags in the client applications because they will remain invalid.
+
+311 Addressing
+
+The default data types for dynamic tags are shown in bold.
+
+Device Address           Range                              Data Type*                Access
+Discrete Inputs                                                                       Read/Write
+Discrete Outputs         I001 to I512                       Boolean                   Read/Write
+Discrete Globals         I001 to I505 (every 8th bit)       Byte                      Read/Write
+Internal Coils           I001 to I497 (every 8th bit)       Word, Short, BCD          Read/Write
+Temporary Coils                                                                       Read/Write
+Status References        Q001 to Q512                       Boolean                   Read Only
+(Same for SA, SB, SC)    Q001 to Q505 (every 8th bit)       Byte                      Read/Write
+Register References      Q001 to Q497 (every 8th bit)       Word, Short, BCD
+                                                                                      Read/Write
+Analog Inputs            G0001 to G1280                     Boolean
+                         G0001 to G1273 (every 8th bit)     Byte                      Read/Write
+Analog Outputs           G0001 to G1265 (every 8th bit)     Word, Short, BCD
+
+                         M0001 to M1024                     Boolean
+                         M0001 to M1017 (every 8th bit)     Byte
+                         M0001 to M1009 (every 8th bit)     Word, Short, BCD
+
+                         T001 to T256                       Boolean
+                         T001 to T249 (every 8th bit)       Byte
+                         T001 to T241 (every 8th bit)       Word, Short, BCD
+
+                         S01 to S32                         Boolean
+                         S01 to S25 (every 8th bit)         Byte
+                         S01 to S17 (every 8th bit)         Word, Short, BCD
+
+                         R1.0 to R512.15                    Boolean
+                         R001 to R512                       Word, Short, BCD
+                         R001 to R511                       DWord, Long, LBCD, Float
+                         R001 to R509                       Double
+
+                         AI1.0 to AI64.15                   Boolean
+                         AI01 to AI64                       Word, Short, BCD
+                         AI01 to AI63                       DWord, Long, LBCD, Float
+                         AI01 to AI61                       Double
+
+                         AQ1.0 to AQ032.15                  Boolean
+                         AQ001 to AQ032                     Word, Short, BCD
+
+                         www. kepware.com
+31                                                                                    GE Ethernet Driver Help
+
+                             AQ001 to AQ031                     DWord, Long, LBCD, Float
+                             AQ001 to AQ029                     Double
+
+    Special Items**
+    (PLC Status, Time, etc)
+
+    *Default data type of Boolean becomes Byte when an array specification is given.
+    **See Also: Special Items.
+
+    Advanced Addressing
+    Bit Access to Registers
+    Default Data Type Override
+    String Access to Registers
+    Array Support
+
+    313 Addressing
+
+    The default data types for dynamic tags are shown in bold.
+
+    Device Address           Range                              Data Type*                Access
+    Discrete Inputs                                                                       Read/Write
+    Discrete Outputs         I001 to I512                       Boolean                   Read/Write
+    Discrete Globals         I001 to I505 (every 8th bit)       Byte                      Read/Write
+    Internal Coils           I001 to I497 (every 8th bit)       Word, Short, BCD          Read/Write
+    Temporary Coils                                                                       Read/Write
+    Status References        Q001 to Q512                       Boolean                   Read Only
+    (Same for SA, SB, SC)    Q001 to Q505 (every 8th bit)       Byte                      Read/Write
+    Register References      Q001 to Q497 (every 8th bit)       Word, Short, BCD
+                                                                                          Read/Write
+    Analog Inputs            G0001 to G1280                     Boolean
+                             G0001 to G1273 (every 8th bit)     Byte                      Read/Write
+    Analog Outputs           G0001 to G1265 (every 8th bit)     Word, Short, BCD
+
+    Special Items**          M0001 to M1024                     Boolean
+    (PLC Status, Time, etc)  M0001 to M1017 (every 8th bit)     Byte
+                             M0001 to M1009 (every 8th bit)     Word, Short, BCD
+
+                             T001 to T256                       Boolean
+                             T001 to T249 (every 8th bit)       Byte
+                             T001 to T241 (every 8th bit)       Word, Short, BCD
+
+                             S01 to S32                         Boolean
+                             S01 to S25 (every 8th bit)         Byte
+                             S01 to S17 (every 8th bit)         Word, Short, BCD
+
+                             R1.0 to R1024.15                   Boolean
+                             R001 to R1024                      Word, Short, BCD
+                             R001 to R1023                      DWord, Long, LBCD, Float
+                             R001 to R1021                      Double
+
+                             AI1.0 to AI64.15                   Boolean
+                             AI01 to AI64                       Word, Short, BCD
+                             AI01 to AI63                       DWord, Long, LBCD, Float
+                             AI01 to AI61                       Double
+
+                             AQ1.0 to AQ032.15                  Boolean
+                             AQ001 to AQ032                     Word, Short, BCD
+                             AQ001 to AQ031                     DWord, Long, LBCD, Float
+                             AQ001 to AQ029                     Double
+
+    *Default data type of Boolean becomes Byte when an array specification is given.
+    **See Also: Special Items.
+
+    Advanced Addressing
+    Bit Access to Registers
+    Default Data Type Override
+    String Access to Registers
+    Array Support
+
+                             www. kepware.com
+GE Ethernet Driver Help                                                                   32
+
+331 Addressing                                                                        Access
+                                                                                      Read/Write
+The default data types for dynamic tags are shown in bold.                            Read/Write
+                                                                                      Read/Write
+Device Address           Range                              Data Type*                Read/Write
+Discrete Inputs                                                                       Read/Write
+Discrete Outputs         I001 to I512                       Boolean                   Read Only
+Discrete Globals         I001 to I505 (every 8th bit)       Byte                      Read/Write
+Internal Coils           I001 to I497 (every 8th bit)       Word, Short, BCD          Read/Write
+Temporary Coils                                                                       Read/Write
+Status References        Q001 to Q512                       Boolean
+(Same for SA, SB, SC)    Q001 to Q505 (every 8th bit)       Byte                      Access
+Register References      Q001 to Q497 (every 8th bit)       Word, Short, BCD          Read/Write
+                                                                                      Read/Write
+Analog Inputs            G0001 to G1280                     Boolean                   Read/Write
+                         G0001 to G1273 (every 8th bit)     Byte                      Read/Write
+Analog Outputs           G0001 to G1265 (every 8th bit)     Word, Short, BCD
+
+Special Items**          M0001 to M1024                     Boolean
+(PLC Status, Time, etc)  M0001 to M1017 (every 8th bit)     Byte
+                         M0001 to M1009 (every 8th bit)     Word, Short, BCD
+
+                         T001 to T256                       Boolean
+                         T001 to T249 (every 8th bit)       Byte
+                         T001 to T241 (every 8th bit)       Word, Short, BCD
+
+                         S01 to S32                         Boolean
+                         S01 to S25 (every 8th bit)         Byte
+                         S01 to S17 (every 8th bit)         Word, Short, BCD
+
+                         R1.0 to R2048.15                   Boolean
+                         R0001 to R2048                     Word, Short, BCD
+                         R0001 to R2047                     DWord, Long, LBCD, Float
+                         R0001 to R2045                     Double
+
+                         AI1.0 to AI128.15                  Boolean
+                         AI001 to AI128                     Word, Short, BCD
+                         AI001 to AI127                     DWord, Long, LBCD, Float
+                         AI001 to AI125                     Double
+
+                         AQ1.0 to AQ64.15                   Boolean
+                         AQ01 to AQ64                       Word, Short, BCD
+                         AQ01 to AQ63                       DWord, Long, LBCD, Float
+                         AQ01 to AQ61                       Double
+
+*Default data type of Boolean becomes Byte when an array specification is given.
+**See Also: Special Items.
+
+Advanced Addressing
+Bit Access to Registers
+Default Data Type Override
+String Access to Registers
+Array Support
+
+341 Addressing
+
+The default data types for dynamic tags are shown in bold.
+
+Device Address           Range                              Data Type*
+Discrete Inputs
+                         I001 to I512                       Boolean
+Discrete Outputs         I001 to I505 (every 8th bit)       Byte
+                         I001 to I497 (every 8th bit)       Word, Short, BCD
+Discrete Globals
+                         Q001 to Q512                       Boolean
+Internal Coils           Q001 to Q505 (every 8th bit)       Byte
+                         Q001 to Q497 (every 8th bit)       Word, Short, BCD
+
+                         G0001 to G1280                     Boolean
+                         G0001 to G1273 (every 8th bit)     Byte
+                         G0001 to G1265 (every 8th bit)     Word, Short, BCD
+
+                         M0001 to M1024                     Boolean
+                         M0001 to M1017 (every 8th bit)     Byte
+
+                         www. kepware.com
+33                                                                                    GE Ethernet Driver Help
+
+    Temporary Coils          M0001 to M1009 (every 8th bit)     Word, Short, BCD          Read/Write
+    Status References                                                                     Read Only
+    (Same for SA, SB, SC)    T001 to T256                       Boolean                   Read/Write
+    Register References      T001 to T249 (every 8th bit)       Byte                      Read/Write
+                             T001 to T241 (every 8th bit)       Word, Short, BCD          Read/Write
+    Analog Inputs
+                             S01 to S32                         Boolean                   Access
+    Analog Outputs           S01 to S25 (every 8th bit)         Byte                      Read/Write
+                             S01 to S17 (every 8th bit)         Word, Short, BCD          Read/Write
+    Special Items**                                                                       Read/Write
+    (PLC Status, Time, etc)  R1.0 to R9999.15                   Boolean                   Read/Write
+                             R0001 to R9999                     Word, Short, BCD          Read/Write
+                             R0001 to R9998                     DWord, Long, LBCD, Float  Read Only
+                             R0001 to R9996                     Double                    Read/Write
+                                                                                          Read/Write
+                             AI1.0 to AI1024.15                 Boolean
+                             AI0001 to AI1024                   Word, Short, BCD
+                             AI0001 to AI1023                   DWord, Long, LBCD, Float
+                             AI0001 to AI1021                   Double
+
+                             AQ1.0 to AQ256.15                  Boolean
+                             AQ0001 to AQ256                    Word, Short, BCD
+                             AQ0001 to AQ255                    DWord, Long, LBCD, Float
+                             AQ0001 to AQ253                    Double
+
+    *Default data type of Boolean becomes Byte when an array specification is given.
+    **See Also: Special Items.
+
+    Advanced Addressing
+    Bit Access to Registers
+    Default Data Type Override
+    String Access to Registers
+    Array Support
+
+    350 Addressing
+
+    The default data types for dynamic tags are shown in bold.
+
+    Device Address           Range                              Data Type*
+    Discrete Inputs
+    Discrete Outputs         I0001 to I2048                     Boolean
+    Discrete Globals         I0001 to I2041 (every 8th bit)     Byte
+    Internal Coils           I0001 to I2033 (every 8th bit)     Word, Short, BCD
+    Temporary Coils
+    Status References        Q0001 to Q2048                     Boolean
+    (Same for SA, SB, SC)    Q0001 to Q2041 (every 8th bit)     Byte
+    Register References      Q0001 to Q2033 (every 8th bit)     Word, Short, BCD
+
+    Analog Inputs            G0001 to G1280                     Boolean
+                             G0001 to G1273 (every 8th bit)     Byte
+                             G0001 to G1265 (every 8th bit)     Word, Short, BCD
+
+                             M0001 to M4096                     Boolean
+                             M0001 to M4089 (every 8th bit)     Byte
+                             M0001 to M4081 (every 8th bit)     Word, Short, BCD
+
+                             T001 to T256                       Boolean
+                             T001 to T249 (every 8th bit)       Byte
+                             T001 to T241 (every 8th bit)       Word, Short, BCD
+
+                             S01 to S32                         Boolean
+                             S01 to S25 (every 8th bit)         Byte
+                             S01 to S17 (every 8th bit)         Word, Short, BCD
+
+                             R1.0 to R9999.15                   Boolean
+                             R0001 to R9999                     Word, Short, BCD
+                             R0001 to R9998                     DWord, Long, LBCD, Float
+                             R0001 to R9996                     Double
+
+                             AI1.0 to AI2048.15                 Boolean
+                             AI0001 to AI2048                   Word, Short, BCD
+                             AI0001 to AI2047                   DWord, Long, LBCD, Float
+                             AI0001 to AI2045                   Double
+
+                             www. kepware.com
+GE Ethernet Driver Help                                                                   34
+
+Analog Outputs           AQ1.0 to AQ512.15                  Boolean                   Read/Write
+                         AQ001 to AQ512                     Word, Short, BCD
+Special Items**          AQ001 to AQ511                     DWord, Long, LBCD, Float  Access
+(PLC Status, Time, etc)  AQ001 to AQ509                     Double                    Read/Write
+                                                                                      Read/Write
+*Default data type of Boolean becomes Byte when an array specification is given.      Read/Write
+**See Also: Special Items.                                                            Read/Write
+                                                                                      Read/Write
+Advanced Addressing                                                                   Read Only
+Bit Access to Registers                                                               Read/Write
+Default Data Type Override                                                            Read/Write
+String Access to Registers                                                            Read/Write
+Array Support
+
+360 Addressing
+
+The default data types for dynamic tags are shown in bold.
+
+Device Address           Range                              Data Type*
+Discrete Inputs
+Discrete Outputs         I0001 to I2048                     Boolean
+Discrete Globals         I0001 to I2041 (every 8th bit)     Byte
+Internal Coils           I0001 to I2033 (every 8th bit)     Word, Short, BCD
+Temporary Coils
+Status References        Q0001 to Q2048                     Boolean
+(Same for SA, SB, SC)    Q0001 to Q2041 (every 8th bit)     Byte
+Register References      Q0001 to Q2033 (every 8th bit)     Word, Short, BCD
+
+Analog Inputs            G0001 to G1280                     Boolean
+                         G0001 to G1273 (every 8th bit)     Byte
+Analog Outputs           G0001 to G1265 (every 8th bit)     Word, Short, BCD
+
+Special Items**          M0001 to M4096                     Boolean
+(PLC Status, Time, etc)  M0001 to M4089 (every 8th bit)     Byte
+                         M0001 to M4081 (every 8th bit)     Word, Short, BCD
+
+                         T001 to T256                       Boolean
+                         T001 to T249 (every 8th bit)       Byte
+                         T001 to T241 (every 8th bit)       Word, Short, BCD
+
+                         S01 to S32                         Boolean
+                         S01 to S25 (every 8th bit)         Byte
+                         S01 to S17 (every 8th bit)         Word, Short, BCD
+
+                         R1.0 to R32768.15                  Boolean
+                         R00001 to R32768                   Word, Short, BCD
+                         R00001 to R32767                   DWord, Long, LBCD, Float
+                         R00001 to R32765                   Double
+
+                         AI1.0 to AI2048.15                 Boolean
+                         AI0001 to AI2048                   Word, Short, BCD
+                         AI0001 to AI2047                   DWord, Long, LBCD, Float
+                         AI0001 to AI2045                   Double
+
+                         AQ1.0 to AQ512.15                  Boolean
+                         AQ001 to AQ512                     Word, Short, BCD
+                         AQ001 to AQ511                     DWord, Long, LBCD, Float
+                         AQ001 to AQ509                     Double
+
+*Default data type of Boolean becomes Byte when an array specification is given.
+**See Also: Special Items.
+
+Advanced Addressing
+Bit Access to Registers
+Default Data Type Override
+String Access to Registers
+Array Support
+
+                         www. kepware.com
+35                                                              GE Ethernet Driver Help
+
+    731 Addressing
+
+    The default data types for dynamic tags are shown in bold.
+
+    Device Address              Range                           Data Type*          Access
+    Discrete Inputs                                                                 Read/Write
+                                I001 to I512                    Boolean             Read/Write
+    Discrete Outputs            I001 to I505 (every 8th bit)    Byte                Read/Write
+                                I001 to I497 (every 8th bit)    Word, Short, BCD    Read/Write
+    Discrete Globals                                                                Read/Write
+                                Q001 to Q512                    Boolean             Read Only
+    Internal Coils              Q001 to Q505 (every 8th bit)    Byte                Read/Write
+                                Q001 to Q497 (every 8th bit)    Word, Short, BCD
+    Temporary Coils                                                                 Read/Write
+                                G0001 to G1280                  Boolean
+    Status References           G0001 to G1273 (every 8th bit)  Byte                Read/Write
+    (Same for SA, SB, SC)       G0001 to G1265 (every 8th bit)  Word, Short, BCD
+    Register References
+                                M0001 to M2048                  Boolean
+                                M0001 to M2041 (every 8th bit)  Byte
+                                M0001 to M2033 (every 8th bit)  Word, Short, BCD
+
+                                T001 to T256                    Boolean
+                                T001 to T249 (every 8th bit)    Byte
+                                T001 to T241 (every 8th bit)    Word, Short, BCD
+
+                                S001 to S128                    Boolean
+                                S001 to S121 (every 8th bit)    Byte
+                                S001 to S113 (every 8th bit)    Word, Short, BCD
+
+                                R1.0 to R16384.15               Boolean
+                                R00001 to R16384                Word, Short, BCD
+                                R00001 to R16383                DWord, Long, LBCD,
+                                R00001 to R16381                Float
+                                                                Double
+    Program Block Registers***  P1.0 to P16384.15
+                                P00001 to P16384                Boolean
+                                P00001 to P16383                 Word, Short, BCD
+                                P00001 to P16381                DWord, Long, LBCD,
+                                                                Float
+    SubProgram Block Reg-       L00001<SUBPRGM>.0 to            Double
+    isters**                    L16384<SUBPRGM>.15
+                                                                Boolean
+
+                                L00001<SUBPRGM> to              Word, Short, BCD
+                                L16384<SUBPRGM>
+
+                                L00001<SUBPRGM> to              DWord, Long, LBCD,
+                                L16383<SUBPRGM>                 Float
+
+    Analog Inputs               L00001<SUBPRGM> to              Double              Read/Write
+                                L16381<SUBPRGM>                                     Read/Write
+    Analog Outputs              AI1.0 to AI8192.15              Boolean
+                                AI0001 to AI8192                Word, Short, BCD
+    Special Items****           AI0001 to AI8191                DWord, Long, LBCD,
+    (PLC Status, Time, etc)     AI0001 to AI8189                Float
+                                                                Double
+                                AQ1.0 to AQ8192.15
+                                AQ0001 to AQ8192                Boolean
+                                AQ0001 to AQ8191                Word, Short, BCD
+                                AQ0001 to AQ8189                DWord, Long, LBCD,
+                                                                Float
+                                                                Double
+
+    *Default data type of Boolean becomes Byte when an array specification is given.
+    **The SubProgram name/Block name <SUBPRGM> must match the name assigned in the PLC. This name can be
+    found in VersaPro under Block Properties.
+    ***Program specified in PLC Settings.
+    ****See Also: Special Items.
+
+    Advanced Addressing
+
+                                www. kepware.com
+GE Ethernet Driver Help                                                                                36
+
+Bit Access to Registers                                                                               Access
+Default Data Type Override                                                                            Read/Write
+String Access to Registers                                                                            Read/Write
+Array Support                                                                                         Read/Write
+                                                                                                      Read/Write
+732 Addressing                                                                                        Read/Write
+                                                                                                      Read Only
+The default data types for dynamic tags are shown in bold.                                            Read/Write
+                                                                                                      Read/Write
+Device Address              Range                                                 Data Type*          Read/Write
+Discrete Inputs                                                                   Boolean
+                            I001 to I512                                          Byte                Read/Write
+Discrete Outputs            I001 to I505 (every 8th bit)                          Word, Short, BCD    Read/Write
+                            I001 to I497 (every 8th bit)                          Boolean
+Discrete Globals                                                                  Byte
+                            Q001 to Q512                                          Word, Short, BCD
+Internal Coils              Q001 to Q505 (every 8th bit)                          Boolean
+                            Q001 to Q497 (every 8th bit)                          Byte
+Temporary Coils                                                                   Word, Short, BCD
+                            G0001 to G1280                                        Boolean
+Status References           G0001 to G1273 (every 8th bit)                        Byte
+(Same for SA, SB, SC)       G0001 to G1265 (every 8th bit)                        Word, Short, BCD
+Register References                                                               Boolean
+                            M0001 to M2048                                        Byte
+                            M0001 to M2041 (every 8th bit)                        Word, Short, BCD
+                            M0001 to M2033 (every 8th bit)                        Boolean
+                                                                                  Byte
+                            T001 to T256                                          Word, Short, BCD
+                            T001 to T249 (every 8th bit)                          Boolean
+                            T001 to T241 (every 8th bit)                          Word, Short, BCD
+                                                                                  DWord, Long, LBCD,
+                            S001 to S128                                          Float
+                            S001 to S121 (every 8th bit)                          Double
+                            S001 to S113 (every 8th bit)                          Boolean
+                                                                                   Word, Short, BCD
+                            R1.0 to R16384.15                                     DWord, Long, LBCD,
+                            R00001 to R16384                                      Float
+                            R00001 to R16383                                      Double
+                            R00001 to R16381                                      Boolean
+
+Program Block Registers***  P1.0 to P16384.15                                      Word, Short, BCD
+                            P00001 to P16384
+                            P00001 to P16383                                      DWord, Long, LBCD,
+                            P00001 to P16381                                      Float
+
+SubProgram Block Reg-       L00001<SUBPRGM>.0 to                                  Double
+isters**                    L16384<SUBPRGM>.15                                    Boolean
+                                                                                  Word, Short, BCD
+Analog Inputs               L00001<SUBPRGM> to                                    DWord, Long, LBCD,
+                            L16384<SUBPRGM>                                       Float
+                                                                                  Double
+                            L00001<SUBPRGM> to                                    Boolean
+                            L16383<SUBPRGM>                                       Word, Short, BCD
+                                                                                  DWord, Long, LBCD,
+                            L00001<SUBPRGM> to                                    Float
+                            L16381<SUBPRGM>                                       Double
+                            AI1.0 to AI8192.15
+                            AI0001 to AI8192
+                            AI0001 to AI8191
+                            AI0001 to AI8189
+
+Analog Outputs              AQ1.0 to AQ8192.15
+                            AQ0001 to AQ8192
+                            AQ0001 to AQ8191
+                            AQ0001 to AQ8189
+
+Special Items****
+(PLC Status, Time, etc)
+
+*Default data type of Boolean becomes Byte when an array specification is given.
+
+                            www. kepware.com
+37                                                              GE Ethernet Driver Help
+
+    **The SubProgram name/Block name <SUBPRGM> must match the name assigned in the PLC. This name can be
+    found in VersaPro under Block Properties.
+    ***Program specified in PLC Settings.
+    ****See Also: Special Items.
+
+    Advanced Addressing
+    Bit Access to Registers
+    Default Data Type Override
+    String Access to Registers
+    Array Support
+
+    771 Addressing
+
+    The default data types for dynamic tags are shown in bold.
+
+    Device Address              Range                           Data Type*          Access
+    Discrete Inputs                                                                 Read/Write
+                                I0001 to I2048                  Boolean             Read/Write
+    Discrete Outputs            I0001 to I2041 (every 8th bit)  Byte                Read/Write
+                                I0001 to I2033 (every 8th bit)  Word, Short, BCD    Read/Write
+    Discrete Globals                                                                Read/Write
+                                Q0001 to Q2048                  Boolean             Read Only
+    Internal Coils              Q0001 to Q2041 (every 8th bit)  Byte                Read/Write
+                                Q0001 to Q2033 (every 8th bit)  Word, Short, BCD
+    Temporary Coils                                                                 Read/Write
+                                G0001 to G7680                  Boolean
+    Status References           G0001 to G7673 (every 8th bit)  Byte                Read/Write
+    (Same for SA, SB, SC)       G0001 to G7665 (every 8th bit)  Word, Short, BCD
+    Register References
+                                M0001 to M4096                  Boolean
+                                M0001 to M4089 (every 8th bit)  Byte
+                                M0001 to M4081 (every 8th bit)  Word, Short, BCD
+
+                                T001 to T256                    Boolean
+                                T001 to T249 (every 8th bit)    Byte
+                                T001 to T241 (every 8th bit)    Word, Short, BCD
+
+                                S001 to S128                    Boolean
+                                S001 to S121 (every 8th bit)    Byte
+                                S001 to S113 (every 8th bit)    Word, Short, BCD
+
+                                R1.0 to R16384.15               Boolean
+                                R00001 to R16384                Word, Short, BCD
+                                R00001 to R16383                DWord, Long, LBCD,
+                                R00001 to R16381                Float
+                                                                Double
+    Program Block Registers***  P1.0 to P16384.15
+                                P00001 to P16384                Boolean
+                                P00001 to P16383                 Word, Short, BCD
+                                P00001 to P16381                DWord, Long, LBCD,
+                                                                Float
+    SubProgram Block Reg-       L00001<SUBPRGM>.0 to            Double
+    isters**                    L16384<SUBPRGM>.15
+                                                                Boolean
+                                L00001<SUBPRGM> to
+                                L16384<SUBPRGM>                 Word, Short, BCD
+
+                                L00001<SUBPRGM> to              DWord, Long, LBCD,
+                                L16383<SUBPRGM>                 Float
+
+    Analog Inputs               L00001<SUBPRGM> to              Double              Read/Write
+                                L16381<SUBPRGM>                                     Read/Write
+                                                                Boolean
+                                AI1.0 to AI8192.15              Word, Short, BCD
+                                AI0001 to AI8192                DWord, Long, LBCD,
+                                AI0001 to AI8191                Float
+                                AI0001 to AI8189                Double
+
+    Analog Outputs              AQ1.0 to AQ8192.15              Boolean
+                                AQ0001 to AQ8192                Word, Short, BCD
+                                AQ0001 to AQ8191                DWord, Long, LBCD,
+                                AQ0001 to AQ8189
+
+                                www. kepware.com
+GE Ethernet Driver Help                                                         38
+
+                                                            Float
+                                                            Double
+
+Special Items****
+(PLC Status, Time, etc)
+
+*Default data type of Boolean becomes Byte when an array specification is given.
+**The SubProgram name/Block name <SUBPRGM> must match the name assigned in the PLC. This name can be
+found in VersaPro under Block Properties.
+***Program specified in PLC Settings.
+****See Also: Special Items.
+
+Advanced Addressing
+Bit Access to Registers
+Default Data Type Override
+String Access to Registers
+Array Support
+
+772 Addressing
+
+The default data types for dynamic tags are shown in bold.
+
+Device Address              Range                           Data Type*          Access
+Discrete Inputs                                                                 Read/Write
+                            I0001 to I2048                  Boolean             Read/Write
+Discrete Outputs            I0001 to I2041 (every 8th bit)  Byte                Read/Write
+                            I0001 to I2033 (every 8th bit)  Word, Short, BCD    Read/Write
+Discrete Globals                                                                Read/Write
+                            Q0001 to Q2048                  Boolean             Read Only
+Internal Coils              Q0001 to Q2041 (every 8th bit)  Byte                Read/Write
+                            Q0001 to Q2033 (every 8th bit)  Word, Short, BCD
+Temporary Coils                                                                 Read/Write
+                            G0001 to G7680                  Boolean
+Status References           G0001 to G7673 (every 8th bit)  Byte                Read/Write
+(Same for SA, SB, SC)       G0001 to G7665 (every 8th bit)  Word, Short, BCD
+Register References
+                            M0001 to M4096                  Boolean
+                            M0001 to M4089 (every 8th bit)  Byte
+                            M0001 to M4081 (every 8th bit)  Word, Short, BCD
+
+                            T001 to T256                    Boolean
+                            T001 to T249 (every 8th bit)    Byte
+                            T001 to T241 (every 8th bit)    Word, Short, BCD
+
+                            S001 to S128                    Boolean
+                            S001 to S121 (every 8th bit)    Byte
+                            S001 to S113 (every 8th bit)    Word, Short, BCD
+
+                            R1.0 to R16384.15               Boolean
+                            R00001 to R16384                Word, Short, BCD
+                            R00001 to R16383                DWord, Long, LBCD,
+                            R00001 to R16381                Float
+                                                            Double
+Program Block Registers***  P1.0 to P16384.15
+                            P00001 to P16384                Boolean
+                            P00001 to P16383                 Word, Short, BCD
+                            P00001 to P16381                DWord, Long, LBCD,
+                                                            Float
+SubProgram Block Reg-       L00001<SUBPRGM>.0 to            Double
+isters**                    L16384<SUBPRGM>.15
+                                                            Boolean
+
+                            L00001<SUBPRGM> to              Word, Short, BCD
+                            L16384<SUBPRGM>
+                                                            DWord, Long, LBCD,
+                            L00001<SUBPRGM> to              Float
+                            L16383<SUBPRGM>
+Analog Inputs                                               Double              Read/Write
+                            L00001<SUBPRGM> to              Boolean
+                            L16381<SUBPRGM>                 Word, Short, BCD
+                            AI1.0 to AI8192.15
+                            AI0001 to AI8192
+
+                            www. kepware.com
+39                                                                GE Ethernet Driver Help
+
+    Analog Outputs              AI0001 to AI8191                  DWord, Long, LBCD,  Read/Write
+                                AI0001 to AI8189                  Float
+    Special Items****                                             Double
+    (PLC Status, Time, etc)     AQ1.0 to AQ8192.15
+                                AQ0001 to AQ8192                  Boolean
+                                AQ0001 to AQ8191                  Word, Short, BCD
+                                AQ0001 to AQ8189                  DWord, Long, LBCD,
+                                                                  Float
+                                                                  Double
+
+    *Default data type of Boolean becomes Byte when an array specification is given.
+    **The SubProgram name/Block name <SUBPRGM> must match the name assigned in the PLC. This name can be
+    found in VersaPro under Block Properties.
+    ***Program specified in PLC Settings.
+    ****See Also: Special Items.
+
+    Advanced Addressing
+    Bit Access to Registers
+    Default Data Type Override
+    String Access to Registers
+    Array Support
+
+    781 Addressing
+
+    The default data types for dynamic tags are shown in bold.
+
+    Device Address              Range                             Data Type*          Access
+    Discrete Inputs                                                                   Read/Write
+                                I00001 to I12288                  Boolean             Read/Write
+    Discrete Outputs            I00001 to I12281 (every 8th bit)  Byte                Read/Write
+                                I00001 to I12273 (every 8th bit)  Word, Short, BCD    Read/Write
+    Discrete Globals                                                                  Read/Write
+                                Q00001 to Q12288                  Boolean             Read Only
+    Internal Coils              Q00001 to Q12281 (every 8th bit)  Byte                Read/Write
+                                Q00001 to Q12273 (every 8th bit)  Word, Short, BCD
+    Temporary Coils                                                                   Read/Write
+                                G0001 to G7680                    Boolean
+    Status References           G0001 to G7673 (every 8th bit)    Byte                Read/Write
+    (Same for SA, SB, SC)       G0001 to G7665 (every 8th bit)    Word, Short, BCD
+    Register References
+                                M00001 to M12288                  Boolean
+                                M00001 to M12281 (every 8th bit)  Byte
+                                M00001 to M12273 (every 8th bit)  Word, Short, BCD
+
+                                T001 to T256                      Boolean
+                                T001 to T249 (every 8th bit)      Byte
+                                T001 to T241 (every 8th bit)      Word, Short, BCD
+
+                                S001 to S128                      Boolean
+                                S001 to S121 (every 8th bit)      Byte
+                                S001 to S113 (every 8th bit)      Word, Short, BCD
+
+                                R1.0 to R16384.15                 Boolean
+                                R00001 to R16384                  Word, Short, BCD
+                                R00001 to R16383                  DWord, Long, LBCD,
+                                R00001 to R16381                  Float
+                                                                  Double
+    Program Block Registers***  P1.0 to P16384.15
+                                P00001 to P16384                  Boolean
+                                P00001 to P16383                   Word, Short, BCD
+                                P00001 to P16381                  DWord, Long, LBCD,
+                                                                  Float
+    SubProgram Block Reg-       L00001<SUBPRGM>.0 to              Double
+    isters**                    L16384<SUBPRGM>.15
+                                                                  Boolean
+                                L00001<SUBPRGM> to
+                                L16384<SUBPRGM>                   Word, Short, BCD
+
+                                L00001<SUBPRGM> to                DWord, Long, LBCD,
+
+                                www. kepware.com
+GE Ethernet Driver Help                                                           40
+
+                            L16383<SUBPRGM>                   Float
+
+Analog Inputs               L00001<SUBPRGM> to                Double              Read/Write
+                            L16381<SUBPRGM>                                       Read/Write
+Analog Outputs              AI1.0 to AI8192.15                Boolean
+                            AI0001 to AI8192                  Word, Short, BCD
+Special Items****           AI0001 to AI8191                  DWord, Long, LBCD,
+(PLC Status, Time, etc)     AI0001 to AI8189                  Float
+                                                              Double
+                            AQ1.0 to AQ8192.15
+                            AQ0001 to AQ8192                  Boolean
+                            AQ0001 to AQ8191                  Word, Short, BCD
+                            AQ0001 to AQ8189                  DWord, Long, LBCD,
+                                                              Float
+                                                              Double
+
+*Default data type of Boolean becomes Byte when an array specification is given.
+**The SubProgram name/Block name <SUBPRGM> must match the name assigned in the PLC. This name can be
+found in VersaPro under Block Properties.
+***Program specified in PLC Settings.
+****See Also: Special Items.
+
+Advanced Addressing
+Bit Access to Registers
+Default Data Type Override
+String Access to Registers
+Array Support
+
+782 Addressing
+
+The default data types for dynamic tags are shown in bold.
+
+Device Address              Range                             Data Type*          Access
+Discrete Inputs                                                                   Read/Write
+                            I00001 to I12288                  Boolean             Read/Write
+Discrete Outputs            I00001 to I12281 (every 8th bit)  Byte                Read/Write
+                            I00001 to I12273 (every 8th bit)  Word, Short, BCD    Read/Write
+Discrete Globals                                                                  Read/Write
+                            Q00001 to Q12288                  Boolean             Read Only
+Internal Coils              Q00001 to Q12281 (every 8th bit)  Byte                Read/Write
+                            Q00001 to Q12273 (every 8th bit)  Word, Short, BCD
+Temporary Coils                                                                   Read/Write
+                            G0001 to G7680                    Boolean
+Status References           G0001 to G7673 (every 8th bit)    Byte
+(Same for SA, SB, SC)       G0001 to G7665 (every 8th bit)    Word, Short, BCD
+Register References
+                            M00001 to M12288                  Boolean
+                            M00001 to M12281 (every 8th bit)  Byte
+                            M00001 to M12273 (every 8th bit)  Word, Short, BCD
+
+                            T001 to T256                      Boolean
+                            T001 to T249 (every 8th bit)      Byte
+                            T001 to T241 (every 8th bit)      Word, Short, BCD
+
+                            S001 to S128                      Boolean
+                            S001 to S121 (every 8th bit)      Byte
+                            S001 to S113 (every 8th bit)      Word, Short, BCD
+
+                            R1.0 to R16384.15                 Boolean
+                            R00001 to R16384                  Word, Short, BCD
+                            R00001 to R16383                  DWord, Long, LBCD,
+                            R00001 to R16381                  Float
+                                                              Double
+Program Block Registers***  P1.0 to P16384.15
+                            P00001 to P16384                  Boolean
+                            P00001 to P16383                   Word, Short, BCD
+                            P00001 to P16381                  DWord, Long, LBCD,
+                                                              Float
+                                                              Double
+
+                            www. kepware.com
+41                                                             GE Ethernet Driver Help
+
+    SubProgram Block Reg-    L00001<SUBPRGM>.0 to              Boolean             Read/Write
+    isters**                 L16384<SUBPRGM>.15                 Word, Short, BCD
+
+                             L00001<SUBPRGM> to
+                             L16384<SUBPRGM>
+
+                             L00001<SUBPRGM> to                DWord, Long, LBCD,
+                             L16383<SUBPRGM>                   Float
+
+    Analog Inputs            L00001<SUBPRGM> to                Double              Read/Write
+                             L16381<SUBPRGM>                                       Read/Write
+    Analog Outputs           AI1.0 to AI8192.15                Boolean
+                             AI0001 to AI8192                  Word, Short, BCD
+    Special Items****        AI0001 to AI8191                  DWord, Long, LBCD,
+    (PLC Status, Time, etc)  AI0001 to AI8189                  Float
+                                                               Double
+                             AQ1.0 to AQ8192.15
+                             AQ0001 to AQ8192                  Boolean
+                             AQ0001 to AQ8191                  Word, Short, BCD
+                             AQ0001 to AQ8189                  DWord, Long, LBCD,
+                                                               Float
+                                                               Double
+
+    *Default data type of Boolean becomes Byte when an array specification is given.
+    **The SubProgram name/Block name <SUBPRGM> must match the name assigned in the PLC. This name can be
+    found in VersaPro under Block Properties.
+    ***Program specified in PLC Settings.
+    ****See Also: Special Items.
+
+    Advanced Addressing
+    Bit Access to Registers
+    Default Data Type Override
+    String Access to Registers
+    Array Support
+
+    GE OPEN Addressing
+
+    The GE OPEN model selection has been provided to supply support for any GE SRTP compatible device that is not
+    currently listed in the standard model selection menu. The ranges of data for each data type have been expanded
+    to allow a wide range of GE PLCs to be addressed. Although the address ranges shown here may exceed the spe-
+    cific PLC's capability, the driver will respect all messages from the PLC regarding memory range limits.
+
+    Note: The default data types for dynamic tags are shown in bold.
+
+    Device Address           Range                             Data Type*          Access
+    Discrete Inputs                                                                Read/Write
+    Discrete Outputs         I0001 to I32768                   Boolean             Read/Write
+    Discrete Globals         I0001 to I32761 (every 8th bit)   Byte                Read/Write
+    Internal Coils           I0001 to I32753 (every 8th bit)   Word, Short, BCD    Read/Write
+    Temporary Coils                                                                Read/Write
+                             Q00001 to Q32768                  Boolean
+                             Q00001 to Q32761 (every 8th bit)  Byte
+                             Q00001 to Q32753 (every 8th bit)  Word, Short, BCD
+
+                             G00001 to G32768                  Boolean
+                             G00001 to G32761 (every 8th bit)  Byte
+                             G00001 to G32753 (every 8th bit)  Word, Short, BCD
+
+                             M00001 to M32768                  Boolean
+                             M00001 to M32761 (every 8th bit)  Byte
+                             M00001 to M32753 (every 8th bit)  Word, Short, BCD
+
+                             T00001 to T32768                  Boolean
+                             T00001 to T32761 (every 8th bit)  Byte
+                             T00001 to T32753 (every 8th bit)  Word, Short, BCD
+
+                             www. kepware.com
+GE Ethernet Driver Help                                                                                         42
+
+Status References           S00001 to S32768                  Boolean             Read Only
+                            S00001 to S32761 (every 8th bit)  Byte                Read/Write
+(Same for SA, SB, SC)       S00001 to S32753 (every 8th bit)  Word, Short, BCD
+Register References                                                               Read/Write
+                            R1.0 to R32768.15                 Boolean             Read/Write
+                            R00001 to R32768                  Word, Short, BCD
+                            R00001 to R32767                  DWord, Long, LBCD,
+                            R00001 to R32765                  Float
+                                                              Double
+Program Block Registers***  P00001 to P32768
+                            P00001 to P32767                  Word, Short, BCD
+                            P00001 to P32765                  DWord, Long, LBCD,
+                                                              Float
+SubProgram Block Reg-       L00001<SUBPRGM>.0 to              Double
+isters**                    L32768<SUBPRGM>.15
+                                                              Boolean
+Analog Inputs               L00001<SUBPRGM> to
+                            L32768<SUBPRGM>                   Word, Short, BCD
+
+                            L00001<SUBPRGM> to                DWord, Long, LBCD,
+                            L32767<SUBPRGM>                   Float
+
+                            L00001<SUBPRGM> to                Double              Read/Write
+                            L32765<SUBPRGM>                                       Read/Write
+                            AI1.0 to AI32768.15               Boolean
+                            AI00001 to AI32768                Word, Short, BCD
+                            AI00001 to AI32767                DWord, Long, LBCD,
+                            AI00001 to AI32765                Float
+                                                              Double
+Analog Outputs              AQ1.0 to AQ32768.15
+                            AQ00001 to AQ32768                Boolean
+                            AQ00001 to AQ32767                Word, Short, BCD
+                            AQ00001 to AQ32765                DWord, Long, LBCD,
+                                                              Float
+                                                              Double
+
+Special Items****           W1.0 to W65536.15                 Boolean             Read/Write
+(PLC Status, Time, etc)     W00001 to W65536                  Word, Short, BCD
+Bulk Memory                 W00001 to W65535                  DWord, Long, LBCD,
+                            W00001 to W65533                  Float
+                                                              Double
+
+*Default data type of Boolean becomes Byte when an array specification is given.
+**The SubProgram name/Block name <SUBPRGM> must match the name assigned in the PLC. This name can be
+found in VersaPro under Block Properties.
+***Program specified in PLC Settings.
+****See Also: Special Items.
+
+Advanced Addressing
+Bit Access to Registers
+Default Data Type Override
+String Access to Registers
+Array Support
+
+Horner OCS Addressing
+
+The Horner OCS model selection has been provided to supply support for Horner Operator Control Stations. The
+ranges of data for each data type have been expanded to allow a wide range of Horner OCS devices to be
+addressed. Although the address ranges shown here may exceed the specific device's capability, the driver will
+respect all messages from the OCS regarding memory range limits.
+
+Note: The default data types for dynamic tags are bold.
+
+Device Address              Range                             Data Type*          Access
+Discrete Inputs             I0001 to I2048                    Boolean             Read/Write
+
+                            www. kepware.com
+43                                                                                    GE Ethernet Driver Help
+
+    Discrete Outputs           I0001 to I2041 (every 8th bit)   Byte                       Read/Write
+    Internal Coils             I0001 to I2033 (every 8th bit)   Word, Short, BCD           Read/Write
+    Temporary Coils                                                                        Read/Write
+    Discrete Globals           Q00001 to Q20488                 Boolean                    Read/Write
+    Status References          Q00001 to Q2041 (every 8th bit)  Byte                       Read/Write
+    (Same for SA, SB, and SC)  Q00001 to Q2033 (every 8th bit)  Word, Short, BCD           Read/Write
+    Register References                                                                    Read/Write
+                               M00001 to M2048                  Boolean                    Read/Write
+    Analog Inputs              M00001 to M2041 (every 8th bit)  Byte
+                               M00001 to M2033 (every 8th bit)  Word, Short, BCD          Access
+    Analog Outputs                                                                        Read/Write
+                               T00001 to T2048                  Boolean                   Read/Write
+                               T00001 to T2041 (every 8th bit)  Byte                      Read/Write
+                               T00001 to T2033 (every 8th bit)  Word, Short, BCD          Read/Write
+                                                                                          Read/Write
+                               G1 to G32768                     Boolean                   Read Only
+                               G1 to G32761                     Byte                      Read/Write
+                               G1 to G32753                     Word, Short, BCD
+
+                               S1 to S32768                     Boolean
+                               S1 to S32761                     Byte
+                               S1 to S32753                     Word, Short, BCD
+
+                               R1.0 to R32768.15                Boolean
+                               R00001 to R32768                 Word, Short, BCD
+                               R00001 to R32767                 DWord, Long, LBCD, Float
+                               R00001 to R32765                 Double
+
+                               AI1.0 to AI32768.15              Boolean
+                               AI00001 to AI32768               Word, Short, BCD
+                               AI00001 to AI32767               DWord, Long, LBCD, Float
+                               AI00001 to AI32765               Double
+
+                               AQ1.0 to AQ32768.15              Boolean
+                               AQ00001 to AQ32768               Word, Short, BCD
+                               AQ00001 to AQ32767               DWord, Long, LBCD, Float
+                               AQ00001 to AQ32765               Double
+
+    *Default data type of Boolean becomes Byte when an array specification is given.
+
+    Advanced Addressing
+    Bit Access to Registers
+    Default Data Type Override
+    String Access to Registers
+    Array Support
+
+    VersaMax Addressing
+
+    The default data types for dynamic tags are shown in bold.
+
+    Device Address             Range                            Data Type*
+    Discrete Inputs
+                               I001 to I2048                    Boolean
+    Discrete Outputs           I001 to I2041 (every 8th bit)    Byte
+                               I001 to I2033 (every 8th bit)    Word, Short, BCD
+    Discrete Globals
+                               Q001 to Q2048                    Boolean
+    Internal Coils             Q001 to Q2041 (every 8th bit)    Byte
+                               Q001 to Q2033 (every 8th bit)    Word, Short, BCD
+    Temporary Coils
+                               G0001 to G1280                   Boolean
+    Status References          G0001 to G1273 (every 8th bit)   Byte
+    (Same for SA, SB, SC)      G0001 to G1265 (every 8th bit)   Word, Short, BCD
+    Register References
+                               M0001 to M1024                   Boolean
+                               M0001 to M1017 (every 8th bit)   Byte
+                               M0001 to M1009 (every 8th bit)   Word, Short, BCD
+
+                               T001 to T256                     Boolean
+                               T001 to T249 (every 8th bit)     Byte
+                               T001 to T241 (every 8th bit)     Word, Short, BCD
+
+                               S01 to S32                       Boolean
+                               S01 to S25 (every 8th bit)       Byte
+                               S01 to S17 (every 8th bit)       Word, Short, BCD
+
+                               R1.0 to R2048.15                 Boolean
+
+                               www. kepware.com
+GE Ethernet Driver Help                                                                                         44
+
+Analog Inputs            R001 to R2048      Word, Short, BCD                            Read/Write
+                         R001 to R2047      DWord, Long, LBCD, Float                    Read/Write
+Analog Outputs           R001 to R2045      Double
+
+Special Items**          AI1.0 to AI128.15  Boolean
+(PLC Status, Time, etc)  AI01 to AI128      Word, Short, BCD
+                         AI01 to AI127      DWord, Long, LBCD, Float
+                         AI01 to AI125      Double
+
+                         AQ1.0 to AQ128.15  Boolean
+                         AQ001 to AQ128     Word, Short, BCD
+                         AQ001 to AQ127     DWord, Long, LBCD, Float
+                         AQ001 to AQ125     Double
+
+*The default data type, Boolean, changes to Byte when an array specification is given.
+**See Also: Special Items.
+
+Advanced Addressing
+Bit Access to Registers
+Default Data Type Override
+String Access to Registers
+Array Support
+
+Advanced Addressing
+
+Bit Access to Registers
+Register based device types such as R, P, L, AI and AQ can be accessed at the bit level by appending a bit number
+to the register address. The valid bit number range is 0 to 15. The bit number must be preceded by either a
+period (".") or a colon (":").
+
+Examples
+1. R100.12 allows Read/Write access to bit 12 of Register 100.
+2. L50SUB1.3 allows Read/Write access to bit 3 of local register L50 in subprogram SUB1.
+
+Note: All device addresses can be prefixed with a % sign if needed, such as %R100. This can aid in converting
+from other OPC servers or communications drivers.
+
+Default Data Type Override
+The default data types for each device type are shown in PACSystems Addressing. The defaults can be over-
+ridden by appending data type indicators to the device address. The possible data type indicators are as follows.
+
+Indicators               Data Type
+F                        Float
+S                        Short
+L                        Long
+M                        String
+(BCD)                    BCD
+
+Examples                 Description
+ Address                 Access R100 as a floating point value
+ R100 F                  Access R300 as a long
+ R300 L                  Access R400-R410 as a string with a length of 22 bytes.
+ R400­R410 M             (LoHi byte order is assumed.)
+                         Access P100 as a short
+ P100 S                  Access L200-L210 in subprogram SUB1 as a string with a length of 22 bytes. (LoHi byte
+ L200SUB1-               order is assumed.)
+ L210SUB1 M
+
+Note: There must be a space between the register number and the data type indicator.
+String Access to Registers
+
+                         www. kepware.com
+45                                                                              GE Ethernet Driver Help
+
+    Register space can be accessed as string data by appending the "M" data indicator. The length of the string is
+    based on how the device address reference is entered. Each register addressed can contain two characters. The
+    byte order of characters in registers can be specified by appending an optional "H" for HiLo or "L" for LoHi after
+    the "M" data indicator. If no byte order is specified, LoHi order is assumed.
+
+    Examples        Description
+     Address        Access Register R100 as string with a length of 202 bytes. (LoHi byte order is assumed.)
+     R100-R200 M    Access Register R400 as a string with a length of 4 bytes. (LoHi byte order is assumed.)
+     R400 M         Access Register R405 as a string with a length of 2 bytes. (LoHi byte order is assumed.)
+     R405-R405 M    Access local register L100 in subprogram SUB1 as a string with a length of 2 bytes. (LoHi
+     L100SUB1-      byte order is assumed.)
+     L100SUB1 M     Access Register R100 as string with a length of 202 bytes. HiLo byte order is explicitly
+     R100-R200 M H  specified.
+                    Access Register R100 as string with a length of 202 bytes. LoHi byte order is explicitly
+     R100-R200 M L  specified.
+
+    Notes: The maximum string length is 255 bytes. For HiLo byte ordering, the string "AB" would be stored in a reg-
+    ister as 0x4142. For LoHi byte ordering, the string "AB" would be stored in a register as 0x4241. There must be a
+    space between the "M" data type indicator and the byte order indicator.
+
+    Array Support
+    An array is a collection of contiguous elements of a given data type. Arrays are supported by the following data
+    types: byte, word, short, DWord, long, float and char. The maximum array size is determined by the "Maximum
+    Bytes per Request" setting in Device Properties. If it is set at its maximum value, arrays can be specified up to
+    1024 elements for 16 bit data types and 512 elements for 32 bit data types. For more information, refer to Max-
+    imum Bytes per Request.
+
+    Maximum Array Size for Ref-  512 DWords (longs, floats), 1024 words (shorts) or 2048 bytes and chars
+    erenced                      for a total of 16384 bits
+    or Mapped Variables
+                                 512 DWords (longs, floats), 1024 words (shorts) or 1024 bytes and chars
+    Maximum Array Size for Sym-  for a total of 16384 bits
+    bolic Variables
+
+    Note: The number of usable bytes is directly reflective of the block size.
+
+    Examples                                            Address Breakdown
+     Address                                            G1, G9, G17, G25
+     G1 [4] includes the following byte addresses       1 row implied = 4 bytes
+     Note: G25 indicates the fourth byte beginning at   4 x 8 (byte) = 32 total bits
+     bit 25.
+     R16 [3][4] includes the following Word addresses:  R16, R17, R18, R19, R20, R21, R22, R23, R24, R25,
+                                                        R26, R27
+     P10 [5] includes the following Word addresses:     3 rows x 4 columns = 12 words
+                                                        12 x 16 (word) = 192 total bits
+                                                        P10, P11, P12, P13, P14
+                                                        1 rows x 5 columns = 5 words
+                                                        5 x 16 (word) = 80 total bits
+
+    Special Items
+
+    Though not visible in the server configuration, dynamic tags with these addresses are automatically created and
+    can be browsed by the OPC client. They will be found under the <Channel Name>.<Device Name>._InternalTags
+    group. If the OPC client does not support browsing or a non-OPC client is being used, users can create their own
+    static and dynamic tags using these addresses. The default data types for dynamic tags are shown in bold.
+
+    Device Address  Range                                                                Data Type                      Access
+    _OVERSWEEP      Oversweep flag. This is meaningful only when constant sweep mode is  Boolean                        Read Only
+                    active.
+
+                    1 = Constant Sweep value exceeded
+                    0 = No oversweep condition exists
+
+                                 www. kepware.com
+GE Ethernet Driver Help                                                                                    46
+
+_CONSWEEP                Constant sweep mode.                                                     Boolean  Read Only
+_NEWFT
+_NEWIOFT                 1 = Constant Sweep Mode active                                           Boolean  Read Only
+_FTSTATUS                0 = Constant Sweep Mode not active
+_IOSTATUS                PLC Fault entry since last read.
+_PROGATTACH
+_ENSWITCH                1 = PLC Fault Table has changed since last read by the server            Boolean  Read Only
+_RUN                     0 = PLC Fault Table is unchanged since last read by the server
+_OEMPROT                 IO Fault entry since last read.
+_SPRGCHG
+_STATE                   1 = IO Fault Table has changed since last read by the server             Boolean  Read Only
+                         0 = IO Fault Table is unchanged since last read by the server
+_PROGNUM                 PLC Fault entry present
+_PRIVLEVEL
+_SWEEPTIME               1 = One or more fault entries in PLC Fault Table                         Boolean  Read Only
+                         0 = PLC Fault table is empty
+                         IO Fault entry present
+
+                         1 = One or more fault entries in IO Fault Table                          Boolean  Read Only
+                         0 = IO Fault Table is empty
+                         Programmer attachment in system flag.
+
+                         1 = Programmer attachment found in system                                Boolean  Read Only
+                         0 = No programmer attachment found in system
+                         Front panel ENABLED/DISABLED switch setting.
+
+                         1 = Outputs disabled
+                         0 = Outputs enabled
+                         Front panel RUN/STOP switch setting.
+
+                         1 = Run                                                                  Boolean  Read Only
+                         0 = Stop
+                         OEM protected bit.
+
+                         1 = OEM protection in effect                                             Boolean  Read Only
+                         0 = No OEM protection
+                         Program changed flag.
+
+                         1 = Program changed                                                      Byte, Char Read Only
+                         0 = No program change
+                         (90-70 release 2.x and later)
+
+                         Current PLC State
+
+                         0 = Run I/O enabled                                                      Byte, Char Read Only
+                         1 = Run I/O disabled
+                         2 = Stop I/O disabled
+                         3 = CPU stop faulted
+                         4 = CPU halted
+                         5 = CPU suspended
+                         6 = Stop I/O enabled
+
+                         Control program number SRTP Master is currently logged into.
+
+                         -1 = SRTP Master is not logged into a task                               Byte, Char Read Only
+                         0 = SRTP Master is logged into task 0                                    Word, Short Read Only
+                         Current privilege level of server for accessing memory in PLC CPU (0-4)
+                         Time taken by the last complete sweep for the main control program
+                         task.
+
+                         The value returned is a whole number representing the number of
+                         tenths of a millisecond. The Sweep Time in milliseconds is 1/10 of this
+                         value. For example, if _SWEEPTIME is 123, the actual Sweep Time is
+                         12.3 milliseconds.
+
+                                             www. kepware.com
+47                                      GE Ethernet Driver Help
+
+        _SNPID        CPU Controller ID.                                                  String      Read Only
+        _PROGNAME     Name of control program task in the PLC CPU.                        String      Read Only
+        _SNUM_PROGS   Number of control program tasks defined for the PLC CPU.            Byte, Char  Read Only
+        _SPROG_FLAGS  Bit flags indicating which control programs tasks have programmers  Byte, Char  Read Only
+        _TIME         attached. Bit 0 = control program 1.
+                      Internal time and date of the PLC CPU. Format:                      String      Read Only
+        _SECOND
+        _MINUTE       SSMMHHDDMoYYDw where                                                Byte, Char  Read Only
+        _HOUR                                                                             Byte, Char  Read Only
+        _DAY          SS = Seconds (0-59)                                                 Byte, Char  Read Only
+        _MONTH        MM == Minutes (0-59)                                                Byte, Char  Read Only
+        _YEAR         HH = Hours (0-23)                                                   Byte, Char  Read Only
+        _DOW          DD = Day (1- 31)                                                    Byte, Char  Read Only
+                      Mo = Month (1-12)                                                   Byte, Char  Read Only
+                      YY = Year (0-99)
+                      Wd = Day of week (1-Sunday, 2-Monday, etc)
+                      PLC Time: Seconds (0-59)
+                      PLC Time: Minutes (0-59)
+                      PLC Time: Hours (0-23)
+                      PLC Date: Day (1- 31)
+                      PLC Date: Month (1-12)
+                      PLC Date: Year (0-99)
+                      PLC Date: Day of week (1-Sunday, 2-Monday, etc)
+
+                      www. kepware.com
+GE Ethernet Driver Help                    48
+
+Error Descriptions
+
+The following error/warning messages may be generated. Click on the link for a description of the message.
+
+Address Validation
+Address '<address>' is out of range for the specified device or register
+Array size is out of range for address '<address>'
+Array support is not available for the specified address: '<address>'
+Data Type '<type>' is not valid for device address '<address>'
+Device address '<address>' contains a syntax error
+Device address '<address>' is not supported by model '<model name>'
+Device address '<address>' is Read Only
+Missing address
+
+Device Status Messages
+Attempting to reacquire symbolic variable mapping information for device '<device name>'. Cannot
+read or write symbolic variables until complete
+Device '<device name>' is not responding
+Unable to write to '<address>' on device '<device name>'
+
+Driver Error Messages
+Bit access is invalid for the device data type '<native data type>' at address '<address>' in device
+'<device>'
+Bit index '<bit index>' is not valid for the device data type '<native data type>' at address
+'<address>' in device '<device>'
+Device '<device name>' returned error code <error num> reading n byte(s) starting at <address>
+The address length of the symbolic variable addressed by '<tag name>' on device '<device>' is
+bigger than the configured block size for this device. Deactivating tag
+The array size of address '<address>' on device '<device name>' must be the same as symbolic var-
+iable's array size of [rows][cols]
+The data type of the symbolic variable addressed by '<address>' on device '<device name>' is not
+compatible with tag
+The symbolic discrete array size of '<size in bytes>' bytes at address '<address>' on device
+'<device>' exceeds the configured '<block size>' maximum request bytes
+The symbolic variable name in tag address '<address>' does not exist in current configuration of
+device '<device name>'
+Winsock initialization failed (OS Error = n)
+Winsock V1.1 or higher must be installed to use the GE Ethernet device driver
+
+Automatic Tag Database Generation Messages
+Database Error: Array tags '<orig. tag name><dimensions>' exceed 31 characters. Tags renamed to
+'<new tag name><dimensions>'
+Database Error: Data type '<type>' arrays are currently not supported. Tag '<array tag name>' not
+created
+Database Error: Data type '<type>' for tag '<tag name>' is currently not supported. Tag not created
+Database Error: Data type '<type>' for tag '<tag name>' not found in import file. Setting to default
+Database Error: Logic Developer Variable Arrays are currently not supported. Array Tag(s) '<array
+tag name>' not created
+Database Error: No Reference Address found for tag '<tag name>' in import file. Tag not created
+Database Error: Only variables with Data Source '<data source name>' are imported. Data Source
+'<data source name>' is not supported. Tag '<tag name>' not created
+Database Error: Tag '<orig. tag name>' exceeds 31 characters. Tag renamed to '<new tag name>'
+Unable to generate a tag database for device <device name>. Reason: Import file is invalid or cor-
+rupt
+Unable to generate a tag database for device <device name>. Reason: Low memory resources
+
+Address Validation Error Messages
+
+The following error/warning messages may be generated. Click on the link for a description of the message.
+
+Address Validation
+Address '<address>' is out of range for the specified device or register
+Array size is out of range for address '<address>'
+
+                         www. kepware.com
+49                                                                         GE Ethernet Driver Help
+
+    Array support is not available for the specified address: '<address>'
+    Data Type '<type>' is not valid for device address '<address>'
+    Device address '<address>' contains a syntax error
+    Device address '<address>' is not supported by model '<model name>'
+    Device address '<address>' is Read Only
+    Missing address
+
+    Address '<address>' is out of range for the specified device or register
+    Error Type:
+
+    Warning
+
+    Possible Cause:
+    1. A tag address that has been specified statically via DDE references a location that is beyond the range of sup-
+    ported locations for the device.
+    2. A tag address has been assigned a bit index that is out of range (greater than or equal to 32).
+
+    Solution:
+    1. Verify the address is correct; if it is not, re-enter it in the client application.
+    2. Remove the bit index syntax from the tag address or change it to one that is in range for the data type.
+
+    Array size is out of range for address '<address>'
+    Error Type:
+
+    Warning
+
+    Possible Cause:
+    1. The number of elements in an array definition exceeds the range of elements supported by the address type.
+    2. The number of elements in an array definition exceeds the maximum number of data values that may be
+    obtained from the device in a single request.
+
+    Solution:
+    Reduce the number of referenced elements in the array definition.
+
+    Array support is not available for the specified address: '<address>'
+    Error Type:
+
+    Warning
+
+    Possible Cause:
+    A tag address that has been specified statically contains an array reference for an address type that doesn't sup-
+    port arrays.
+
+    Solution:
+    Re-enter the address in the client application to remove the array reference or correct the address type.
+
+    Data Type '<type>' is not valid for device address '<address>'
+    Error Type:
+
+    Warning
+
+    Possible Cause:
+    A tag address that has been specified statically has been assigned an invalid data type.
+
+    Solution:
+    Modify the requested data type in the client application.
+
+    Device address '<address>' contains a syntax error
+    Error Type:
+
+    Warning
+
+    Possible Cause:
+    A tag address that has been specified statically contains one or more invalid characters.
+
+    www. kepware.com
+GE Ethernet Driver Help                                                                                          50
+
+Solution:
+Re-enter the address in the client application.
+
+Device address '<address>' is not supported by model '<model name>'
+Error Type:
+
+Warning
+
+Possible Cause:
+A tag address that has been specified statically references a location that is valid for the communications protocol
+but not supported by the target device.
+
+Solution:
+Verify that the address is correct; if it is not, re-enter it in the client application. Also verify that the selected
+model name for the device is correct.
+
+Device address '<address>' is Read Only
+Error Type:
+
+Warning
+
+Possible Cause:
+A tag address that has been specified statically has a requested access mode that is not compatible with what the
+device supports for that address.
+
+Solution:
+Change the access mode in the client application.
+
+Missing address
+Error Type:
+
+Warning
+
+Possible Cause:
+A tag address that has been specified statically has no length.
+
+Solution:
+Re-enter the address in the client application.
+
+Device Status Messages
+
+The following error/warning messages may be generated. Click on the link for a description of the message.
+
+Device Status Messages
+Attempting to reacquire symbolic variable mapping information for device '<device name>'. Cannot
+read or write symbolic variables until complete
+Device '<device name>' is not responding
+Unable to write to '<address>' on device '<device name>'
+
+Attempting to reacquire symbolic variable mapping information for device
+'<device name>'. Cannot read or write symbolic variables until complete
+Error Type:
+
+Warning
+
+Possible Cause:
+A new configuration is being downloaded to the device or the configuration has been lost (possibly due to power
+failure).
+
+Solution:
+The driver should automatically recover once a new device configuration has been restored.
+
+Device '<device name>' not responding
+Error Type:
+
+                         www. kepware.com
+51                    GE Ethernet Driver Help
+
+    Serious
+
+    Possible Cause:
+    1. The connection between the device and the Host PC is broken.
+    2. The IP address assigned to the device is incorrect.
+    3. The response from the device took longer to receive than the amount of time specified in the "Request Timeout"
+    device setting.
+
+    Solution:
+    1. Verify the cabling between the PC and the PLC device.
+    2. Verify that the IP address given to the named device matches that of the actual device.
+    3. Increase the Request Timeout setting so that the entire response can be handled.
+
+    Unable to write to '<address>' on device '<device name>'
+
+    Error Type:
+    Serious
+
+    Possible Cause:
+    1. The connection between the device and the Host PC is broken.
+    2. The named device may have been assigned an incorrect IP address.
+
+    Solution:
+    1. Verify the cabling between the PC and the PLC device.
+    2. Verify that the IP address given to the named device matches that of the actual device.
+
+    Driver Error Messages
+
+    The following error/warning messages may be generated. Click on the link for a description of the message.
+
+    Driver Error Messages
+    Bit access is invalid for the device data type '<native data type>' at address '<address>' in device
+    '<device>'
+    Bit index '<bit index>' is not valid for the device data type '<native data type>' at address
+    '<address>' in device '<device>'
+    Device '<device name>' returned error code <error num> reading n byte(s) starting at <address>
+    The address length of the symbolic variable addressed by '<tag name>' on device '<device>' is
+    bigger than the configured block size for this device. Deactivating tag
+    The array size of address '<address>' on device '<device name>' must be the same as symbolic var-
+    iable's array size of [rows][cols]
+    The data type of the symbolic variable addressed by '<address>' on device '<device name>' is not
+    compatible with tag
+    The symbolic discrete array size of '<size in bytes>' bytes at address '<address>' on device
+    '<device>' exceeds the configured '<block size>' maximum request bytes
+    The symbolic variable name in tag address '<address>' does not exist in current configuration of
+    device '<device name>'
+    Winsock initialization failed (OS Error = n)
+    Winsock V1.1 or higher must be installed to use the GE Ethernet device driver
+
+    Bit access is invalid for the device data type '<native data type>' at address
+    '<address>' in device '<device>'
+
+    Error Type:
+    Warning
+
+    Possible Cause:
+    A tag address has been assigned a bit index that is invalid for its native data type.
+
+    Solution:
+    Remove the bit index syntax from the tag address or modify the symbolic variable in the controller to one of the fol-
+    lowing native data types: Byte, Int, Uint, Word, Dint, or DWord.
+
+    www. kepware.com
+GE Ethernet Driver Help                                                                     52
+
+Bit index '<bit index>' is not valid for the device data type '<native data
+type>' at address '<address>' in device '<device>'
+Error Type:
+
+Warning
+
+Possible Cause:
+A tag address has been assigned a bit index that is out of range for its native data type.
+
+Solution:
+Correct the tag address's bit index to be within the native data type's range.
+
+Note:
+The native data types' ranges are as follows:
+
+      l Byte: 0-7.
+      l Int, Uint, Word: 0-15.
+      l Dint and DWord: 0-31.
+
+Device '<device name>' returned error code <error num> reading n byte(s)
+starting at <address>
+Error Type:
+
+Error
+
+Possible Cause:
+An attempt has been made to read a location that does not exist.
+
+Solution:
+Review the address map for the device in question and make necessary adjustments in the client application.
+
+The address length of the symbolic variable addressed by '<tag name>' on
+device '<device>' is bigger than the configured block size for this device. Deac-
+tivating tag
+Error Type:
+
+Error
+
+Possible Cause:
+The requested tag is larger than the configured block size for this device. This can be caused by the name being
+too big or requested packet being too big.
+
+Solution:
+Increase the block size or change name size.
+
+The array size of address '<address>' on device '<device name>' must be the
+same as symbolic variable's array size of [rows][cols]
+Error Type:
+
+Warning
+
+Possible Cause:
+The array dimensions given in the tag address, if any, are not the same as the array size of the referenced sym-
+bolic variable.
+
+Solution:
+Determine the array dimensions of the variable as currently defined in the device. Adjust the tag address to
+match.
+
+The data type of the symbolic variable addressed by '<address>' on device
+'<device name>' is not compatible with tag
+Error Type:
+
+                         www. kepware.com
+53                    GE Ethernet Driver Help
+
+    Warning
+
+    Possible Cause:
+    The native data type of the symbolic variable, as currently defined in the device, is not compatible with the data
+    type of the tag.
+
+    Solution:
+    Adjust the data type of the tag to match the variable's native data type.
+
+    See Also:
+    Symbolic Variables
+
+    The symbolic discrete array size of '<size in bytes>' bytes at address
+    '<address>' on device '<device>' exceeds the configured '<block size>' max-
+    imum request bytes
+
+    Error Type:
+    Warning
+
+    Possible Cause:
+    The number of bytes required to obtain a symbolic discrete array in a single request exceeds the maximum con-
+    figured block size.
+
+    Solution:
+    1. Increase the Maximum Bytes per Request parameter (located in Device Properties | Communications
+    Parameters) to accommodate the actual size of the array.
+    2. If the symbolic discrete array is larger than 2048 bytes, reconfigure the controller to assign the symbolic array
+    to non-discrete memory. For example, a response containing a symbolic non-discrete DWord array of 64 ele-
+    ments contains 256 bytes (64 elements * 4 bytes per DWord).
+    3. Separate the array into smaller arrays in order to reduce the number of referenced elements in each array def-
+    inition.
+    4. Read the individual array elements in separate requests (instead of reading the array itself).
+
+    Note:
+    1. Symbolic variables assigned to discrete memory consume one byte per bit. For example, a byte variable actu-
+    ally requires eight bytes to obtain the data for each bit. Therefore, a response containing a symbolic discrete
+    DWord array of 64 elements contains 2048 bytes (64 elements * 4 bytes per DWord * 8 bytes per byte).
+    2. For more information, refer to "Importing Array Elements (Index)" in Proficy Logic Developer Array Tag
+    Import.
+
+    See Also:
+    Communications Parameters
+
+    The symbolic variable name in tag address '<address>' does not exist in cur-
+    rent configuration of device '<device name>'
+    Error Type:
+
+    Warning
+
+    Possible Cause:
+    The named variable does not exist in the current device configuration.
+
+    Solution:
+    1. Verify that variable is defined in current device configuration.
+    2. Check the spelling of the variable name.
+
+    Note:
+    To optimize driver performance, it is recommended that all tags with invalid symbolic variable addresses be
+    removed from the server configuration or not be used by a client application.
+
+    Winsock initialization failed (OS Error = n)
+    Error Type:
+
+    Fatal
+
+    www. kepware.com
+GE Ethernet Driver Help                                                                                     54
+
+OS      Indication                                              Possible Solution
+Error:                                                          Wait a few seconds and restart the driver.
+10091   Indicates that the underlying network subsystem is not
+        ready for network communication.                        Close one or more applications that may be
+10067   Limit on the number of tasks supported by the Win-      using Winsock and restart the driver.
+        dows Sockets implementation has been reached.
+
+Winsock V1.1 or higher must be installed to use the GE Ethernet device driver
+
+Error Type:
+Fatal
+
+Possible Cause:
+The version number of the Winsock DLL found on the system is less than 1.1.
+
+Solution:
+Upgrade Winsock to version 1.1 or higher.
+
+Automatic Tag Database Generation Messages
+
+The following error/warning messages may be generated. Click on the link for a description of the message.
+
+Automatic Tag Database Generation Messages
+Database Error: Array tags '<orig. tag name><dimensions>' exceed 31 characters. Tags renamed to
+'<new tag name><dimensions>'
+Database Error: Data type '<type>' arrays are currently not supported. Tag '<array tag name>' not
+created
+Database Error: Data type '<type>' for tag '<tag name>' is currently not supported. Tag not created
+Database Error: Data type '<type>' for tag '<tag name>' not found in import file. Setting to default
+Database Error: Logic Developer Variable Arrays are currently not supported. Array Tag(s) '<array
+tag name>' not created
+Database Error: No Reference Address found for tag '<tag name>' in import file. Tag not created
+Database Error: Only variables with Data Source '<data source name>' are imported. Data Source
+'<data source name>' is not supported. Tag '<tag name>' not created
+Database Error: Tag '<orig. tag name>' exceeds 31 characters. Tag renamed to '<new tag name>'
+Unable to generate a tag database for device <device name>. Reason: Import file is invalid or cor-
+rupt
+Unable to generate a tag database for device <device name>. Reason: Low memory resources
+
+Database Error: Array tags '<orig. tag name><dimensions>' exceed 31 char-
+acters. Tags renamed to '<new tag name><dimensions>'
+
+Error Type:
+Warning
+
+Possible Cause:
+The name assigned to an array tag originates from the variable name in the import file. This name exceeds the
+31-character limitation and will be renamed to one that is valid. <Dimensions> define the number of dimensions
+for the given array tag. XXX for 1 Dimension, XXX_YYY for 2 Dimensions. The number of X's and Y's approx-
+imates the number of elements for the respective dimensions. Since such an error will occur for each element,
+generalizing with XXX and YYY implies all array elements will be affected.
+
+Solution:
+None.
+
+See Also:
+Import File-to-Server Name Conversions
+
+Database Error: Data type '<type>' arrays are currently not supported. Tag
+'<array tag name>' not created
+
+Error Type:
+
+                         www. kepware.com
+55                    GE Ethernet Driver Help
+
+    Warning
+
+    Possible Cause:
+    Boolean or String array tags of 1 or 2 dimensions are not supported at this time.
+
+    Solution:
+    For Boolean array tags, individual array elements of the tag if specified in the import file will be generated. Fur-
+    thermore, the driver will also automatically create individual elements for the array tag (except for bit within word
+    type Boolean array tags).
+
+    Note:
+    For String array tags, neither the array tag or the individual elements will be generated. String data type is cur-
+    rently not supported by the driver. Thus, avoid using String data type if possible.
+
+    Database Error: Data type '<type>' for tag '<tag name>' is currently not sup-
+    ported. Tag not created
+    Error Type:
+
+    Warning
+
+    Possible Cause:
+    The data type <type> as specified in the import file cannot be resolved or isn't natively supported by the GE Eth-
+    ernet Driver. The tag was not automatically generated.
+
+    Solution:
+    For applicable tags, avoid using data type <type> in the VersaPro/Logic Developer projects.
+
+    Database Error: Data type '<type>' for tag '<tag name>' not found in import
+    file. Setting to default
+    Error Type:
+
+    Warning
+
+    Possible Cause:
+    The definition of data type '<type>', for tag <tag name>, could not be found in the import file.
+
+    Solution:
+    This tag will take on the default type for the given address type as assigned by the GE Ethernet Driver.
+
+    Database Error: Logic Developer Variable Arrays are currently not supported.
+    Array Tag(s) '<array tag name>' not created
+    Error Type:
+
+    Warning
+
+    Possible Cause:
+    Array tags of 1 or 2 dimensions originating from a Logic Developer import file are not supported at this time. The
+    array tags were not automatically generated.
+
+    Solution:
+    For applicable tags, avoid using arrays in the Logic Developer projects.
+
+    Database Error: No Reference Address found for tag '<tag name>' in import
+    file. Tag not created
+    Error Type:
+
+    Warning
+
+    Possible Cause:
+    Variables without a reference address cannot have a tag created since the reference address determines the
+    tag's address. The tag was not automatically generated.
+
+    Solution:
+
+    www. kepware.com
+GE Ethernet Driver Help                                                                       56
+
+Verify the <tag name> has a PLC as a data source and that reference address (PLC memory location) has been
+assigned to it.
+
+Database Error: Only variables with Data Source '<data source name>' are
+imported. Data Source '<data source name>' is not supported. Tag '<tag
+name>' not created
+Error Type:
+
+Warning
+
+Possible Cause:
+In Logic Developer, variables can take on a data value from a number of sources. For use in the OPC server, the
+source must be a GE Ethernet PLC. The tag was not automatically generated.
+
+Solution:
+Verify the <tag name> has a PLC as a data source.
+
+Database Error: Tag '<orig. tag name>' exceeds 31 characters. Tag renamed to
+'<new tag name>'
+Error Type:
+
+Warning
+
+Possible Cause:
+The name assigned to a tag originates from the variable name in the import file. This name exceeds the 31 char-
+acter limitation and will be renamed to one that is valid.
+
+Solution:
+None.
+
+See Also:
+Import File-to-Server Name Conversions
+
+Unable to generate a tag database for device <device name>. Reason: Import
+file is invalid or corrupt
+Error Type:
+
+Warning
+
+Possible Cause:
+The file specified as the Tag Import File (in the Database Settings device properties page) is a corrupt import file
+(*.snf or*.csv) or improperly formatted Logic Developer text file.
+
+Solution:
+Select a valid, properly formatted VersaPro/Logic Developer variable import file or retry the tag export process in
+the respective application to produce a new import file.
+
+See Also:
+Automatic Tag Database Generation Preparation
+
+Unable to generate a tag database for device <device name>. Reason: Low
+memory resources
+Error Type:
+
+Warning
+
+Possible Cause:
+Memory required for database generation could not be allocated. The process is aborted.
+
+Solution:
+Close any unused applications and/or increase the amount of virtual memory. Then, try again.
+
+                         www. kepware.com
+57                                                                        GE Ethernet Driver Help
+
+  Index
+
+3
+
+311 Addressing                                                            30
+
+313 Addressing                                                            31
+
+331 Addressing                                                            32
+
+341 Addressing                                                            32
+
+350 Addressing                                                            33
+
+360 Addressing                                                            34
+
+7
+
+731 Addressing                                                            35
+
+732 Addressing                                                            36
+
+771 Addressing                                                            37
+
+772 Addressing                                                            38
+
+781 Addressing                                                            39
+
+782 Addressing                                                            40
+
+A
+
+Address '<address>' is out of range for the specified device or register  49
+
+Address Descriptions                                                      26
+
+Address Validation Error Messages                                         48
+
+Advanced Addressing                                                       44
+
+Array size is out of range for address '<address>'                        49
+
+Array support is not available for the specified address: '<address>'     49
+
+Attempting to reacquire symbolic variable mapping information for device '<device name>'. 50
+
+Cannot read or write symbolic variables until complete
+
+Automatic Tag Database Generation                                         10
+
+Automatic Tag Database Generation Messages                                54
+
+B
+
+BCD                                                                       25
+
+Bit access is invalid for the device data type '<native data type>' at address '<address>' in 51
+
+device '<device>'
+
+Bit index '<bit index>' is not valid for the device data type '<native data type>' at address 52
+
+'<address>' in device '<device>'
+
+Block Size                                                                6
+
+Boolean                                                                   25
+
+Byte                                                                      25
+
+                                   www. kepware.com
+GE Ethernet Driver Help                                                                58
+
+C
+
+Cimplicity Logic Developer Array Tag Import                                            18
+
+Cimplicity Logic Developer Import Preparation: Logic Developer Steps                   16
+
+Cimplicity Logic Developer Import Preparation: OPC Server Steps                        17
+
+Communications                                                                         6
+
+Communications Parameters                                                              7
+
+D
+
+Data Type '<type>' is not valid for device address '<address>'                         49
+
+Data Types Description                                                                 25
+
+Database Error                                                                         54
+
+Data type '<type>' arrays are currently not supported. Tag '<array tag name>' not created54
+
+Database Error: Array tags '<orig. tag name><dimensions>' exceed 31 characters. Tags   54
+
+renamed to '<new tag name><dimensions>'
+
+Database Error: Data type '<type>' for tag '<tag name>' is currently not supported. Tag not 55
+
+created
+
+Database Error: Data type '<type>' for tag '<tag name>' not found in import file. Setting to 55
+
+Default Type '<type>'
+
+Database Error: Logic Developer Variable Arrays are currently not supported. Array Tag(s) 55
+
+'<array tag name>' not created
+
+Database Error: No Reference Address found for tag '<tag name>' in import file. Tag not 55
+
+created
+
+Database Error: Only variables with Data Source '<data source name>' are imported. Data 56
+
+Source '<data soure name>' is not..
+
+Database Error: Tag '<orig. tag name>' exceeds 31 characters. Tag renamed to '<new tag 56
+
+name>'
+
+device                                                                                 48-49
+
+Device '<device name>' returned error code <error num> reading in byte(s) starting at  52
+
+<address>
+
+Device '<device name> not responding                                                   50
+
+Device address '<address>' contains a syntax error                                     49
+
+Device address '<address>' is not supported by model '<model name>'                    50
+
+Device address '<address>' is Read Only                                                50
+
+Device ID                                                                              6
+
+Device Setup                                                                           6
+
+Device Status Messages                                                                 50
+
+Driver Error Messages                                                                  51
+
+DWord                                                                                  25
+
+E
+
+Error Descriptions                                                                     48
+
+                                     www. kepware.com
+59                                                                                   GE Ethernet Driver Help
+
+       F                                                                                                       25
+
+         Float                                                                                                 41
+
+       G                                                                                                       18
+                                                                                                               21
+         GE OPEN Addressing                                                                                    14
+                                                                                                               42
+       H
+                                                                                                               11
+         Highlighting LogicDeveloper Variables                                                                 15
+         Highlighting Proficy Logic Developer Variables                                                        18
+         Highlighting VersaPro Variables                                                                       12
+         Horner OCS Addressing
+                                                                                                               25
+       I                                                                                                       25
+
+         Import File-to-Server Name Conversions                                                                50
+         Importing LogicDeveloper Tags
+         Importing Proficy Logic Developer Tags                                                                 6
+         Importing VersaPro Tags                                                                                9
+
+       L
+
+         LBCD
+         Long
+
+       M
+
+         Missing address
+
+       N
+
+         Network
+         Nickname
+
+                                                                   www. kepware.com
+GE Ethernet Driver Help                                                               60
+
+O
+
+Optimizing GE Ethernet Communications                                                 23
+
+Overview                                                                              5
+
+P
+
+PACSystems Addressing                                                                 26
+
+PLC Settings                                                                          8
+
+Proficy Logic Developer Array Tag Import                                              21
+
+Proficy Logic Developer Import Preparation: Logic Developer Steps                     18
+
+Proficy Logic Developer Import Preparation: OPC Server Steps                          21
+
+protocol                                                                              6
+
+S
+
+Short                                                                                 25
+
+Special Items                                                                         45
+
+Symbolic Variables                                                                    27
+
+T
+
+Tag Hierarchy                                                                         10
+
+Target Name                                                                           9
+
+The address length of the symbolic variable addressed by '<tag name>' on device '<device>' 52
+
+is bigger
+
+The array size of address '<address>' on device '<device name>' must be the same as sym- 52
+
+bolic variable's array size of [rows][cols]
+
+The data type of the symbolic variable addressed by '<address>' on device '<device name>' 52
+
+is not compatible with tag
+
+The symbolic discrete array size of '<size in bytes>' bytes at address '<address>' on device 53
+
+'<device>' exceeds the configured '<block size>' maximum request bytes
+
+The symbolic variable name in tag address '<address>' does not exist in current con-  53
+
+figuration of device '<device name>'
+
+U
+
+Unable to generate a tag database for device <device name>. Reason                    56
+
+Unable to generate a tag database for device <device name>. Reason: Import file is invalid 56
+
+or corrupt
+
+Unable to generate a tag database for device <device name>. Reason: Low memory        56
+
+                                      www. kepware.com
+61                                                                  GE Ethernet Driver Help
+                                                                                              51
+        resources
+         Unable to write tag '<address>' on device '<device name>'
+
+V
+
+Variable Import Settings                                                       8
+
+VersaMax Addressing                                                            43
+
+VersaPro Array Tag Import                                                      15
+
+VersaPro Import Preparation: VersaPro Steps                                    12
+
+VersaPro Import Preparation: OPC Server Steps                                  14
+
+W
+
+Winsock initialization failed (OS Error = n)                                   53
+
+Winsock V1.1 or higher must be installed to use the GE Ethernet device driver  54
+
+Word                                                                           25
+
+                           www. kepware.com
+

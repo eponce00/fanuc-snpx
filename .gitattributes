@@ -1,3 +1,5 @@
 * text=auto eol=lf
 *.pdf binary
 *.png binary
+# Reference material is kept byte-exact (line endings are part of the controller file formats).
+vendor-docs/** -text
